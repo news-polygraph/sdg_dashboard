@@ -1,0 +1,20 @@
+/* Colorpalatte:  FFFBF5, F7EFE5, C3ACD0, 674188 Link: https://colorhunt.co/palette/fffbf5f7efe5c3acd0674188 */
+
+.form-control {
+  background-color: #fffbf5;
+  border: solid 1px lightgray;
+}
+
+.removeButtonMargin {
+  margin-bottom: 0px;
+}
+
+.card {
+  border-color: lightgray;
+}
+
+.btn-custom {
+  background-color: #fffbf5;
+  border-color: lightgray;
+  color: solid 1px lightgray;
+}
