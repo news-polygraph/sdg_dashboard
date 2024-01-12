@@ -65,6 +65,7 @@ function Dashboard() {
   const numPages = Object.keys(fileData.sdg_data).length;
 
   const keywordsAllSet = new Set();
+
   for (var value of Object.values(pageData)) {
     value.keywords.forEach((keyword) => keywordsAllSet.add(keyword.word));
   }
