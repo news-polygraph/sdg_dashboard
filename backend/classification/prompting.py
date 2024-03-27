@@ -29,10 +29,10 @@ def run_prompting_for_page(filename, page_texts):
             prompt = page_prompt.replace("to_be_filled", page_text)
 
             try: 
-                response = client.chat.completions.create(
-                    model="gpt-3.5-turbo",
-                    messages=[{"role": "user", "content": prompt}],
-                )
+                # response = client.chat.completions.create(
+                #     model="gpt-3.5-turbo",
+                #     messages=[{"role": "user", "content": prompt}],
+                # )
                 page_sdg_data = json.loads(response.choices[0].message.content)
                 report["sdg_data"][str(page_idx + 1)] = fill_nones(page_sdg_data)
 

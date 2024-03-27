@@ -1,14 +1,18 @@
 import React, { Component, useCallback, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+
 import PropTypes from "prop-types";
-import "react-pdf/dist/esm/Page/TextLayer.css";
 import { Pagination } from "react-bootstrap";
 import { sdgColors, sdgDataDefault } from "./utils.js";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.js",
-  import.meta.url,
-).toString();
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/esm/Page/TextLayer.css";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js`;
+
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//   "pdfjs-dist/build/pdf.worker.min.js",
+//   import.meta.url
+// ).toString();
 
 class PdfViewer extends Component {
   constructor(props) {

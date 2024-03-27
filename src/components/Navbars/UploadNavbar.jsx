@@ -27,7 +27,7 @@ class UploadNavbar extends Component {
     formData.append("title", title);
     formData.append("file", file);
 
-    const result = await axios.post("http://localhost:8000/upload", formData, {
+    const result = await axios.post("http://localhost:3001/upload", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     if (result.data.status === "ok") {

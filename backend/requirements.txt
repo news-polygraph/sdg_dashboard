@@ -4,3 +4,5 @@ python-dotenv
 pandas
 PyMuPDF
 openai
+scikit-learn
+nltk

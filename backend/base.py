@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, redirect, send_file, jsonify
+from flask import Flask, flash, request, redirect, send_file, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import json
@@ -14,7 +14,9 @@ from classification.sdg_data_default import sdg_data_default
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3002"}})
+
 
 app.config['UPLOAD_FOLDER'] = ""
 
@@ -29,6 +31,9 @@ def my_profile():
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
+    
+    print("File is in Backend")
+
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -110,7 +115,8 @@ def return_file(title):
     
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
-app.run(port=8000)
+app.run(port=8000, host='0.0.0.0')
+
 # after upload 
     # first analyse first page
     # start asnycronosly analysing the pages

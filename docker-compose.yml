@@ -1,0 +1,13 @@
+version: "3"
+services:
+  backend:
+    build: ./backend # specify where the Dockerfile is
+    ports:
+      - "3001:8000" # [HOST_PORT]:[CONTAINER_PORT]
+
+  frontend:
+    build: .
+    ports:
+      - "3002:8000"
+    depends_on:
+      - backend

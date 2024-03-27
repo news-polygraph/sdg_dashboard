@@ -44,7 +44,7 @@ function Dashboard() {
 
     // get sdg data
     axios
-      .get("http://localhost:8000/report/".concat(fileUploadedTitle))
+      .get("http://localhost:3001/report/".concat(fileUploadedTitle))
       .then((res) => {
         // set Keywords to be shown in PdfViewer
         setfileData(res.data);
