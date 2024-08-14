@@ -57,8 +57,8 @@ const sdgColors = {
 };
 
 const fileDataDefault = {
-  filename: "1604404731.pdf",
-  title: "Sustainability Report",
+  filename: "default_filename",
+  title: "default_title",
   sdg_data: {
     1: {
       1: {

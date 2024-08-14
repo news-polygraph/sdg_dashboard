@@ -3,7 +3,8 @@ services:
   backend:
     build: ./backend # specify where the Dockerfile is
     ports:
-      - "3001:8000" # [HOST_PORT]:[CONTAINER_PORT]
+      - "3001:3001" # [HOST_PORT]:[CONTAINER_PORT]
+      - "5678:5678" # Debugger port
 
   frontend:
     build: .

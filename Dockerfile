@@ -22,5 +22,5 @@ RUN npm install -g serve
 # Make port 3000 available to the world outside this container
 EXPOSE 8000
 
-# Run `serve` to serve the application on port 3000
+# Run `serve` to serve the application on port 8000
 CMD ["serve", "-s", "build", "-l", "8000"]

@@ -1,124 +1,169 @@
 import os
-from flask import Flask, flash, request, redirect, send_file, jsonify, send_from_directory
+from flask import Flask, flash, request, redirect, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import json
-from base64 import b64encode
 from dotenv import load_dotenv
 
-from classification.keyword_extraction import get_keywords_page_level, combine_keywords_file_level
-from classification.sentence_extraction import sentence_extraction
-from classification.prompting import run_prompting_for_file, run_prompting_for_page
-from classification.sdg_data_default import sdg_data_default
+from analysis.page_analysis.analyse_page import analyse_page
 
 load_dotenv()
 
-app = Flask(__name__)
-# CORS(app)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3002"}})
+# start with a fresh database
+with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
+    json.dump([], feedsjson)
 
 
-app.config['UPLOAD_FOLDER'] = ""
+def create_app(test_config=None):
+    # Create and configure the app
+    app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
 
-@app.route('/data')
-def my_profile():
-    response_body = {
-        "name": "Nagato",
-        "about" :"Hello! I'm a full stack developer that loves python and javascript"
-    }
+    app.config.from_mapping(
+        SECRET_KEY='super secret key',
+        DATABASE=os.path.join(app.instance_path, 'yourapplication.sqlite'),
+        UPLOAD_FOLDER="",  # Set this to your desired upload folder path
+        SESSION_TYPE='filesystem'
+    )
 
-    return response_body
+    # Load the default configuration if test_config is None
+    # otherwise load the test configuration
+    if test_config is None:
+        # load the instance config, if it exists, when not testing
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        # load the test config if passed in
+        app.config.from_mapping(test_config)
 
-@app.route('/upload', methods=['GET', 'POST'])
-def upload_file():
-    
-    print("File is in Backend")
-
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file:
-
-            # save pdf-file
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-
-            # save json
-            file_data = {
-                "filename": filename,
-                "title": request.form["title"],
-                "sdg_data": sdg_data_default,
-            }
-
-            # get current data from file
-            with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-                reports = json.load(feedsjson)
-
-            reports.append(file_data)
-
-            # save dict as json
-            with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
-                
-                json.dump(reports, feedsjson)
-
-            # will be asyncronus function
-
-            # extract keywords on page level and combine keywords on file level
-            page_texts = get_keywords_page_level(filename)
-            combine_keywords_file_level(filename)
-
-            # extract relevent sentences on file level
-            relevant_paragraphs = sentence_extraction(filename, page_texts)
-            
-            run_prompting_for_file(filename, relevant_paragraphs)
-            run_prompting_for_page(filename, page_texts)
-            
-            return {"status": "ok" }
-
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
-
-
-@app.route('/report/<title>')
-def return_file(title):
+    # Ensure the instance folder exists
     try:
-        with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-            feeds = json.load(feedsjson)
-            for report in feeds:
-                if report["title"] == title:
-                    filename = report["filename"]
-                    file_data = report
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
-        if filename:
-            return file_data
-        else:
-            return {"status": "no such file"}
- 
-    except Exception as e:
-	    return str(e)
+    # Load default json files
+    with open('data_defaults/sdg_data_default.json', 'r') as file:
+        sdg_data_default = json.load(file)
+    with open('data_defaults/analysis_data_default.json', 'r') as file:
+        analysis_data_default = json.load(file)
+
+
+    @app.route('/upload', methods=['GET', 'POST'])
+    def upload_file():
+        
+        print("File is in Backend")
+
+        if request.method == 'POST':
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                flash('No file part')
+                return redirect(request.url)
+            file = request.files['file']
+            # If the user does not select a file, the browser submits an
+            # empty file without a filename.
+            if file.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            if file:
+
+                # save pdf-file
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                print("----- File saved! ------")
+
+                # save json
+                file_data = {
+                    "filename": filename,
+                    "title": request.form["title"],
+                    "sdg_data": sdg_data_default,
+                    "analysis_data": analysis_data_default,
+                }
+
+                # get current data from file
+                with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+                    reports = json.load(feedsjson)
+
+                reports.append(file_data)
+
+                # save dict as json
+                with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
+                    json.dump(reports, feedsjson)
+
+                return {"status": "ok" }
+
+        return '''
+        <!doctype html>
+        <title>Upload new File</title>
+        <h1>Upload new File</h1>
+        <form method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        <input type=submit value=Upload>
+        </form>
+        '''
+
+
+    # is triggered after pdf is first shown
+    @app.route('/data_initial/<title>')
+    def get_initial_file_data(title):
+        try:
+
+            with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+                feeds = json.load(feedsjson)
+                for report in feeds:
+                    if report["title"] == title:
+                        filename = report["filename"]
+
+            analyse_page(filename, 1)
+            analyse_page(filename, 2)
+
+            with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+                feeds = json.load(feedsjson)
+                for report in feeds:
+                    if report["title"] == title:
+                        file_data = report
+
+
+            if filename:
+                return file_data
+            else:
+                return {"status": "no such file"}
     
-app.secret_key = 'super secret key'
-app.config['SESSION_TYPE'] = 'filesystem'
-app.run(port=8000, host='0.0.0.0')
+        except Exception as e:
+            return str(e)
 
-# after upload 
-    # first analyse first page
-    # start asnycronosly analysing the pages
-    # send data of first page to frontend
-# 
+
+    # is triggered when klicking on next page
+    @app.route('/data/<title>/<page_number>')
+    def get_file_data(title, page_number):
+        # try:
+
+            with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+                feeds = json.load(feedsjson)
+                for report in feeds:
+                    if report["title"] == title:
+                        filename = report["filename"]
+            
+            if filename:
+
+                analyse_page(filename, int(page_number)+1)
+
+                with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+                    feeds = json.load(feedsjson)
+                    for report in feeds:
+                        if report["title"] == title:
+                            file_data = report
+
+                
+                return file_data
+            else:
+                return {"status": "no such file"}
+    
+        # except Exception as e:
+        #     return str(e)
+
+
+    return app
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(port=3001, host='0.0.0.0')

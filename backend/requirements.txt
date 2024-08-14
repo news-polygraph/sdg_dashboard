@@ -6,3 +6,7 @@ PyMuPDF
 openai
 scikit-learn
 nltk
+debugpy
+pytest
+Flask-Testing
+spacy # pip install -U spacy

@@ -7,7 +7,8 @@ import { sdgColors, sdgDataDefault } from "./utils.js";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js`;
+// pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   "pdfjs-dist/build/pdf.worker.min.js",
@@ -17,19 +18,19 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pd
 class PdfViewer extends Component {
   constructor(props) {
     super(props);
-    const { setPageNumber } = this.props;
-    this.setPageNumber = setPageNumber;
+    const { onPageChange } = this.props;
+    this.onPageChange = onPageChange;
   }
 
   onDocumentLoadSuccess = ({ newNumPages }) => {
     this.setState({
       numPages: newNumPages,
     });
-    this.setPageNumber(1);
+    this.onPageChange(1);
   };
 
   changePage = (offset) => {
-    this.setPageNumber((prevPageNumber) => prevPageNumber + offset);
+    this.onPageChange((prevPageNumber) => prevPageNumber + offset);
   };
 
   previousPage = () => {
@@ -162,7 +163,11 @@ class PdfViewer extends Component {
     `}
         </style>
         <div className="pdf-container">
-          <Document file={file} onLoadSuccess={this.onDocumentLoadSuccess}>
+          <Document
+            file={file}
+            onLoadSuccess={this.onDocumentLoadSuccess}
+            onLoadError={console.error}
+          >
             <Page
               pageNumber={pageNumber}
               customTextRenderer={textRenderer}
@@ -174,7 +179,7 @@ class PdfViewer extends Component {
         <div className="pagination-container">
           <Pagination>
             <Pagination.First
-              onClick={() => this.setPageNumber(1)}
+              onClick={() => this.onPageChange(1)}
               disabled={pageNumber <= 1}
             />
             <Pagination.Prev
@@ -183,7 +188,7 @@ class PdfViewer extends Component {
             />
 
             <Pagination.Item
-              onClick={() => this.setPageNumber(1)}
+              onClick={() => this.onPageChange(1)}
               active={pageNumber === 1}
             >
               {pageNumber}
@@ -194,7 +199,7 @@ class PdfViewer extends Component {
               disabled={pageNumber >= numPages}
             />
             <Pagination.Last
-              onClick={() => this.setPageNumber(numPages)}
+              onClick={() => this.onPageChange(numPages)}
               disabled={pageNumber >= numPages}
             />
           </Pagination>

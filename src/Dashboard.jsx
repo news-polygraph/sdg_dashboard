@@ -18,7 +18,7 @@ function Dashboard() {
   const location = useLocation();
   const mainPanel = React.useRef(null);
   const [file, setFile] = React.useState(null);
-  const [fileData, setfileData] = React.useState(fileDataDefault);
+  const [fileData, setFileData] = React.useState(fileDataDefault);
   const [sdgActive, setSdgActive] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
@@ -42,19 +42,43 @@ function Dashboard() {
     // set File to be shown in PdfViewer
     setFile(fileUploaded);
 
-    // get sdg data
     axios
-      .get("http://localhost:3001/report/".concat(fileUploadedTitle))
+      .get("http://localhost:3001/data_initial/".concat(fileUploadedTitle))
       .then((res) => {
         // set Keywords to be shown in PdfViewer
-        setfileData(res.data);
+        setFileData(res.data);
+        console.log(fileData);
       });
+    // get sdg data of first page
   });
 
-  // // update activeSdg after hovering over icon
-  // const activateSdg = useCallback((event) => {
-  //   setSdgActive(Number(event.target.getAttribute("sdgId"))); // update sdgActive with sdgId form img tag after hovering
-  // });
+  const onPageChange = useCallback((newPageNumber) => {
+    setPageNumber(newPageNumber);
+
+    // if (fileData.title != "default_title") {
+    //   axios
+    //     .get(
+    //       "http://localhost:3001/data/".concat(fileData.title, "/", pageNumber)
+    //     )
+    //     .then((res) => {
+    //       // set Keywords to be shown in PdfViewer
+    //       setFileData(res.data);
+    //     });
+    // }
+  });
+
+  React.useEffect(() => {
+    if (fileData.title != "default_title") {
+      axios
+        .get(
+          "http://localhost:3001/data/".concat(fileData.title, "/", pageNumber)
+        )
+        .then((res) => {
+          // set Keywords to be shown in PdfViewer
+          setFileData(res.data);
+        });
+    }
+  }, [pageNumber]);
 
   // filter sdgData to feed relevent attributes to child-components
   // changes per file
@@ -97,7 +121,7 @@ function Dashboard() {
                       keywords={keywords}
                       sequences={sequences}
                       sdgActive={sdgActive}
-                      setPageNumber={setPageNumber}
+                      onPageChange={onPageChange}
                     />
                   </Card.Body>
                 </Card>
