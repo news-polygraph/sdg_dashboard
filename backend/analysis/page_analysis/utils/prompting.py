@@ -130,18 +130,34 @@ def run_prompting_for_paragraphs(filename, paragraphs, page_number):
 
     for sdg_idx, paragraph in paragraphs.items():
         sdg = sdg_descriptions[int(sdg_idx)-1]
+        # prompt = f"""
+        # Task: Analyze and contextualize the following paragraph from a sustainability report according to Sustainable Development Goal {sdg}.
+        #
+        # Paragraph:
+        # {paragraph}
+        #
+        # In your analysis, please:
+        #
+        # Explain how the paragraph aligns with this SDG: Identify the connections between the actions or themes in the paragraph and the key targets or indicators of the SDG.
+        # Evaluate the impact: Assess the potential positive or negative impacts of the described actions or policies on achieving the targets of the SDG.
+        # Provide contextual insights: Discuss the broader context of these actions, considering industry best practices, global trends, or challenges related to SDG.
+        # Suggest improvements: Offer recommendations or strategies that could further enhance alignment with the SDG or improve outcomes. 
+        # "{sdg}""
         prompt = f"""
-        Task: Analyze and contextualize the following paragraph from a sustainability report according to Sustainable Development Goal {sdg}.
+        Your task is to evaluate whether a specific measure contributes to achieving a particular Sustainable Development Goal (SDG). 
+        Please follow these steps for a clear, logical analysis:
+        1. Understand the Measure: Begin by reading and summarizing the measure provided in the paragraph.
+        2. Contextualize the Measure: Consider how this measure fits within the broader context of the SDG. What are the key challenges and requirements of achieving this SDG? How does this measure address them?
+        3. Evaluate Relevance: Analyze whether and how the measure directly or indirectly supports progress towards the SDG. Mention specific aspects of the measure that align with the targets of the SDG, and identify any gaps or weaknesses.
+        4. Provide a Conclusion: Based on your analysis, explain whether the measure is helpful, partially helpful, or not helpful in advancing the SDG.
 
-        Paragraph:
+        Here is the paragraph containing the measure:
+
         {paragraph}
 
-        In your analysis, please:
+        The Sustainable Development Goal in focus is: {sdg}
 
-        Explain how the paragraph aligns with SDG X: Identify the connections between the actions or themes in the paragraph and the key targets or indicators of the SDG.
-        Evaluate the impact: Assess the potential positive or negative impacts of the described actions or policies on achieving the targets of SDG X.
-        Provide contextual insights: Discuss the broader context of these actions, considering industry best practices, global trends, or challenges related to SDG X.
-        Suggest improvements: Offer recommendations or strategies that could further enhance alignment with the SDG or improve outcomes. 
+        Use logical reasoning and evidence from the paragraph to support your conclusions."
         """
         data = {
             "inputs": prompt,
