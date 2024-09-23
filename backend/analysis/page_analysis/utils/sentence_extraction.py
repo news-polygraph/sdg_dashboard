@@ -42,7 +42,7 @@ def sentence_extraction(filename, page_texts):
     
     # create single string
     page_text = (" ").join(page_texts)
-    
+
     # Basic text cleaning
     page_text = clean_text(page_text)
 
@@ -90,3 +90,50 @@ def sentence_extraction(filename, page_texts):
 
     return relevant_paragraphs
 
+
+def sentence_extraction_for_page(filename, page_texts):
+    # Predefined descriptions for each of the 17 SDGs
+    sdg_descriptions = [
+        "No Poverty",
+        "Zero Hunger",
+        "Good Health and Well-being",
+        "Quality Education",
+        "Gender Equality",
+        "Clean Water and Sanitation",
+        "Affordable and Clean Energy",
+        "Decent Work and Economic Growth",
+        "Industry, Innovation, and Infrastructure",
+        "Reduced Inequality",
+        "Sustainable Cities and Communities",
+        "Responsible Consumption and Production",
+        "Climate Action",
+        "Life Below Water",
+        "Life on Land",
+        "Peace and Justice Strong Institutions",
+        "Partnerships to achieve the Goal"
+    ]
+
+    # Basic text cleaning
+    page_text = clean_text(page_texts)
+
+    # Tokenize the text into paragraphs
+    paragraphs = sent_tokenize(page_text)
+
+    # Combine SDG descriptions and paragraphs for vectorization
+    combined_texts = sdg_descriptions + paragraphs
+
+    # Vectorize the text using TF-IDF
+    vectorizer = TfidfVectorizer()
+    vectorized_texts = vectorizer.fit_transform(combined_texts)
+
+    # Dictionary to store the most relevant paragraph for each SDG
+    relevant_paragraphs = {}
+
+    # Calculate cosine similarity and find the most relevant paragraph for each SDG
+    for i, sdg in enumerate(sdg_descriptions, start=1):
+        sdg_vector = vectorized_texts[i - 1]
+        cos_similarities = cosine_similarity(sdg_vector, vectorized_texts[len(sdg_descriptions):])[0]
+        most_relevant_paragraph_idx = np.argmax(cos_similarities)
+        relevant_paragraphs[i] = paragraphs[most_relevant_paragraph_idx]
+
+    return relevant_paragraphs

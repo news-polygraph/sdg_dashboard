@@ -3,6 +3,7 @@ from flask import Flask, flash, request, redirect, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import json
+import threading
 from dotenv import load_dotenv
 
 from analysis.page_analysis.analyse_page import analyse_page
@@ -79,15 +80,16 @@ def create_app(test_config=None):
                     "analysis_data": analysis_data_default,
                 }
 
+                # TODO why do we append instead of overwriting? The file is saved in any case
                 # get current data from file
-                with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-                    reports = json.load(feedsjson)
-
-                reports.append(file_data)
+                # with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+                #     reports = json.load(feedsjson)
+                #
+                # reports.append(file_data)
 
                 # save dict as json
                 with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
-                    json.dump(reports, feedsjson)
+                    json.dump([file_data], feedsjson)
 
                 return {"status": "ok" }
 
@@ -145,7 +147,8 @@ def create_app(test_config=None):
             
             if filename:
 
-                analyse_page(filename, int(page_number)+1)
+                thread = threading.Thread(analyse_page(filename, int(page_number)+1))
+                thread.start()
 
                 with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
                     feeds = json.load(feedsjson)

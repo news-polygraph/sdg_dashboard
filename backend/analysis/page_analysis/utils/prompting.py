@@ -2,6 +2,7 @@
 import os
 from openai import OpenAI
 import json
+import requests
 
 
 def run_prompting_for_page(filename, page_texts):
@@ -50,54 +51,121 @@ def run_prompting_for_page(filename, page_texts):
 
 def run_prompting_for_file(filename, relevant_paragraphs):
 
-    client = OpenAI(
-        api_key=os.environ.get("OPENAI_API_KEY"),
-    )
+    api_url = os.environ.get("MISTRAL_API_URL")
 
     relevant_text = " ".join(relevant_paragraphs.values())
 
     prompt = "Analyze the given text from a company report and provide key facts categorized under emissions, resources, energy, waste, employees, and audits. Format the response as a JSON object with each category as a key and the key facts as the value. For example: { 'emissions': '<fact>', 'resources': '<fact>', 'energy': '<fact>', 'waste': '<fact>', 'employees': '<fact>', 'audits': '<fact>' }. The text: '"+relevant_text+"'"
 
     
-    try: 
         # response = client.chat.completions.create(
         #     model="gpt-3.5-turbo",
         #     messages=[{"role": "user", "content": prompt}],
         #     max_tokens= 200,
         # )
-        category_claims = json.loads(response.choices[0].message.content)
-        
-    except:
-       print("--no api calling--")
-       category_claims = {
-        "emissions": "extcept emissions",
-        "resources": "extcept resources",
-        "energy": "extcept energy",
-        "waste": "extcept waste",
-        "employees": "extcept employees",
-        "audit": "extcept audit"
-        }     
+    data = {
+        "inputs": prompt,
+        "parameters": {"max_new_tokens": 200}
+    }
+    headers = {
+        'Authorization': 'Bearer your_api_token',
+        'Content-Type': 'application/json'
+    }
+    try:
+        response = requests.post(api_url, json=data, headers=headers)
+        if response.status_code == 200:
+            print("Prompt", relevant_text)
+            print("Success", response.json()['generated_text'])
+        else:
+            print(f"Failed with status code: {response.status_code}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
+    # with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+    #   reports = json.load(feedsjson)
+    #
+    #    # add results for page of a certain report to the dict
+    # for report in reports:
+    #     if report["filename"] == filename:
+    #             data_page_level = report["sdg_data"]
+    #             pass
+    #
+    #
+    # # add amount of keywords to report data and save in json
+    # if "analysis_data" in report:
+    #     report["analysis_data"]["category_claims"] = category_claims
+    # else:
+    #     report["analysis_data"] = {"category_claims": category_claims}
+    #
+    # with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
+    #     json.dump(reports, feedsjson)
+
+
+def run_prompting_for_paragraphs(filename, paragraphs, page_number):
+    api_url = os.environ.get("MISTRAL_API_URL")
+
+    sdg_descriptions = [
+        "No Poverty",
+        "Zero Hunger",
+        "Good Health and Well-being",
+        "Quality Education",
+        "Gender Equality",
+        "Clean Water and Sanitation",
+        "Affordable and Clean Energy",
+        "Decent Work and Economic Growth",
+        "Industry, Innovation, and Infrastructure",
+        "Reduced Inequality",
+        "Sustainable Cities and Communities",
+        "Responsible Consumption and Production",
+        "Climate Action",
+        "Life Below Water",
+        "Life on Land",
+        "Peace and Justice Strong Institutions",
+        "Partnerships to achieve the Goal"
+    ]
+    llm_responses = {}
     with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
       reports = json.load(feedsjson)
-    
-       # add results for page of a certain report to the dict
-    for report in reports:
-        if report["filename"] == filename:
-                data_page_level = report["sdg_data"]
-                pass
 
+    for sdg_idx, paragraph in paragraphs.items():
+        sdg = sdg_descriptions[int(sdg_idx)-1]
+        prompt = f"""
+        Task: Analyze and contextualize the following paragraph from a sustainability report according to Sustainable Development Goal {sdg}.
 
-    # add amount of keywords to report data and save in json
-    if "analysis_data" in report:
-        report["analysis_data"]["category_claims"] = category_claims
-    else:
-        report["analysis_data"] = {"category_claims": category_claims}
+        Paragraph:
+        {paragraph}
 
+        In your analysis, please:
+
+        Explain how the paragraph aligns with SDG X: Identify the connections between the actions or themes in the paragraph and the key targets or indicators of the SDG.
+        Evaluate the impact: Assess the potential positive or negative impacts of the described actions or policies on achieving the targets of SDG X.
+        Provide contextual insights: Discuss the broader context of these actions, considering industry best practices, global trends, or challenges related to SDG X.
+        Suggest improvements: Offer recommendations or strategies that could further enhance alignment with the SDG or improve outcomes. 
+        """
+        data = {
+            "inputs": prompt,
+            "parameters": {"max_new_tokens": 200}
+        }
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        try:
+            response = requests.post(api_url, json=data, headers=headers)
+            if response.status_code == 200:
+                print("+++ Success +++")
+                print("Paragraph:", paragraph)
+                print("Response:", response.json()['generated_text'])
+                for report in reports:
+                    if report["filename"] == filename:
+                        report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["nl_explanation"] = response.json()['generated_text']
+                        break
+            else:
+                print(f"Failed with status code: {response.status_code}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
     with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
         json.dump(reports, feedsjson)
-
 
 
 def create_default_page_sdg_data():
