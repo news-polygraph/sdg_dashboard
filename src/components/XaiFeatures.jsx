@@ -22,7 +22,7 @@ class XaiFeatures extends Component {
       sdgActive !== null
         ? pageData[sdgActive]
         : { score: 0.1, factuality: 0.0, tense: 0.1, category: null }; // default values if no sdg is selected
-    const { score, factuality, tense, category, nl_explanation } = activeData;
+    const { score, factuality, tense, category, summary, classify, context } = activeData;
 
     return (
       <>
@@ -99,191 +99,196 @@ class XaiFeatures extends Component {
                     }
             `}
         </style>
-        <Container>
-          <div
-            style={{
-              margin: "30px 0",
-            }}
-          >
-            <div>Factuality</div>
-            <ProgressBar
-              now={Math.round(factuality * 100)}
-              label={`${Math.round(factuality * 100)}%`}
-              style={{
-                height: "25px",
-                backgroundColor: "#F7EFE5",
-                // color: "balck",
-              }}
-            />
-          </div>
-
-          {/* Tense */}
-
-          <div style={{ margin: "30px 0" }}>
-            <div>Tense</div>
-            <div style={{ position: "relative" }}>
-              <ProgressBar
-                now={Math.round(tense * 100)}
-                style={{
-                  height: "25px", // Set the height of the ProgressBar
-                  backgroundColor: "#F7EFE5",
-                }}
-              />
+          <Container>
               <div
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "25px", // Same height as the ProgressBar
-                  display: "flex",
-                  alignItems: "center", // Vertically center the content
-                  top: "0",
-                  left: "0",
-                  fontSize: "12px",
-                  color: "#343a40",
-                }}
-              >
-                <div
                   style={{
-                    width: "33.33%",
-                    textAlign: "center",
-                    zIndex: 2,
-                    color: tense < 0.2 ? "black" : "white",
+                      margin: "30px 0",
                   }}
-                >
-                  Future
-                </div>
-                <div
-                  style={{
-                    width: "33.33%",
-                    textAlign: "center",
-                    zIndex: 2,
-                    color: tense < 0.5 ? "black" : "white",
-                  }}
-                >
-                  Present
-                </div>
-                <div
-                  style={{
-                    width: "33.33%",
-                    textAlign: "center",
-                    zIndex: 2,
-                    color: tense < 0.7 ? "black" : "white",
-                  }}
-                >
-                  Past
-                </div>
+              >
+                  <div>Factuality</div>
+                  <ProgressBar
+                      now={Math.round(factuality * 100)}
+                      label={`${Math.round(factuality * 100)}%`}
+                      style={{
+                          height: "25px",
+                          backgroundColor: "#F7EFE5",
+                          // color: "balck",
+                      }}
+                  />
               </div>
-            </div>
-          </div>
 
-          {/* Category */}
+              {/* Tense */}
 
-          <div style={{ margin: "30px 0" }}>
-            <div>Category</div>
-            <div
-              style={{
-                display: "flex",
-                background: "#F7EFE5", // "#e9ecef", // Default background color
-                borderRadius: "7px",
-                fontSize: "12px",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  flexGrow: 1,
-                  padding: "2px 5px",
-                  margin: 0, // Ensure no margin between divs
-                  borderRadius: "5px 0 0 5px", // Only round the left corners of the first div
-                  background:
-                    category === "action" ? sdgActiveColor : "transparent",
-                  color: category === "action" ? "white" : "black",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Action
+              <div style={{margin: "30px 0"}}>
+                  <div>Tense</div>
+                  <div style={{position: "relative"}}>
+                      <ProgressBar
+                          now={Math.round(tense * 100)}
+                          style={{
+                              height: "25px", // Set the height of the ProgressBar
+                              backgroundColor: "#F7EFE5",
+                          }}
+                      />
+                      <div
+                          style={{
+                              position: "absolute",
+                              width: "100%",
+                              height: "25px", // Same height as the ProgressBar
+                              display: "flex",
+                              alignItems: "center", // Vertically center the content
+                              top: "0",
+                              left: "0",
+                              fontSize: "12px",
+                              color: "#343a40",
+                          }}
+                      >
+                          <div
+                              style={{
+                                  width: "33.33%",
+                                  textAlign: "center",
+                                  zIndex: 2,
+                                  color: tense < 0.2 ? "black" : "white",
+                              }}
+                          >
+                              Future
+                          </div>
+                          <div
+                              style={{
+                                  width: "33.33%",
+                                  textAlign: "center",
+                                  zIndex: 2,
+                                  color: tense < 0.5 ? "black" : "white",
+                              }}
+                          >
+                              Present
+                          </div>
+                          <div
+                              style={{
+                                  width: "33.33%",
+                                  textAlign: "center",
+                                  zIndex: 2,
+                                  color: tense < 0.7 ? "black" : "white",
+                              }}
+                          >
+                              Past
+                          </div>
+                      </div>
+                  </div>
               </div>
-              <div
-                style={{
-                  flexGrow: 1,
-                  padding: "2px 5px",
-                  margin: 0,
-                  background:
-                    category === "target" ? sdgActiveColor : "transparent",
-                  color: category === "target" ? "white" : "black",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Target
+
+              {/* Category */}
+
+              <div style={{margin: "30px 0"}}>
+                  <div>Impact Type</div>
+                  <div
+                      style={{
+                          display: "flex",
+                          background: "#F7EFE5", // "#e9ecef", // Default background color
+                          borderRadius: "7px",
+                          fontSize: "12px",
+                          overflow: "hidden",
+                      }}
+                  >
+                      <div
+                          style={{
+                              flexGrow: 1,
+                              padding: "2px 5px",
+                              margin: 0, // Ensure no margin between divs
+                              borderRadius: "5px 0 0 5px", // Only round the left corners of the first div
+                              background:
+                                  classify === "Act to avoid harm" ? sdgActiveColor : "transparent",
+                              color: classify === "Act to avoid harm" ? "white" : "black",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                          }}
+                      >
+                          <b>A</b>ct to avoid harm
+                      </div>
+                      <div
+                          style={{
+                              flexGrow: 1,
+                              padding: "2px 5px",
+                              margin: 0,
+                              background:
+                                  classify === "Benefit stakeholders" ? sdgActiveColor : "transparent",
+                              color: classify === "Benefit stakeholders" ? "white" : "black",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                          }}
+                      >
+                          <b>B</b>enefit stakeholders
+                      </div>
+                      <div
+                          style={{
+                              flexGrow: 1,
+                              padding: "2px 5px",
+                              margin: 0,
+                              background:
+                                  classify === "Contribute to solutions" ? sdgActiveColor : "transparent",
+                              color: classify === "Contribute to solutions" ? "white" : "black",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                          }}
+                      >
+                          <b>C</b>ontribute to solutions
+                      </div>
+                  </div>
               </div>
-              <div
-                style={{
-                  flexGrow: 1,
-                  padding: "2px 5px",
-                  margin: 0,
-                  background:
-                    category === "belief" ? sdgActiveColor : "transparent",
-                  color: category === "belief" ? "white" : "black",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Belief
+              <div style={{margin: "30px 0"}}>
+                  <div>Summary</div>
+                  <div
+                      style={{
+                          display: "flex",
+                          background: "#F7EFE5",
+                          borderRadius: "7px",
+                          fontSize: "12px",
+                          overflow: "hidden",
+                      }}
+                  >
+                      <div
+                          style={{
+                              padding: "10px",
+                          }}
+                      >
+                          {summary}
+                      </div>
+                  </div>
               </div>
-              <div
-                style={{
-                  flexGrow: 1,
-                  padding: "2px 5px",
-                  margin: 0,
-                  borderRadius: "0 5px 5px 0", // Only round the right corners of the last div
-                  background:
-                    category === "situation" ? sdgActiveColor : "transparent",
-                  color: category === "situation" ? "white" : "black",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Situation
+              <div style={{margin: "30px 0"}}>
+                  <div>Evaluation</div>
+                  <div
+                      style={{
+                          display: "flex",
+                          background: "#F7EFE5",
+                          borderRadius: "7px",
+                          fontSize: "12px",
+                          overflow: "hidden",
+                      }}
+                  >
+                      <div
+                          style={{
+                              padding: "10px",
+                          }}
+                      >
+                          {context}
+                      </div>
+                  </div>
               </div>
-            </div>
-          </div>
-          <div style={{ margin: "30px 0" }}>
-            <div>Natural Language Explanation</div>
-            <div
-              style={{
-                display: "flex",
-                background: "#F7EFE5",
-                borderRadius: "7px",
-                fontSize: "12px",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  padding: "10px",
-                }}
-              >
-                {nl_explanation}
-              </div>
-            </div>
-          </div>
-        </Container>
+          </Container>
       </>
     );
   }
 }
+
 XaiFeatures.defaultProps = {
-  sdgData: fileDataDefault.sdg_data,
+    sdgData: fileDataDefault.sdg_data,
 };
 XaiFeatures.propTypes = {
-  /* eslint-disable react/prop-types */
-  sdgData: PropTypes.any,
+    /* eslint-disable react/prop-types */
+    sdgData: PropTypes.any,
 };
 
 export default XaiFeatures;

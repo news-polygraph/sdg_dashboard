@@ -5,11 +5,10 @@ import random
 import pandas as pd
 import json
 
-from .utils.keyword_extraction import (get_keywords_per_sentence, get_keywords_page_level, combine_keywords_file_level,
-                                       read_keywords_single_page, combine_keywords_page_level)
+from .utils.keyword_extraction import get_keywords_per_sentence, get_keywords_page_level, read_keywords_single_page, combine_keywords_page_level
 from .utils.feature_extraction import extract_factuality, extract_tense
-from .utils.sentence_extraction import sentence_extraction, sentence_extraction_for_page
-from .utils.prompting import run_prompting_for_file, run_prompting_for_page, run_prompting_for_paragraphs
+from .utils.sentence_extraction import  sentence_extraction_for_page
+from .utils.prompting import summarize_paragraph, contextualize_paragraph
 
 
 def analyse_page(filename, page_number):
@@ -104,17 +103,24 @@ def analyse_page(filename, page_number):
 
 
         # # extract keywords on page level and combine keywords on file level
+        print("Getting keywords per page")
         get_keywords_page_level(filename)
+        print("Read keywords")
         page_text, sdg_data = read_keywords_single_page(filename, page_number)
         # combine_keywords_file_level(filename)
 
         # # extract relevant sentences on file level
+        print("Extract paragraph")
         relevant_paragraphs = sentence_extraction_for_page(filename, page_text)
+        print("Combine paragraphs with sdgs")
         paragraphs_with_keywords = combine_keywords_page_level(relevant_paragraphs, sdg_data)
         # print(paragraphs_with_keywords)
         # print("page_number: ", page_number)
         # print(relevant_paragraphs)
 
-        run_prompting_for_paragraphs(filename, paragraphs_with_keywords, page_number)
+        print("Summarize paragraph")
+        summarize_paragraph(filename, paragraphs_with_keywords, page_number)
+        print("Summarize paragraph")
+        contextualize_paragraph(filename, paragraphs_with_keywords, page_number)
         # run_prompting_for_file(filename, relevant_paragraphs)
         # run_prompting_for_page(filename, page_text)

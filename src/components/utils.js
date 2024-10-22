@@ -66,8 +66,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -82,8 +83,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -98,8 +100,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -114,8 +117,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -130,8 +134,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -146,8 +151,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -162,8 +168,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -178,8 +185,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -194,8 +202,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -210,8 +219,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -226,8 +236,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -242,8 +253,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -258,8 +270,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -274,8 +287,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -290,8 +304,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -306,8 +321,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -322,8 +338,9 @@ const fileDataDefault = {
         factuality: 0.6,
         tense: 0.2,
         category: "action",
-        nl_explanation:
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+        summary: "Generating summary...",
+        classify: "Generating classification...",
+        context: "Generating contextualization...",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },

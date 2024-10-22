@@ -1,217 +1,131 @@
-
 import os
 from openai import OpenAI
 import json
-import requests
+import concurrent.futures
 
-
-def run_prompting_for_page(filename, page_texts):
-
+def perform_api_request(prompts: tuple) -> str:
+    system_prompt, user_prompt = prompts
+    api_key = os.environ.get("LEMONFOX_API")
+    api_url = "https://api.lemonfox.ai/v1"
     client = OpenAI(
-        api_key=os.environ.get("OPENAI_API_KEY"),
+        api_key=api_key,
+        base_url=api_url,
     )
+    completion = client.chat.completions.create(
+        messages=[
+            {"role":"system", "content":system_prompt}, 
+            {"role":"user", "content":user_prompt}, 
 
-    with open('analysis/page_analysis/utils/prompting.py', 'r') as file:
-        page_prompt = file.read()
-
-    with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-        reports = json.load(feedsjson)
-        
-        # add results for page of a certain report to the dict
-        for report in reports:
-            if report["filename"] == filename:
-                    data_page_level = report["sdg_data"]
-                    pass
-
-    to_be_prompted = [1]
-    for page_idx, page_text in enumerate(page_texts):
-        
-        if page_idx in to_be_prompted:
-            prompt = page_prompt.replace("to_be_filled", page_text)
-
-            try: 
-                # response = client.chat.completions.create(
-                #     model="gpt-3.5-turbo",
-                #     messages=[{"role": "user", "content": prompt}],
-                # )
-                page_sdg_data = json.loads(response.choices[0].message.content)
-                report["sdg_data"][str(page_idx + 1)] = fill_nones(page_sdg_data)
-
-            except:
-                print("--no api calling--")
-                report["sdg_data"][str(page_idx + 1)] = create_default_page_sdg_data()    
-
-        else:
-            report["sdg_data"][str(page_idx + 1)] = create_default_page_sdg_data()
-
-    with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
-        json.dump(reports, feedsjson)
+        ],
+        model="mixtral-chat"
+    )
+    return completion.choices[0].message.content if completion.choices[0].message.content else ""
 
 
-
-def run_prompting_for_file(filename, relevant_paragraphs):
-
-    api_url = os.environ.get("MISTRAL_API_URL")
-
-    relevant_text = " ".join(relevant_paragraphs.values())
-
-    prompt = "Analyze the given text from a company report and provide key facts categorized under emissions, resources, energy, waste, employees, and audits. Format the response as a JSON object with each category as a key and the key facts as the value. For example: { 'emissions': '<fact>', 'resources': '<fact>', 'energy': '<fact>', 'waste': '<fact>', 'employees': '<fact>', 'audits': '<fact>' }. The text: '"+relevant_text+"'"
-
-    
-        # response = client.chat.completions.create(
-        #     model="gpt-3.5-turbo",
-        #     messages=[{"role": "user", "content": prompt}],
-        #     max_tokens= 200,
-        # )
-    data = {
-        "inputs": prompt,
-        "parameters": {"max_new_tokens": 200}
-    }
-    headers = {
-        'Authorization': 'Bearer your_api_token',
-        'Content-Type': 'application/json'
-    }
-    try:
-        response = requests.post(api_url, json=data, headers=headers)
-        if response.status_code == 200:
-            print("Prompt", relevant_text)
-            print("Success", response.json()['generated_text'])
-        else:
-            print(f"Failed with status code: {response.status_code}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-
-    # with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-    #   reports = json.load(feedsjson)
-    #
-    #    # add results for page of a certain report to the dict
-    # for report in reports:
-    #     if report["filename"] == filename:
-    #             data_page_level = report["sdg_data"]
-    #             pass
-    #
-    #
-    # # add amount of keywords to report data and save in json
-    # if "analysis_data" in report:
-    #     report["analysis_data"]["category_claims"] = category_claims
-    # else:
-    #     report["analysis_data"] = {"category_claims": category_claims}
-    #
-    # with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
-    #     json.dump(reports, feedsjson)
-
-
-def run_prompting_for_paragraphs(filename, paragraphs, page_number):
-    api_url = os.environ.get("MISTRAL_API_URL")
-
+def summarize_paragraph(filename, paragraphs, page_number):
     sdg_descriptions = [
-        "No Poverty",
-        "Zero Hunger",
-        "Good Health and Well-being",
-        "Quality Education",
-        "Gender Equality",
-        "Clean Water and Sanitation",
-        "Affordable and Clean Energy",
-        "Decent Work and Economic Growth",
-        "Industry, Innovation, and Infrastructure",
-        "Reduced Inequality",
-        "Sustainable Cities and Communities",
-        "Responsible Consumption and Production",
-        "Climate Action",
-        "Life Below Water",
-        "Life on Land",
-        "Peace and Justice Strong Institutions",
-        "Partnerships to achieve the Goal"
+        "End poverty in all its forms everywhere",
+        "End hunger, achieve food security and improved nutrition and promote sustainable agriculture",
+        "Ensure healthy lives and promote well-being for all at all ages",
+        "Ensure inclusive and equitable quality education and promote lifelong learning opportunities for all",
+        "Achieve gender equality and empower all women and girls",
+        "Ensure availability and sustainable management of water and sanitation for all",
+        "Ensure access to affordable, reliable, sustainable and modern energy for all",
+        "Promote sustained, inclusive and sustainable economic growth, full and productive employment and decent work for all",
+        "Build resilient infrastructure, promote inclusive and sustainable industrialization and foster innovation",
+        "Reduce inequality within and among countries",
+        "Make cities and human settlements inclusive, safe, resilient and sustainable",
+        "Ensure sustainable consumption and production patterns",
+        "Take urgent action to combat climate change and its impacts",
+        "Conserve and sustainably use the oceans, seas and marine resources for sustainable development",
+        "Protect, restore and promote sustainable use of terrestrial ecosystems, sustainably manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss",
+        "Promote peaceful and inclusive societies for sustainable development, provide access to justice for all and build effective, accountable and inclusive institutions at all levels",
+        "Strengthen the means of implementation and revitalize the Global Partnership for Sustainable Development"
     ]
-    llm_responses = {}
     with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
       reports = json.load(feedsjson)
 
     for sdg_idx, paragraph in paragraphs.items():
         sdg = sdg_descriptions[int(sdg_idx)-1]
-        prompt = f"""
-        Task: Analyze and contextualize the following paragraph from a sustainability report according to Sustainable Development Goal {sdg}.
-
-        Paragraph:
-        {paragraph}
-
-        In your analysis, please:
-
-        Explain how the paragraph aligns with SDG X: Identify the connections between the actions or themes in the paragraph and the key targets or indicators of the SDG.
-        Evaluate the impact: Assess the potential positive or negative impacts of the described actions or policies on achieving the targets of SDG X.
-        Provide contextual insights: Discuss the broader context of these actions, considering industry best practices, global trends, or challenges related to SDG X.
-        Suggest improvements: Offer recommendations or strategies that could further enhance alignment with the SDG or improve outcomes. 
+        summary_system_prompt = f"""
+        You are a analyst that has to write a single sentence summary about a report for his boss. 
         """
-        data = {
-            "inputs": prompt,
-            "parameters": {"max_new_tokens": 200}
-        }
-        headers = {
-            'Content-Type': 'application/json'
-        }
+        summary_prompt = f"""
+        The summary has to be as short as possible and focus on points concerning the SDG {sdg_idx} 
+        '{sdg}'. 
+        Report: {paragraph} 
+        Summary: 
+        """
+        classify_system_prompt = f"""
+        You are a robot that labels statements with categories.
+        """
+        classify_prompt = f"""
+        Classify the actions described in the following text in on of 3 categories. 
+        Act to avoid harm, Benefit stakeholders, Contribute to solutions.
+        
+        Text: We donate parts of our income to charities in the third world. 
+        Class: Contribute to solutions
+        
+        Text: We reduce our carbon emissions by 20 %.
+        Class: Act to avoid harm
+        
+        Text: I want our business to profit from sustainability.
+        Class: Benefit stakeholders 
+        
+        Text: {paragraph}  
+        Class: 
+        """
+        analyze_prompts = [(summary_system_prompt, summary_prompt), (classify_system_prompt, classify_prompt)]
         try:
-            response = requests.post(api_url, json=data, headers=headers)
-            if response.status_code == 200:
-                print("+++ Success +++")
-                print("Paragraph:", paragraph)
-                print("Response:", response.json()['generated_text'])
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                results = executor.map(perform_api_request, analyze_prompts)
+            for idx, response in enumerate(results):
                 for report in reports:
                     if report["filename"] == filename:
-                        report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["nl_explanation"] = response.json()['generated_text']
-                        break
-            else:
-                print(f"Failed with status code: {response.status_code}")
+                        if idx == 0:
+                            report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["summary"] = response
+                            break
+                        if idx == 1:
+                            report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["classify"] = response
+                            break
         except Exception as e:
             print(f"An error occurred: {e}")
     with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
         json.dump(reports, feedsjson)
 
 
-def create_default_page_sdg_data():
+def contextualize_paragraph(filename, paragraphs, page_number):
+    with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+        reports = json.load(feedsjson)
+    for sdg_idx,_ in paragraphs.items():
+        summary = ""
+        for report in reports:
+            if report["filename"] == filename:
+                summary = report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["summary"]
+        context_system_prompt = f"""
+        You are an analyst that has to evaluate an action taken by a company to contribute to solutions for to ensure 
+        access to affordable, reliable, sustainable and modern energy for all. Determine if the action is valuable and 
+        """        
+        context_prompt = f"""
+        explain thought process. Just provide an evaluation dont offer a new action. 
 
-    page_sdg_data = {}
-    for sdg in range(1,18):
-    
-        page_sdg_data[sdg] = {
-            "score": 0.1,
-            "factuality" : 0.6,
-            "tense" : 0.2,
-            "category" : "action",
-            "nl_explanation" :
-            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-            "keywords" : [
-            { "word": "Report", "char" : (5, 9) },
-            { "word" : "Company", "char" : (11, 20) },
-            ],
-            "sequences" : [
-            { "sequence": "systematically assessed", "char" : (5, 9) },
-            { "sequence" : "Coloplast has reached its 2020 targets", "char" : (5, 9) },
-            ],
-        }
-    
-    return page_sdg_data
+        Action:We compensate 10% of our fossil energy use by buying forest in canada.
+        Evaluation:10% is not much compared to other companies. 
+        Additionally buying a forest does not bring a new value to the environment. 
+        Therfore the action is not optimal.
 
+        Action:We invest 5% of our income into renewable energy sources, because we believe that green energy is 
+        the key to a green future.
+        Evaluation:Investing 5% of the total income is a significant step and renewable energy effectively stops 
+        emissions. Therefore the action is usefull.
 
-
-def fill_nones(page_sdg_data):
-
-    for sdg in range(1,18):
-    
-        if page_sdg_data[str(sdg)] == None:
-
-            page_sdg_data[str(sdg)] = {
-                "score": 0.0,
-                "factuality" : 0.0,
-                "tense" : 0.0,
-                "category" : None,
-                "nl_explanation" :
-                "No information present",
-                "keywords" : [
-                ],
-                "sequences" : [
-                ],
-            }
-    
-    return page_sdg_data
-
+        Action:{summary}
+        Evaluation: 
+        """
+        prompt = (context_system_prompt, context_prompt)
+        response = perform_api_request(prompt)
+        for report in reports:
+            if report["filename"] == filename:
+                report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["context"] = response
+    with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
+        json.dump(reports, feedsjson)

@@ -76,6 +76,7 @@ function Dashboard() {
         .then((res) => {
           // set Keywords to be shown in PdfViewer
           setFileData(res.data);
+          console.log(fileData)
         });
     }
   }, [pageNumber]);

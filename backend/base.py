@@ -109,15 +109,18 @@ def create_app(test_config=None):
     def get_initial_file_data(title):
         try:
 
+            filename = ""
             with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
                 feeds = json.load(feedsjson)
                 for report in feeds:
                     if report["title"] == title:
                         filename = report["filename"]
 
-            analyse_page(filename, 1)
-            analyse_page(filename, 2)
+            if filename:
+                analyse_page(filename, 1)
+                analyse_page(filename, 2)
 
+            file_data = {}
             with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
                 feeds = json.load(feedsjson)
                 for report in feeds:
@@ -125,7 +128,7 @@ def create_app(test_config=None):
                         file_data = report
 
 
-            if filename:
+            if file_data:
                 return file_data
             else:
                 return {"status": "no such file"}
@@ -138,7 +141,7 @@ def create_app(test_config=None):
     @app.route('/data/<title>/<page_number>')
     def get_file_data(title, page_number):
         # try:
-
+            filename=""
             with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
                 feeds = json.load(feedsjson)
                 for report in feeds:
@@ -147,9 +150,10 @@ def create_app(test_config=None):
             
             if filename:
 
-                thread = threading.Thread(analyse_page(filename, int(page_number)+1))
-                thread.start()
-
+                # thread = threading.Thread(analyse_page(filename, int(page_number)+1))
+                # thread.start()
+                analyse_page(filename, int(page_number) + 1)
+                file_data={}
                 with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
                     feeds = json.load(feedsjson)
                     for report in feeds:
@@ -157,7 +161,7 @@ def create_app(test_config=None):
                             file_data = report
 
                 
-                return file_data
+                return file_data if file_data else {"status": "could not read file data"}
             else:
                 return {"status": "no such file"}
     
