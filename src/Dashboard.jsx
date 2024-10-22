@@ -47,6 +47,7 @@ function Dashboard() {
       .then((res) => {
         // set Keywords to be shown in PdfViewer
         setFileData(res.data);
+        console.log("Data Initial:")
         console.log(fileData);
       });
     // get sdg data of first page
@@ -69,6 +70,7 @@ function Dashboard() {
 
   React.useEffect(() => {
     if (fileData.title != "default_title") {
+      console.log("New Page Number: ", pageNumber)
       axios
         .get(
           "http://localhost:3001/data/".concat(fileData.title, "/", pageNumber)
@@ -76,7 +78,6 @@ function Dashboard() {
         .then((res) => {
           // set Keywords to be shown in PdfViewer
           setFileData(res.data);
-          console.log(fileData)
         });
     }
   }, [pageNumber]);
@@ -87,6 +88,7 @@ function Dashboard() {
 
   // changes per page
   const pageData = fileData.sdg_data[pageNumber]; // data for XAI-Features
+  console.log(pageData)
   const numPages = Object.keys(fileData.sdg_data).length;
 
   const keywordsAllSet = new Set();
