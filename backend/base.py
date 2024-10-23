@@ -160,7 +160,6 @@ def create_app(test_config=None):
                         if report["title"] == title:
                             file_data = report
 
-                
                 return file_data if file_data else {"status": "could not read file data"}
             else:
                 return {"status": "no such file"}

@@ -80,7 +80,6 @@ def summarize_paragraph(filename, paragraphs, page_number):
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 results = executor.map(perform_api_request, analyze_prompts)
             for idx, response in enumerate(results):
-                print("=>  Response: " + response[:9])
                 for report in reports:
                     if report["filename"] == filename:
                         if idx == 0:
@@ -125,7 +124,6 @@ def contextualize_paragraph(filename, paragraphs, page_number):
         """
         prompt = (context_system_prompt, context_prompt)
         response = perform_api_request(prompt)
-        print("=>  Response: " + response[:9])
         for report in reports:
             if report["filename"] == filename:
                 report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["context"] = response

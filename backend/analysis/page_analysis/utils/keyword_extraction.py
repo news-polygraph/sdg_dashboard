@@ -32,24 +32,24 @@ def get_keywords_per_sentence(sentences):
 
 
 
-def get_keywords_page_level(filename):
+def get_keywords_page_level(filename, page_number):
 
-   # initialize list of strings to save the page text for GenAI
-   page_texts = []
+   # initialize list of strings to save the page text for GenAIpage_texts
+    page_texts = []
 
    # get first page
-   with fitz.open(filename) as doc:
+    with fitz.open(filename) as doc:
 
-      number_pages = doc.page_count
-      for page_number in range(number_pages):
+      # number_pages = doc.page_count
+      # for page_number in range(number_pages):
 
-         text = doc.load_page(page_number).get_text()
+        text = doc.load_page(page_number).get_text()
 
-         page_texts.append(text)
+        page_texts.append(text)
 
          # calculate single SDG scores
-         page_data = {}
-         for sdg, sdg_keywords in keywords.items():
+        page_data = {}
+        for sdg, sdg_keywords in keywords.items():
 
             sdg_keywords_splitted = sdg_keywords.split(", ")
             words = text.split()
@@ -60,16 +60,16 @@ def get_keywords_page_level(filename):
             # calculate score: amount of keywords * 0.1 and maximal 1
             score = round(np.clip(len(keywords_included)*0.1,0.,1.), 2)
             if score > 0 and score < 1:
-               score = score + round(random.uniform(0, 1)/10,2)
+                score = score + round(random.uniform(0, 1)/10,2)
 
             if score > 0:
-               factuality = random.uniform(0, 1)
-               tense = random.uniform(0, 1)
-               category = random.choice(["action", "target", "belief", "status"])
+                factuality = random.uniform(0, 1)
+                tense = random.uniform(0, 1)
+                category = random.choice(["action", "target", "belief", "status"])
             else:
-               factuality = 0
-               tense = 0
-               category = None
+                factuality = 0
+                tense = 0
+                category = None
 
 
             sdg_data = { "score": score,
@@ -83,21 +83,21 @@ def get_keywords_page_level(filename):
             page_data[sdg] = sdg_data
 
 
-         with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+        with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
             reports = json.load(feedsjson)
 
          # add results for page of a certain report to the dict
-         for report in reports:
+        for report in reports:
             if report["filename"] == filename:
-                  report["sdg_data"][int(page_number)+1] = page_data
-                  pass
+                report["sdg_data"][int(page_number)+1] = page_data
+                pass
 
 
-         with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
+        with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
             json.dump(reports, feedsjson)
 
    # give page text to main function to use it for GenAI in the next step
-   return page_texts
+   # return page_texts
 
 def read_keywords_single_page(filename, page_number):
 
