@@ -43,7 +43,7 @@ def get_keywords_page_level(filename, page_number):
       # number_pages = doc.page_count
       # for page_number in range(number_pages):
 
-        text = doc.load_page(page_number).get_text()
+        text = doc.load_page(page_number-1).get_text()
 
         page_texts.append(text)
 
@@ -102,7 +102,7 @@ def get_keywords_page_level(filename, page_number):
 def read_keywords_single_page(filename, page_number):
 
    with fitz.open(filename) as doc:
-      text = doc.load_page(page_number).get_text()
+      text = doc.load_page(page_number-1).get_text()
 
       # calculate single SDG scores
       page_data = {}

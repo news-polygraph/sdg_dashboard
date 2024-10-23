@@ -10,14 +10,6 @@ from .utils.feature_extraction import extract_factuality, extract_tense
 from .utils.sentence_extraction import  sentence_extraction_for_page
 from .utils.prompting import summarize_paragraph, contextualize_paragraph
 
-def print_current_page(filename, page_number):
-    if page_number == 3:
-        with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-            reports = json.load(feedsjson)
-            for report in reports:
-                if report["filename"] == filename:
-                    print(report["sdg_data"][f"{2}"])
-
 
 def analyse_page(filename, page_number):
     page_data = {}
@@ -25,7 +17,7 @@ def analyse_page(filename, page_number):
     
     # get text from page
     with fitz.open(filename) as doc:
-            text = doc.load_page(page_number).get_text()
+            text = doc.load_page(page_number-1).get_text()
 
 
     # split text in sentences
@@ -110,32 +102,18 @@ def analyse_page(filename, page_number):
 
 
     # # extract keywords on page level and combine keywords on file level
-    print(f"Page {page_number} - Step 0")
-    print_current_page(filename, page_number)
     get_keywords_page_level(filename, page_number)
-    print(f"Page {page_number} - Step 1")
-    print_current_page(filename, page_number)
     page_text, sdg_data = read_keywords_single_page(filename, page_number)
     # combine_keywords_file_level(filename)
 
     # # extract relevant sentences on file level
-    print(f"Page {page_number} - Step 2")
-    print_current_page(filename, page_number)
     relevant_paragraphs = sentence_extraction_for_page(filename, page_text)
-    print(f"Page {page_number} - Step 3")
-    print_current_page(filename, page_number)
     paragraphs_with_keywords = combine_keywords_page_level(relevant_paragraphs, sdg_data)
     # print(paragraphs_with_keywords)
     # print("page_number: ", page_number)
     # print(relevant_paragraphs)
 
-    print(f"Page {page_number} - Step 4")
-    print_current_page(filename, page_number)
     summarize_paragraph(filename, paragraphs_with_keywords, page_number)
-    print(f"Page {page_number} - Step 5")
-    print_current_page(filename, page_number)
     contextualize_paragraph(filename, paragraphs_with_keywords, page_number)
-    print(f"Page {page_number} - Step 6")
-    print_current_page(filename, page_number)
     # run_prompting_for_file(filename, relevant_paragraphs)
     # run_prompting_for_page(filename, page_text)
