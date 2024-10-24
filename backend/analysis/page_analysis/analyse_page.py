@@ -4,14 +4,18 @@ import numpy as np
 import random
 import pandas as pd
 import json
+from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor
 
 from .utils.keyword_extraction import get_keywords_per_sentence, get_keywords_page_level, read_keywords_single_page, combine_keywords_page_level
 from .utils.feature_extraction import extract_factuality, extract_tense
 from .utils.sentence_extraction import  sentence_extraction_for_page
 from .utils.prompting import summarize_paragraph, contextualize_paragraph
 
+MAX_THREADS = 32
 
 def analyse_page(filename, page_number):
+    print("1")
     page_data = {}
 
     
@@ -34,6 +38,7 @@ def analyse_page(filename, page_number):
     sdg_df["sdg_included"] = sdg_matrix.sum(axis=1)
 
     sdg_included_sentences = sdg_df[sdg_df["sdg_included"] > 0].copy()
+    print("2")
 
     # calcualte factuality and tense
     sdg_included_sentences["factuality"] = sdg_included_sentences["sentences"].apply(extract_factuality)
@@ -81,17 +86,21 @@ def analyse_page(filename, page_number):
                             "sequences": [],
                             }
 
-    with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-        reports = json.load(feedsjson)
+    print("3")
+    try:
+        with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
+            reports = json.load(feedsjson)
 
-    for report in reports:
-        if report["filename"] == filename:
-              report["sdg_data"][int(page_number)+1] = page_data
-              pass
-     
-     
-    with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
-            json.dump(reports, feedsjson)
+        for report in reports:
+            if report["filename"] == filename:
+                  report["sdg_data"][int(page_number)+1] = page_data
+                  pass
+         
+         
+        with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
+                json.dump(reports, feedsjson)
+    except Exception as e:
+        print(e)
 
 
 
@@ -106,14 +115,31 @@ def analyse_page(filename, page_number):
     page_text, sdg_data = read_keywords_single_page(filename, page_number)
     # combine_keywords_file_level(filename)
 
+    print("4")
     # # extract relevant sentences on file level
     relevant_paragraphs = sentence_extraction_for_page(filename, page_text)
     paragraphs_with_keywords = combine_keywords_page_level(relevant_paragraphs, sdg_data)
     # print(paragraphs_with_keywords)
     # print("page_number: ", page_number)
     # print(relevant_paragraphs)
-
     summarize_paragraph(filename, paragraphs_with_keywords, page_number)
     contextualize_paragraph(filename, paragraphs_with_keywords, page_number)
     # run_prompting_for_file(filename, relevant_paragraphs)
     # run_prompting_for_page(filename, page_text)
+
+def analyse_document(filename): 
+    num_pages = 0 
+    with fitz.open(filename) as doc:
+        num_pages = doc.page_count
+
+    print(f"Num Pages: {num_pages}")
+    
+    with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
+        futures = []
+        for page_number in tqdm(range(1, num_pages+1)):
+            future = executor.submit(analyse_page, filename, page_number)
+            futures.append(future)
+
+        executor.shutdown(wait=True) 
+    print("Everything done")
+        

@@ -6,7 +6,7 @@ import json
 import threading
 from dotenv import load_dotenv
 
-from analysis.page_analysis.analyse_page import analyse_page
+from analysis.page_analysis.analyse_page import analyse_page, analyse_document
 
 load_dotenv()
 
@@ -117,8 +117,7 @@ def create_app(test_config=None):
                         filename = report["filename"]
 
             if filename:
-                analyse_page(filename, 1)
-                analyse_page(filename, 2)
+                analyse_document(filename)
 
             file_data = {}
             with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:

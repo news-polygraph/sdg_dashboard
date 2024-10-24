@@ -1,7 +1,6 @@
 import os
 from openai import OpenAI
 import json
-import concurrent.futures
 
 def perform_api_request(prompts: tuple) -> str:
     system_prompt, user_prompt = prompts
@@ -75,11 +74,10 @@ def summarize_paragraph(filename, paragraphs, page_number):
         Text: {paragraph}  
         Class: 
         """
-        analyze_prompts = [(summary_system_prompt, summary_prompt), (classify_system_prompt, classify_prompt)]
+        analyse_prompts = [(summary_system_prompt, summary_prompt), (classify_system_prompt, classify_prompt)]
         try:
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                results = executor.map(perform_api_request, analyze_prompts)
-            for idx, response in enumerate(results):
+            for idx, prompt in enumerate(analyse_prompts):
+                response = perform_api_request(prompt)
                 for report in reports:
                     if report["filename"] == filename:
                         if idx == 0:

@@ -68,20 +68,6 @@ function Dashboard() {
     // }
   });
 
-  React.useEffect(() => {
-    if (fileData.title != "default_title") {
-      console.log("New Page Number: ", pageNumber)
-      axios
-        .get(
-          "http://localhost:3001/data/".concat(fileData.title, "/", pageNumber)
-        )
-        .then((res) => {
-          // set Keywords to be shown in PdfViewer
-          setFileData(res.data);
-        });
-    }
-  }, [pageNumber]);
-
   // filter sdgData to feed relevent attributes to child-components
   // changes per file
   const analysisData = fileData.analysis_data;
