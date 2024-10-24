@@ -12,6 +12,7 @@ from .utils.prompting import summarize_paragraph, contextualize_paragraph
 
 
 def analyse_page(filename, page_number):
+    print(f"Analysing - page {page_number}")
     page_data = {}
 
     
@@ -102,6 +103,7 @@ def analyse_page(filename, page_number):
 
 
     # # extract keywords on page level and combine keywords on file level
+    print(f"Extracting paragraphs - page {page_number}")
     get_keywords_page_level(filename, page_number)
     page_text, sdg_data = read_keywords_single_page(filename, page_number)
     # combine_keywords_file_level(filename)
@@ -113,6 +115,7 @@ def analyse_page(filename, page_number):
     # print("page_number: ", page_number)
     # print(relevant_paragraphs)
 
+    print(f"Performing requests to LLM - page {page_number}")
     summarize_paragraph(filename, paragraphs_with_keywords, page_number)
     contextualize_paragraph(filename, paragraphs_with_keywords, page_number)
     # run_prompting_for_file(filename, relevant_paragraphs)
