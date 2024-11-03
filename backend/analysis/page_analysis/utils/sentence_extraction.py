@@ -130,7 +130,7 @@ def sentence_extraction_for_page(filename, page_texts):
     relevant_paragraphs = {}
 
     # Calculate cosine similarity and find the most relevant paragraph for each SDG
-    for i, sdg in enumerate(sdg_descriptions, start=1):
+    for i, _ in enumerate(sdg_descriptions, start=1):
         sdg_vector = vectorized_texts[i - 1]
         cos_similarities = cosine_similarity(sdg_vector, vectorized_texts[len(sdg_descriptions):])[0]
         most_relevant_paragraph_idx = np.argmax(cos_similarities)

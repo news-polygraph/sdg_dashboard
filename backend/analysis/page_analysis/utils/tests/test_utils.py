@@ -1,5 +1,5 @@
 import unittest
-from utils.prompting import perform_api_request
+from ..prompting import perform_api_request
 
 class PromptingTest(unittest.TestCase):
 

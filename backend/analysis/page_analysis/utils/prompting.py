@@ -21,7 +21,7 @@ def perform_api_request(prompts: tuple) -> str:
     return completion.choices[0].message.content if completion.choices[0].message.content else ""
 
 
-def summarize_paragraph(filename, paragraphs, page_number):
+def summarize_paragraph(paragraphs, page_data):
     sdg_descriptions = [
         "End poverty in all its forms everywhere",
         "End hunger, achieve food security and improved nutrition and promote sustainable agriculture",
@@ -78,28 +78,22 @@ def summarize_paragraph(filename, paragraphs, page_number):
         try:
             for idx, prompt in enumerate(analyse_prompts):
                 response = perform_api_request(prompt)
-                for report in reports:
-                    if report["filename"] == filename:
-                        if idx == 0:
-                            report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["summary"] = response
-                            break
-                        if idx == 1:
-                            report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["classify"] = response
-                            break
+                if idx == 0:
+                    page_data[f"{sdg_idx}"]["summary"] = response
+                    break
+                if idx == 1:
+                    continue
+                    page_data[f"{sdg_idx}"]["classify"] = response
+                    break
         except Exception as e:
             print(f"An error occurred: {e}")
-    with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
-        json.dump(reports, feedsjson)
 
 
-def contextualize_paragraph(filename, paragraphs, page_number):
+def contextualize_paragraph(paragraphs, page_data):
     with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
         reports = json.load(feedsjson)
     for sdg_idx,_ in paragraphs.items():
-        summary = ""
-        for report in reports:
-            if report["filename"] == filename:
-                summary = report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["summary"]
+        summary = page_data[f"{sdg_idx}"]["summary"]
         context_system_prompt = f"""
         You are an analyst that has to evaluate an action taken by a company to contribute to solutions for to ensure 
         access to affordable, reliable, sustainable and modern energy for all. Determine if the action is valuable and 
@@ -122,8 +116,4 @@ def contextualize_paragraph(filename, paragraphs, page_number):
         """
         prompt = (context_system_prompt, context_prompt)
         response = perform_api_request(prompt)
-        for report in reports:
-            if report["filename"] == filename:
-                report["sdg_data"][f"{page_number}"][f"{sdg_idx}"]["context"] = response
-    with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
-        json.dump(reports, feedsjson)
+        page_data[f"{sdg_idx}"]["context"] = response
