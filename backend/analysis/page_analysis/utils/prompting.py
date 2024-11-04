@@ -1,8 +1,11 @@
 import os
+import logging
 from openai import OpenAI
-import json
 
-def perform_api_request(prompts: tuple) -> str:
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+def perform_api_request(prompts: tuple, max_tokens: int) -> str:
     system_prompt, user_prompt = prompts
     api_key = os.environ.get("LEMONFOX_API")
     api_url = "https://api.lemonfox.ai/v1"
@@ -16,7 +19,8 @@ def perform_api_request(prompts: tuple) -> str:
             {"role":"user", "content":user_prompt}, 
 
         ],
-        model="mixtral-chat"
+        model="mixtral-chat",
+        max_tokens=max_tokens
     )
     return completion.choices[0].message.content if completion.choices[0].message.content else ""
 
@@ -41,9 +45,6 @@ def summarize_paragraph(paragraphs, page_data):
         "Promote peaceful and inclusive societies for sustainable development, provide access to justice for all and build effective, accountable and inclusive institutions at all levels",
         "Strengthen the means of implementation and revitalize the Global Partnership for Sustainable Development"
     ]
-    with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-      reports = json.load(feedsjson)
-
     for sdg_idx, paragraph in paragraphs.items():
         sdg = sdg_descriptions[int(sdg_idx)-1]
         summary_system_prompt = f"""
@@ -77,29 +78,28 @@ def summarize_paragraph(paragraphs, page_data):
         analyse_prompts = [(summary_system_prompt, summary_prompt), (classify_system_prompt, classify_prompt)]
         try:
             for idx, prompt in enumerate(analyse_prompts):
-                response = perform_api_request(prompt)
+                max_tokens = 200 if idx==0 else 20
+                response = perform_api_request(prompt, max_tokens)
                 if idx == 0:
                     page_data[f"{sdg_idx}"]["summary"] = response
-                    break
-                if idx == 1:
                     continue
+                if idx == 1:
                     page_data[f"{sdg_idx}"]["classify"] = response
-                    break
+                    continue 
         except Exception as e:
             print(f"An error occurred: {e}")
 
 
 def contextualize_paragraph(paragraphs, page_data):
-    with open("file_data.json", mode='r', encoding='utf-8') as feedsjson:
-        reports = json.load(feedsjson)
     for sdg_idx,_ in paragraphs.items():
         summary = page_data[f"{sdg_idx}"]["summary"]
         context_system_prompt = f"""
         You are an analyst that has to evaluate an action taken by a company to contribute to solutions for to ensure 
-        access to affordable, reliable, sustainable and modern energy for all. Determine if the action is valuable and 
+        access to affordable, reliable, sustainable and modern energy for all.  
         """        
         context_prompt = f"""
-        explain thought process. Just provide an evaluation dont offer a new action. 
+        Determine if the action is valuable and explain thought process. Just provide an 
+        evaluation dont offer a new action. Keep your answer as short as possible.
 
         Action:We compensate 10% of our fossil energy use by buying forest in canada.
         Evaluation:10% is not much compared to other companies. 
@@ -115,5 +115,5 @@ def contextualize_paragraph(paragraphs, page_data):
         Evaluation: 
         """
         prompt = (context_system_prompt, context_prompt)
-        response = perform_api_request(prompt)
+        response = perform_api_request(prompt, 200)
         page_data[f"{sdg_idx}"]["context"] = response

@@ -1,16 +1,11 @@
 import fitz
-from nltk.tokenize import sent_tokenize
-import numpy as np
 import logging
-import random
-import pandas as pd
 import json
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from .utils.keyword_extraction import get_keywords_per_sentence, read_keywords_single_page, combine_keywords_page_level
-from .utils.feature_extraction import extract_factuality, extract_tense
-from .utils.sentence_extraction import  sentence_extraction_for_page
+from .utils.keyword_extraction import read_keywords_single_page, combine_keywords_page_level
+from .utils.sentence_extraction import sentence_extraction_for_page
 from .utils.prompting import summarize_paragraph, contextualize_paragraph
 
 MAX_THREADS = 32
@@ -20,23 +15,15 @@ logger.setLevel(logging.INFO)
 
 def analyse_page(filename, page_number):
     page_data = {}
-
-    
-    # get text from page
-    with fitz.open(filename) as doc:
-        text = doc.load_page(page_number-1).get_text()
     # read keywords
     page_text, page_data = read_keywords_single_page(filename, page_number)
 
-    # # extract relevant sentences on page level
     relevant_paragraphs = sentence_extraction_for_page(filename, page_text)
     paragraphs_with_keywords = combine_keywords_page_level(relevant_paragraphs, page_data)
-    # print(paragraphs_with_keywords)
-    # print("page_number: ", page_number)
-    # print(relevant_paragraphs)
     summarize_paragraph(paragraphs_with_keywords, page_data)
-    # contextualize_paragraph(paragraphs_with_keywords, page_data)
+    contextualize_paragraph(paragraphs_with_keywords, page_data)
 
+    logger.info(page_data)
     return page_data
 
 def analyse_document(filename): 
