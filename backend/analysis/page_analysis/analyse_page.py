@@ -21,9 +21,8 @@ def analyse_page(filename, page_number):
 
     relevant_paragraphs = sentence_extraction_for_page(filename, page_text)
     paragraphs_with_keywords = combine_keywords_page_level(relevant_paragraphs, page_data)
-    time.sleep(10)
-    # summarize_paragraph(paragraphs_with_keywords, page_data)
-    # contextualize_paragraph(paragraphs_with_keywords, page_data)
+    summarize_paragraph(paragraphs_with_keywords, page_data)
+    contextualize_paragraph(paragraphs_with_keywords, page_data)
 
     logger.info(page_data)
     return page_data
