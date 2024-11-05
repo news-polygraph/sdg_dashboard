@@ -38,10 +38,10 @@ class AnalysisTest(unittest.TestCase):
         logging.info("Running test_analyse_page")
         analyse_page(self.file_path, 7)
 
-    # def test_analyse_file(self):
-    #     logging.info("Running test_analyse_file")
-    #     analyse_document(self.file_path)
-    #     logging.info("Completed test_analyse_file")
+    def test_analyse_file(self):
+        logging.info("Running test_analyse_file")
+        analyse_document(self.file_path)
+        logging.info("Completed test_analyse_file")
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,6 @@
 import fitz
 import logging
+import time
 import json
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -20,8 +21,9 @@ def analyse_page(filename, page_number):
 
     relevant_paragraphs = sentence_extraction_for_page(filename, page_text)
     paragraphs_with_keywords = combine_keywords_page_level(relevant_paragraphs, page_data)
-    summarize_paragraph(paragraphs_with_keywords, page_data)
-    contextualize_paragraph(paragraphs_with_keywords, page_data)
+    time.sleep(10)
+    # summarize_paragraph(paragraphs_with_keywords, page_data)
+    # contextualize_paragraph(paragraphs_with_keywords, page_data)
 
     logger.info(page_data)
     return page_data
@@ -31,7 +33,6 @@ def analyse_document(filename):
     with fitz.open(filename) as doc:
         num_pages = doc.page_count
 
-    print(f"Num Pages: {num_pages}")
     
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         futures = []
@@ -44,7 +45,6 @@ def analyse_document(filename):
         for report in reports:
             if report["filename"] == filename:
                 for idx, future in enumerate(as_completed(futures)):
-                    logger.info(f"Terminated Page {idx+1}")
                     try:
                         result = future.result()
                         report["sdg_data"][f"{idx+1}"] = result       

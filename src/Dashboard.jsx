@@ -1,8 +1,9 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { Card, Container, Row, Col } from "react-bootstrap";
-
+import { grid } from 'ldrs';
+grid.register('loading-grid')
 import MainNavbar from "components/Navbars/MainNavbar";
 import UploadNavbar from "components/Navbars/UploadNavbar";
 import Footer from "components/Footer/Footer";
@@ -21,6 +22,7 @@ function Dashboard() {
   const [fileData, setFileData] = React.useState(fileDataDefault);
   const [sdgActive, setSdgActive] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
+  const [loading, setLoading] = useState(false);
   const cardColor = { backgroundColor: "#FFFBF5" };
 
   React.useEffect(() => {
@@ -41,7 +43,7 @@ function Dashboard() {
     //  use uploaded file and get sdg data from backend
     // set File to be shown in PdfViewer
     setFile(fileUploaded);
-
+    setLoading(true); // Start Loading animation  
     axios
       .get("http://localhost:3001/data_initial/".concat(fileUploadedTitle))
       .then((res) => {
@@ -49,8 +51,8 @@ function Dashboard() {
         setFileData(res.data);
         console.log("Data Initial:")
         console.log(fileData);
+        setLoading(false);
       });
-    // get sdg data of first page
   });
 
   const onPageChange = useCallback((newPageNumber) => {
@@ -121,11 +123,15 @@ function Dashboard() {
                     <Card.Title as="h4">XAI Features</Card.Title>
                   </Card.Header>
                   <Card.Body>
-                    <XaiFeatures
-                      sdgActive={sdgActive}
-                      pageData={pageData}
-                      setSdgActive={setSdgActive}
-                    />
+                    {loading ? ( 
+                      <loading-grid color="black"></loading-grid> 
+                    ):(
+                      <XaiFeatures
+                        sdgActive={sdgActive}
+                        pageData={pageData}
+                        setSdgActive={setSdgActive}
+                      />
+                    )}
                   </Card.Body>
                 </Card>
               </Col>
