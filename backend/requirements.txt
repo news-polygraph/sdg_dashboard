@@ -1,12 +1,12 @@
-flask
-flask_cors
-python-dotenv
-pandas
-PyMuPDF
-openai
-scikit-learn
-nltk
-debugpy
-pytest
-Flask-Testing
-spacy # pip install -U spacy
+Flask==3.0.0
+Flask-Cors==4.0.0
+python-dotenv==1.0.0
+pandas==2.1.3
+PyMuPDF==1.23.7
+openai==1.3.6
+scikit-learn==1.3.2
+nltk==3.8.1
+debugpy==1.8.0
+pytest==8.1.1
+Flask-Testing==0.8.1
+spacy==3.7.4
