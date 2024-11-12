@@ -1,8 +1,12 @@
 # start without docker
 
 start frontend: npm start
-start backend: python base.py
+start backend: 
+source venv/bin/activate
+python base.py
 
 # start within docker
 
 docker-compose up
+
+
