@@ -56,6 +56,35 @@ def create_app(test_config=None):
     def test():
         return "App is working!"
     
+    @app.route('/modules/all', methods=['GET'])
+    def get_modules():
+        # if full = true, return the entire data of all modules, else make it more lean and only return title + modulnummer
+        full = request.args.get('full', default=False, type=bool)
+        with open("all_modules.json", mode='r', encoding='utf-8') as feedsjson:
+            modules = json.load(feedsjson)
+
+        if full == True:
+            return modules
+        
+        l = []
+        for m in modules:
+            k = {}
+            k["modulnummer"] = m["modulinfos"]["modulnummer"]
+            k["titelde"] = m["modulinfos"]["titelde"]
+            k["titelen"] = m["modulinfos"]["titelen"]
+            l.append(k)
+        return l
+    
+    @app.route('/modules/<id>', methods=['GET'])
+    def get_module(id):
+        with open("all_modules.json", mode='r', encoding='utf-8') as feedsjson:
+            modules = json.load(feedsjson)
+
+        for m in modules:
+            if m["modulinfos"]["modulnummer"] == int(id):
+                return m
+        return []
+    
 
     @app.route('/upload', methods=['GET', 'POST'])
     def upload_file():

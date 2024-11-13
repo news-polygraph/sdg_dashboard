@@ -1,0 +1,42 @@
+[
+    {           
+        "modulinfos": {
+            "modulnummer": 10002,
+            "versionsnummer": 6,
+            "link": "https://moseskonto.tu-berlin.de/moses/modultransfersystem/bolognamodule/beschreibung/anzeigen.html?nummer=10002&version=6",
+            "titelde": "Digitale Signalverarbeitung (MSc-AKT 1-1) / (MA-SK 17) / (MA-DC WP3-16)",
+            "titelen": null,
+            "lernergebnissede": "Nach dem erfolgreichem Abschluss des Moduls können die Studierenden - Audiosignale mit Hilfe des Computer Algebra Systems MATLAB erzeugen und analysieren. - elementare Eigenschaften diskreter Systeme bestimmen. - das Verhalten diskreter Signale und Systeme im Zeitbereich und im Frequenzbereich analysieren. - dafür benötigte Transformationen (Fouriertransformation, z-Transformation) analytisch sowie numerisch unter Benutzung von MATLAB durchführen. - für Audio-Effekte und für die akustische Messtechnik wichtige Signalprozesse (Faltung, Schnelle Faltung, FFT, IFFT, STFFT) berechnen. - einfache digitale Filter (IIR, FIR) entwerfen.",
+            "lernergebnisseen": null,
+            "lehrinhaltede": "- Diskrete Signale und Systeme - Systemeigenschaften: Linearität, Zeitinvarianz, Kausalität, Stabilität - Diskrete Faltung - Zeitdiskrete Fouriertransformation - Amplitudengang, Phasengang, Gruppenlaufzeit - z-Transformation, Konvergenzbereich, Pol-Nullstellen-Darstellung - Inverse Filter, Minimalphasige Systeme - Digitale Fouriertransformation (DFT, FFT), Fensterung - Faltung im Frequenzbereich - Filterentwurf: Fenstermethode, IIR-Prototypen",
+            "lehrinhalteen": null
+        },
+        "sdgs": {
+
+        },
+        "editorinfos":{
+
+        },
+        "num_requested": 0
+    },
+    {
+        "modulinfos": {
+            "modulnummer": 10003,
+            "versionsnummer": 3,
+            "link": "https://moseskonto.tu-berlin.de/moses/modultransfersystem/bolognamodule/beschreibung/anzeigen.html?nummer=10003&version=3",
+            "titelde": "Deutsch als Zweitsprache (DaZ) - Grundlagenmodul",
+            "titelen": null,
+            "lernergebnissede": "- Umsetzung von Zweitspracherwerbstheorien in der Erziehungs- und Bildungsarbeit - Unterscheidung von DaZ als didaktischem Prinzip in allen Unterrichtsfächern und von DaZ in der Lehrgangsvariante in allen Schulstufen - Diagnostische Fähigkeiten zur Feststellung lernerspezifischer Entwicklungen und die Fähigkeit Diagnose und Förderung zu verzahnen - Kenntnisse über Prinzipien der Sprachaneignung und des Sprachgebrauchs im Fachunterricht - Kenntnisse über grammatische Besonderheiten der deutschen Sprache und ausgewählter Minderheitensprachen - Reflexion von Unterrichtskommunikation vor dem Hintergrund von Heterogenität -Kritische Auseinandersetzung mit DaZ- und Fachunterrichtsmaterialien hinsichtlich ihrer Einsatzmöglichkeiten Die Veranstaltung vermittelt: Fachkompetenz 30% Methodenkompetenz 40% Systemkompetenz 10% Sozialkompetenz 20% Lehrinhalte ",
+            "lernergebnisseen": null,
+            "lehrinhaltede": "- Theorien zum Erwerb des Deutschen als Zweitsprache - DaZ- und fachdidaktische Ansätze - DaZ-spezifische Diagnoseinstrumente für verschiedene Schulstufen sowie Feedbackverfahren zur Korrektur von Fehlern - Sprachaneignung (u.a. Hypothesenbildung, Monitoring, Transfer von sprachlichem Wissen) und Sprachgebrauch (Mündlichkeit und Schriftlichkeit, Fachsprachen verschiedener Unterrichtsfächer) - Lernergrammatiken für DaZ und ausgewählte Minderheitensprachen - DaZ- und Fachunterrichtsmaterialien - Binnendifferenzierung im Unterricht, um die schriftlichen und mündlichen Leistungen zu optimieren",
+            "lehrinhalteen": null
+        },
+        "sdgs": {
+
+        },
+        "editorinfos":{
+
+        },
+        "num_requested": 0
+    }
+]
