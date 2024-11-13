@@ -12,8 +12,15 @@ import XaiFeatures from "components/XaiFeatures";
 import PdfAnalysis from "components/PdfAnalysis";
 import { fileDataDefault } from "./components/utils.js";
 
-// react-bootstrap components
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
+console.log("REACT_APP_BACKEND_URL:");
+console.log(process.env.REACT_APP_BACKEND_URL);
+
+console.log("Dashboard.jsx:");
+console.log(backendUrl);
+
+// react-bootstrap components
 function Dashboard() {
   const location = useLocation();
   const mainPanel = React.useRef(null);
@@ -43,7 +50,7 @@ function Dashboard() {
     setFile(fileUploaded);
 
     axios
-      .get("http://localhost:3001/data_initial/".concat(fileUploadedTitle))
+      .get(`${backendUrl}/data_initial/`.concat(fileUploadedTitle))
       .then((res) => {
         // set Keywords to be shown in PdfViewer
         setFileData(res.data);
@@ -58,7 +65,7 @@ function Dashboard() {
     // if (fileData.title != "default_title") {
     //   axios
     //     .get(
-    //       "http://localhost:3001/data/".concat(fileData.title, "/", pageNumber)
+    //       `${backendUrl}/data/`.concat(fileData.title, "/", pageNumber)
     //     )
     //     .then((res) => {
     //       // set Keywords to be shown in PdfViewer
@@ -70,9 +77,7 @@ function Dashboard() {
   React.useEffect(() => {
     if (fileData.title != "default_title") {
       axios
-        .get(
-          "http://localhost:3001/data/".concat(fileData.title, "/", pageNumber)
-        )
+        .get(`${backendUrl}/data/`.concat(fileData.title, "/", pageNumber))
         .then((res) => {
           // set Keywords to be shown in PdfViewer
           setFileData(res.data);
@@ -129,7 +134,7 @@ function Dashboard() {
               <Col md="4">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">XAI Features</Card.Title>
+                    <Card.Title as="h4">SDGs</Card.Title>
                   </Card.Header>
                   <Card.Body>
                     <XaiFeatures
