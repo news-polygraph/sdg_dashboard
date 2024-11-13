@@ -4,8 +4,9 @@ to run Backend:
 
 1. Install python 3.9
 2. Create venv
-3. install requirements.txt
-4. run: python -m spacy download en_core_web_sm
+3. source venv/bin/activate
+4. install requirements.txt
+5. run: python -m spacy download en_core_web_sm
 
 -> start backend: python backend/base.py
 
