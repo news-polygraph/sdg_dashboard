@@ -4,10 +4,13 @@ services:
     build: ./backend # specify where the Dockerfile is
     ports:
       - "3001:3001" # [HOST_PORT]:[CONTAINER_PORT]
-      - "5678:5678" # Debugger port
 
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_BACKEND_URL: http://backend:3001 # <- within docker compose you can call a container with it's service name
     ports:
       - "8000:8000"
     depends_on:

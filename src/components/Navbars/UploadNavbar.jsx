@@ -6,6 +6,9 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { Button, Container } from "react-bootstrap";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
+console.log("Backend UploadNavbar:", backendUrl);
+
 class UploadNavbar extends Component {
   constructor(props) {
     super(props); // passes data to parent component
@@ -27,13 +30,18 @@ class UploadNavbar extends Component {
     formData.append("title", title);
     formData.append("file", file);
 
-    const result = await axios.post("http://localhost:3001/upload", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    if (result.data.status === "ok") {
-      console.log("Uploaded Successfully!!!");
-      // getPdf();
+    try {
+      const result = await axios.post(`${backendUrl}/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (result.data.status === "ok") {
+        console.log("Uploaded Successfully!!!");
+        // getPdf();
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
     }
+
     // request pdf and page data and show
     this.onSelectPdf(title, file);
   };

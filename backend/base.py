@@ -18,7 +18,8 @@ with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
 def create_app(test_config=None):
     # Create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    CORS(app)
+    # allow all origins
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     app.config.from_mapping(
         SECRET_KEY='super secret key',
@@ -49,12 +50,19 @@ def create_app(test_config=None):
         analysis_data_default = json.load(file)
 
 
+
+    print("!! Code is runnning !!")
+    # A simple test route to confirm the app is running
+    @app.route('/test')
+    def test():
+        return "App is working!"
+    
+
     @app.route('/upload', methods=['GET', 'POST'])
     def upload_file():
         
-        print("File is in Backend")
-
         if request.method == 'POST':
+            print("File is in Backend")
             # check if the post request has the file part
             if 'file' not in request.files:
                 flash('No file part')
