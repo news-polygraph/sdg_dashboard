@@ -18,5 +18,5 @@ EXPOSE 3001
 ENV NAME World
 
 # Run app.py when the container launches
-# CMD ["python", "base.py"]
-CMD ["python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "--wait-for-client", "base.py"]
+CMD ["python", "base.py"]
+# CMD ["python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "--wait-for-client", "base.py"]

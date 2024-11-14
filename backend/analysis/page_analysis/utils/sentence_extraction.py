@@ -133,7 +133,12 @@ def sentence_extraction_for_page(filename, page_texts):
     for i, _ in enumerate(sdg_descriptions, start=1):
         sdg_vector = vectorized_texts[i - 1]
         cos_similarities = cosine_similarity(sdg_vector, vectorized_texts[len(sdg_descriptions):])[0]
-        most_relevant_paragraph_idx = np.argmax(cos_similarities)
-        relevant_paragraphs[i] = paragraphs[most_relevant_paragraph_idx]
+        match_idx = np.argmax(cos_similarities)
+        if len(paragraphs) <= 3:
+            relevant_paragraphs[i] = " ".join(paragraphs)
+        elif len(paragraphs) == (match_idx + 1):
+            relevant_paragraphs[i] = " ".join(paragraphs[-3:])
+        else:
+            relevant_paragraphs[i] = " ".join(paragraphs[match_idx-1:match_idx+2])
 
     return relevant_paragraphs

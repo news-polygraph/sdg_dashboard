@@ -18,14 +18,12 @@ def analyse_page(filename, page_number):
     page_data = {}
     # read keywords
     page_text, page_data = read_keywords_single_page(filename, page_number)
-
     relevant_paragraphs = sentence_extraction_for_page(filename, page_text)
     paragraphs_with_keywords = combine_keywords_page_level(relevant_paragraphs, page_data)
     summarize_paragraph(paragraphs_with_keywords, page_data)
     contextualize_paragraph(paragraphs_with_keywords, page_data)
 
-    logger.info(page_data)
-    return page_data
+    return page_data, page_number
 
 def analyse_document(filename): 
     num_pages = 0 
@@ -45,8 +43,8 @@ def analyse_document(filename):
             if report["filename"] == filename:
                 for idx, future in enumerate(as_completed(futures)):
                     try:
-                        result = future.result()
-                        report["sdg_data"][f"{idx+1}"] = result       
+                        page_data, page_number = future.result()
+                        report["sdg_data"][f"{page_number}"] = page_data
                     except Exception as e:
                         logger.info(f"Failed with error: {e}")
         with open("file_data.json", mode="w", encoding="utf-8") as feedsjson:

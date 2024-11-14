@@ -36,7 +36,7 @@ class AnalysisTest(unittest.TestCase):
 
     def test_analyse_page(self):
         logging.info("Running test_analyse_page")
-        analyse_page(self.file_path, 7)
+        analyse_page(self.file_path, 19)
 
     def test_analyse_file(self):
         logging.info("Running test_analyse_file")
