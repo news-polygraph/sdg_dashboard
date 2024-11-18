@@ -5,6 +5,7 @@ import { Card, Container, Row, Col } from "react-bootstrap";
 
 import MainNavbar from "components/Navbars/MainNavbar";
 import UploadNavbar from "components/Navbars/UploadNavbar";
+import ChooseModule from "components/Navbars/ChooseModule.jsx";
 import Footer from "components/Footer/Footer";
 
 import PdfViewer from "components/PdfViewer";
@@ -109,13 +110,16 @@ function Dashboard() {
     <div className="wrapper">
       <div ref={mainPanel}>
         <MainNavbar />
-        <UploadNavbar onSelectPdf={onSelectPdf} />
+        {pageState==1?(<UploadNavbar onSelectPdf={onSelectPdf} />):(
+          <ChooseModule></ChooseModule>
+        )}
         <div className="content">
           <Container fluid>
             <Row>
+            {pageState==1?(
               <Col md="8">
                 <Card style={cardColor}>
-                  <Card.Header style={cardColor}>
+                  (<Card.Header style={cardColor}>
                     <Card.Title as="h4">{fileData.title}</Card.Title>
                   </Card.Header>
                   <Card.Body>
@@ -131,8 +135,8 @@ function Dashboard() {
                     />
                   </Card.Body>
                 </Card>
-              </Col>
-              <Col md="4">
+              </Col>):(null)}
+              {pageState==1?(<Col md="4">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
                     <Card.Title as="h4">SDGs</Card.Title>
@@ -145,7 +149,21 @@ function Dashboard() {
                     />
                   </Card.Body>
                 </Card>
-              </Col>
+              </Col>):
+              (<Col md="12">
+                <Card style={cardColor}>
+                  <Card.Header style={cardColor}>
+                    <Card.Title as="h4">SDGs</Card.Title>
+                  </Card.Header>
+                  <Card.Body>
+                    <XaiFeatures
+                      sdgActive={sdgActive}
+                      pageData={pageData}
+                      setSdgActive={setSdgActive}
+                    />
+                  </Card.Body>
+                </Card>
+              </Col>)}
             </Row>
             <Row>
               <Col>
