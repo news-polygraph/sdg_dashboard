@@ -29,6 +29,7 @@ function Dashboard() {
   const [sdgActive, setSdgActive] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
+  const pageState = 0;//depending on this state cards are shown or not
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
