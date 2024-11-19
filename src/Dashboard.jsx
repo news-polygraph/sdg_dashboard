@@ -13,6 +13,8 @@ import XaiFeatures from "components/XaiFeatures";
 import PdfAnalysis from "components/PdfAnalysis";
 import { fileDataDefault } from "./components/utils.js";
 
+import { useState } from 'react';
+
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
 console.log("REACT_APP_BACKEND_URL:");
@@ -30,7 +32,9 @@ function Dashboard() {
   const [sdgActive, setSdgActive] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
-  const pageState = 0;//depending on this state cards are shown or not
+
+  //page state
+  const [pageState, setPageState] = useState(0);
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -109,7 +113,12 @@ function Dashboard() {
   return (
     <div className="wrapper">
       <div ref={mainPanel}>
-        <MainNavbar />
+        <MainNavbar
+          dashboardState={pageState}
+          changeDashboardState={(newState)=>
+            setPageState(newState)
+          }
+        />
         {pageState==1?(<UploadNavbar onSelectPdf={onSelectPdf} />):(
           <ChooseModule></ChooseModule>
         )}
