@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Dropdown } from "react-bootstrap";
+import { Col, Container, Dropdown, Row } from "react-bootstrap";
 import axios from "axios";
 
 function ChooseModule() {
@@ -37,6 +37,7 @@ function ChooseModule() {
 
   return (
     <Container fluid>
+      <Row>
         <Dropdown>
           <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
             Choose Module
@@ -53,6 +54,18 @@ function ChooseModule() {
             ))}
           </Dropdown.Menu>
         </Dropdown>
+      </Row>
+      <Container fluid>
+        <Row>
+          <Col lg={2}>
+            <Row>Modultitel: Lustiger Modultitel</Row>
+            <Row>ID: #03854094</Row>
+          </Col>
+          <Col lg={8}>
+              Moduledesription
+          </Col>
+        </Row>
+        </Container>
     </Container>
   );
 }

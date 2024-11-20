@@ -1,11 +1,11 @@
 import React, { useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { Card, Container, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col, CardBody } from "react-bootstrap";
 
 import MainNavbar from "components/Navbars/MainNavbar";
 import UploadNavbar from "components/Navbars/UploadNavbar";
-import ChooseModule from "components/Navbars/ChooseModule.jsx";
+import ChooseModule from "components/ChooseModule.jsx";
 import Footer from "components/Footer/Footer";
 
 import PdfViewer from "components/PdfViewer";
@@ -123,16 +123,26 @@ function Dashboard() {
             }
           }}
         />
-        {pageState==1?(<UploadNavbar onSelectPdf={onSelectPdf} />):(
-          <ChooseModule></ChooseModule>
-        )}
+        
         <div className="content">
+          <Container fluid>
+            {pageState==1?(<UploadNavbar onSelectPdf={onSelectPdf} />):(
+              <Card style={cardColor}>
+                <Card.Header style={cardColor}>
+                  <Card.Title as="h4">Choose module and send request</Card.Title>
+                </Card.Header>
+                <Card.Body>
+                  <ChooseModule></ChooseModule>
+                </Card.Body>
+              </Card>
+            )}
+          </Container>
           <Container fluid>
             <Row>
             {pageState==1?(
               <Col md="8">
                 <Card style={cardColor}>
-                  (<Card.Header style={cardColor}>
+                  <Card.Header style={cardColor}>
                     <Card.Title as="h4">{fileData.title}</Card.Title>
                   </Card.Header>
                   <Card.Body>
