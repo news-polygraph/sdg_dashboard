@@ -37,25 +37,22 @@ function ChooseModule() {
 
   return (
     <Container fluid>
-      <Dropdown>
-        <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
-          Choose Module
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          <Dropdown.Header>Choose Module</Dropdown.Header>
-          {/* Dropdown-Elemente */}
-          {modules.map((module, index) => (
-            <Dropdown.Item 
-              key={index}
-              eventKey={index}
-              onClick={() => {
+        <Dropdown>
+          <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
+            Choose Module
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Header>Choose Module</Dropdown.Header>
+            {/* Dropdown-Elemente */}
+            {modules.map((module, index) => (
+              <Dropdown.Item key={index} eventKey={index} onClick={() => {
                 chooseModule(module);
               }}>
-              {module.titelde} / {module.titelen}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
+                {module.titelde} / {module.titelen}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
     </Container>
   );
 }
