@@ -14,6 +14,7 @@ import PdfAnalysis from "components/PdfAnalysis";
 import { fileDataDefault } from "./components/utils.js";
 
 import { useState } from 'react';
+import OldXaiFeatures from "components/OldXaiFeatures.jsx";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
@@ -168,11 +169,17 @@ function Dashboard() {
                     <Card.Title as="h4">SDGs</Card.Title>
                   </Card.Header>
                   <Card.Body>
+                  {pageState==1?
+                    <OldXaiFeatures
+                    sdgActive={sdgActive}
+                    pageData={pageData}
+                    setSdgActive={setSdgActive}
+                    />:
                     <XaiFeatures
                       sdgActive={sdgActive}
                       pageData={pageData}
                       setSdgActive={setSdgActive}
-                    />
+                    />}
                   </Card.Body>
                 </Card>
               </Col>)}
