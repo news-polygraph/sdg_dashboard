@@ -6,7 +6,7 @@ import { VictoryPie, VictoryLabel } from "victory";
 import PropTypes from "prop-types";
 import { sdgIcons, sdgColors, fileDataDefault } from "./utils.js";
 
-class XaiFeatures extends Component {
+class OldXaiFeatures extends Component {
   constructor(props) {
     super(props);
     const { setSdgActive } = this.props;
@@ -277,14 +277,14 @@ class XaiFeatures extends Component {
     );
   }
 }
-XaiFeatures.defaultProps = {
+OldXaiFeatures.defaultProps = {
   sdgData: fileDataDefault.sdg_data,
 };
-XaiFeatures.propTypes = {
+OldXaiFeatures.propTypes = {
   /* eslint-disable react/prop-types */
   sdgData: PropTypes.any,
 };
 
-export default XaiFeatures;
+export default OldXaiFeatures;
 
 
