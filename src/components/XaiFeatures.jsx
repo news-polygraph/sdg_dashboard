@@ -31,30 +31,39 @@ class XaiFeatures extends Component {
           style={{ maxWidth: "600px" }}
         >
           <Row>
-            {sdgIcons.map(({ key, sdgIcon }) => (
-              <Col md={4} lg={3} xl={2} key={key} className="p-0">
-                <img
-                  className="sdgIcon img-fluid"
-                  src={sdgIcon}
-                  key={key}
-                  sdgId={key}
-                  alt={"sdg_icon_".concat(key)}
-                  style={{
-                    objectFit: "contain",
-                    paddingLeft: "0px", // remove style
-                    filter:
-                      key === sdgActive
-                        ? "grayscale(0%)" // if sdg is selected normal color
-                        : pageData[key].score > 0
-                          ? "grayscale(50%)" // if sdg has a positive score but not selected less color intensity
-                          : "grayscale(100%)", // if score is 0 and not selected show black&white icon
-                  }}
-                  onMouseEnter={() => this.setSdgActive(key)}
-                  onMouseLeave={() => this.setSdgActive(null)}
-                />
-              </Col>
-              //
-            ))}
+            <Col lg={8}>
+              <Row>
+              {sdgIcons.map(({ key, sdgIcon }) => (
+                <Col md={4} lg={3} xl={2} key={key} className="p-0">
+                  <img
+                    className="sdgIcon img-fluid"
+                    src={sdgIcon}
+                    key={key}
+                    sdgId={key}
+                    alt={"sdg_icon_".concat(key)}
+                    style={{
+                      objectFit: "contain",
+                      paddingLeft: "0px", // remove style
+                      filter:
+                        key === sdgActive
+                          ? "grayscale(0%)" // if sdg is selected normal color
+                          : pageData[key].score > 0
+                            ? "grayscale(50%)" // if sdg has a positive score but not selected less color intensity
+                            : "grayscale(100%)", // if score is 0 and not selected show black&white icon
+                    }}
+                    onMouseEnter={() => this.setSdgActive(key)}
+                    onMouseLeave={() => this.setSdgActive(null)}
+                  />
+                  
+                </Col>
+              ))}
+              </Row>
+            </Col>
+            {/*display additional information (definition) about the sdg which ist hovered*/}
+            <Col>
+            <h3>SDG Definition:</h3>
+            
+            </Col>  
           </Row>
         </Container>
 
