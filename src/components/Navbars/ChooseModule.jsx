@@ -16,9 +16,9 @@ function ChooseModule() {
       axios
         .get(`${backendUrl}/modules/all`)
         .then((result) =>{  
-          setModules(result)//save result modules in modules
+          setModules(result.data)//save result modules in modules
         }); 
-      console.log(result);
+      console.log(result.data);
     } catch (error) {
       console.error("Fehler beim Abrufen der Module:", error);
     }
@@ -28,20 +28,20 @@ function ChooseModule() {
 
   return (
     <Container fluid>
-      <Dropdown>
-        <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
-          Choose Module
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          <Dropdown.Header>Choose Module</Dropdown.Header>
-          {/* Dropdown-Elemente */}
-          {modules.map((module, index) => (
-            <Dropdown.Item key={index} eventKey={index}>
-              {module.titelde} / {module.titelen}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
+        <Dropdown>
+          <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
+            Choose Module
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Header>Choose Module</Dropdown.Header>
+            {/* Dropdown-Elemente */}
+            {modules.map((module, index) => (
+              <Dropdown.Item key={index} eventKey={index}>
+                {module.titelde} / {module.titelen}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
     </Container>
   );
 }
