@@ -115,9 +115,12 @@ function Dashboard() {
       <div ref={mainPanel}>
         <MainNavbar
           dashboardState={pageState}
-          changeDashboardState={(newState)=>
-            setPageState(newState)
-          }
+          changeDashboardState={(newState)=>{
+            if (newState !== pageState) {
+              console.log("Changing dashboardState to:", newState);
+              setPageState(newState);
+            }
+          }}
         />
         {pageState==1?(<UploadNavbar onSelectPdf={onSelectPdf} />):(
           <ChooseModule></ChooseModule>

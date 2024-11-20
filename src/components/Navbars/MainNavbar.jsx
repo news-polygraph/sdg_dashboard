@@ -21,7 +21,7 @@ function MainNavbar({
               </Navbar.Brand>
             </Col>
             <Col xs="auto">
-              <Button variant="outline-secondary" onclick={changeDashboardState(dashboardState==0?1:0)}>Change Mode</Button>
+              <Button variant="outline-secondary" onClick={() => changeDashboardState(dashboardState === 0 ? 1 : 0)}>Change Mode</Button>
             </Col>
           </Row>
       </Container>
