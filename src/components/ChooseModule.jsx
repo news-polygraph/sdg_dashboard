@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Dropdown, Row } from "react-bootstrap";
+import { Col, Container, Dropdown, Row, Card } from "react-bootstrap";
 import axios from "axios";
 
 function ChooseModule() {
@@ -55,17 +55,26 @@ function ChooseModule() {
           </Dropdown.Menu>
         </Dropdown>
       </Row>
-      <Container fluid>
+      <div className="content">
         <Row>
           <Col lg={2}>
-            <Row>Modultitel: Lustiger Modultitel</Row>
-            <Row>ID: #03854094</Row>
+            <Row><Card>
+              <Card.Header>Modultitel</Card.Header>
+              <Card.Body>Lustiger Modultitel</Card.Body>
+              </Card></Row>
+            <Row><Card>
+              <Card.Header>ID</Card.Header>
+              <Card.Body>#03854094</Card.Body>
+            </Card></Row>
           </Col>
           <Col lg={8}>
-              Moduledesription
+              <Card>
+                <Card.Header>Moduledesription</Card.Header>
+                <Card.Body>Nach dem erfolgreichem Abschluss des Moduls können die Studierenden - Audiosignale mit Hilfe des Computer Algebra Systems MATLAB erzeugen und analysieren. - elementare Eigenschaften diskreter Systeme bestimmen. - das Verhalten diskreter Signale und Systeme im Zeitbereich und im Frequenzbereich analysieren. - dafür benötigte Transformationen (Fouriertransformation, z-Transformation) analytisch sowie numerisch unter Benutzung von MATLAB durchführen. - für Audio-Effekte und für die akustische Messtechnik wichtige Signalprozesse (Faltung, Schnelle Faltung, FFT, IFFT, STFFT) berechnen. - einfache digitale Filter (IIR, FIR) entwerfen.</Card.Body>
+              </Card>
           </Col>
         </Row>
-        </Container>
+        </div>
     </Container>
   );
 }
