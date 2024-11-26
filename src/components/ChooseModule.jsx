@@ -5,7 +5,8 @@ import axios from "axios";
 function ChooseModule() {
   // Zustand für die Module
   const [modules, setModules] = useState([]);
-  const [moduleChosen, setModuleChosen] = useState({});
+  const [moduleChosen, setModuleChosen] = useState();
+  const [languageModuleInfo, setLanguage] = useState("");
 
   // URL des Backends
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
@@ -17,10 +18,10 @@ function ChooseModule() {
       axios
         .get(`${backendUrl}/modules/all`)
         .then((result) =>{  
-          setModules(result)//save result modules in modules
           setModules(result.data)//save result modules in modules
+          console.log(result.data);
         }); 
-      console.log(result);
+      
     } catch (error) {
       console.error("Fehler beim Abrufen der Module:", error);
     }
@@ -33,10 +34,18 @@ function ChooseModule() {
         .get(`${backendUrl}/modules/${module.modulnummer}`)
         .then((result) =>{  
           setModuleChosen(result.data);
+          console.log("ModuleChosen: " + result.data);
         });
+        
     } catch (error) {
       console.error("Fehler beim Auswählen eines Moduls:", error);
     }
+  }
+
+  const changeLanguage = (language) =>{
+    setLanguage(language);
+    console.log("changed language to "+ language)
+
   }
 
   return (
@@ -58,27 +67,67 @@ function ChooseModule() {
             ))}
           </Dropdown.Menu>
         </Dropdown>
+        <Dropdown>
+          <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
+            Choose Language 
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Header>Choose Module</Dropdown.Header>
+            {/* Dropdown-Elemente */}
+            <Dropdown.Item  onClick={() => {
+              changeLanguage("deutsch");
+            }}>
+              Deutsch
+            </Dropdown.Item>
+            <Dropdown.Item  onClick={() => {
+              changeLanguage("english");
+            }}>
+              English
+            </Dropdown.Item>
+           
+          </Dropdown.Menu>
+        </Dropdown>
       </Row>
+      {moduleChosen?
       <div className="content">
         <Row>
-          <Col lg={2}>
+          <Col lg={4}>
             <Row><Card>
               <Card.Header>Modultitel</Card.Header>
-              <Card.Body>Lustiger Modultitel</Card.Body>
+              <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.titelde || "Kein Titel verfügbar" ):(moduleChosen?.modulinfos?.titelen || "no title available" )}</Card.Body>
               </Card></Row>
             <Row><Card>
               <Card.Header>ID</Card.Header>
-              <Card.Body>#03854094</Card.Body>
+              <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.modulnummer || "Keine ID verfügbar"):(moduleChosen?.modulinfos?.modulnummer || "no ID available")}</Card.Body>
             </Card></Row>
           </Col>
           <Col lg={8}>
               <Card>
                 <Card.Header>Moduledesription</Card.Header>
-                <Card.Body>Nach dem erfolgreichem Abschluss des Moduls können die Studierenden - Audiosignale mit Hilfe des Computer Algebra Systems MATLAB erzeugen und analysieren. - elementare Eigenschaften diskreter Systeme bestimmen. - das Verhalten diskreter Signale und Systeme im Zeitbereich und im Frequenzbereich analysieren. - dafür benötigte Transformationen (Fouriertransformation, z-Transformation) analytisch sowie numerisch unter Benutzung von MATLAB durchführen. - für Audio-Effekte und für die akustische Messtechnik wichtige Signalprozesse (Faltung, Schnelle Faltung, FFT, IFFT, STFFT) berechnen. - einfache digitale Filter (IIR, FIR) entwerfen.</Card.Body>
+                <Card.Body>
+                  {languageModuleInfo=="deutsch"?
+                    <div>
+                      <p>Lehrinhalte</p>
+                      {moduleChosen?.modulinfos?.lehrinhaltede || "Keine lehrinhalte verfügbar"}
+                      <p></p>
+                      <p>Lernergebnisse</p>
+                      <p></p>
+                      {moduleChosen?.modulinfos?.lehrnergebnissede || "Keine lernergebnisse verfügbar"}
+                    </div>
+                   :
+                    <div>
+                      <p>subjects</p>
+                      {moduleChosen?.modulinfos?.lehrinhalteen || "no subjects available"}
+                      <p></p>
+                      <p>learnig goals</p>
+                      <p></p>
+                      {moduleChosen?.modulinfos?.lehrnergebnisseen || "no goals available"}
+                    </div>}
+                </Card.Body>
               </Card>
           </Col>
         </Row>
-        </div>
+      </div>: <div>Bitte wählen Sie ein Modul aus.</div>}
     </Container>
   );
 }
