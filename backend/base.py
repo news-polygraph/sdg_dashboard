@@ -56,6 +56,12 @@ def create_app(test_config=None):
     def test():
         return "App is working!"
     
+    @app.route('/descriptions', methods=['GET'])
+    def get_sdg_descriptions():
+        with open("data_defaults/sdg_descriptions.json", mode='r', encoding='utf-8') as feedsjson:
+            descriptions = json.load(feedsjson)
+        return descriptions
+    
     @app.route('/modules/all', methods=['GET'])
     def get_modules():
         # if full = true, return the entire data of all modules, else make it more lean and only return title + modulnummer
