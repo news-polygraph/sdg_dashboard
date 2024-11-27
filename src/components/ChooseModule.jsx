@@ -13,13 +13,12 @@ function ChooseModule() {
 
   // Funktion zum Abrufen der Module
   useEffect(() => {
-    console.log("useEffect ausgeführt")
     try {
       axios
         .get(`${backendUrl}/modules/all`)
         .then((result) =>{  
           setModules(result.data)//save result modules in modules
-          console.log(result.data);
+          console.log("Module abgerufen");
         }); 
       
     } catch (error) {

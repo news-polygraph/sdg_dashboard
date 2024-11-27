@@ -1,28 +1,22 @@
-/* eslint-disable react/forbid-prop-types */
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import ProgressBar from "react-bootstrap/ProgressBar";
 import { VictoryPie, VictoryLabel } from "victory";
 import PropTypes from "prop-types";
-import { sdgIcons, sdgColors, fileDataDefault } from "./utils.js";
+import { sdgIcons, sdgColors } from "./utils.js";
 
-class XaiFeatures extends Component {
-  constructor(props) {
-    super(props);
-    const { setSdgActive } = this.props;
-    // parent function
-    this.setSdgActive = setSdgActive;
-  }
+function XaiFeatures ({ sdgActive, pageData, setSdgActive }){
+  const sdgActiveColor =
+    sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
+  const activeData =
+    sdgActive !== null
+      ? pageData[sdgActive]
+      : { score: 0.1, factuality: 0.0, tense: 0.1, category: null };
 
-  render() {
-    const { sdgActive, pageData } = this.props; // needs to be called here to be updated when State changes
-    const sdgActiveColor =
-      sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
-    const activeData =
-      sdgActive !== null
-        ? pageData[sdgActive]
-        : { score: 0.1, factuality: 0.0, tense: 0.1, category: null }; // default values if no sdg is selected
-    const { score, factuality, tense, category, nl_explanation } = activeData;
+  const { score, factuality, tense, category, nl_explanation } = activeData;
+
+  const [sdgDescriptions, setSdgDescriptions] = useState(null);
+  
+  
 
     return (
       <>
@@ -51,8 +45,8 @@ class XaiFeatures extends Component {
                             ? "grayscale(50%)" // if sdg has a positive score but not selected less color intensity
                             : "grayscale(100%)", // if score is 0 and not selected show black&white icon
                     }}
-                    onMouseEnter={() => this.setSdgActive(key)}
-                    onMouseLeave={() => this.setSdgActive(null)}
+                    onMouseEnter={() => setSdgActive(key)}
+                    onMouseLeave={() => setSdgActive(null)}
                   />
                   
                 </Col>
@@ -133,14 +127,11 @@ class XaiFeatures extends Component {
         </Container>
       </>
     );
-  }
-}
-XaiFeatures.defaultProps = {
-  sdgData: fileDataDefault.sdg_data,
-};
+ }
 XaiFeatures.propTypes = {
-  /* eslint-disable react/prop-types */
-  sdgData: PropTypes.any,
+  sdgActive: PropTypes.number,
+  pageData: PropTypes.object.isRequired,
+  setSdgActive: PropTypes.func.isRequired,
 };
 
 export default XaiFeatures;
