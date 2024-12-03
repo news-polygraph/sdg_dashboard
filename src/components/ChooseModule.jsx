@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Dropdown, Row, Card } from "react-bootstrap";
+import { Col, Container, Dropdown, Row, Card, Button} from "react-bootstrap";
 import axios from "axios";
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 function ChooseModule() {
   // Zustand für die Module
   const [modules, setModules] = useState([]);
   const [moduleChosen, setModuleChosen] = useState();
-  const [languageModuleInfo, setLanguage] = useState("");
+  const [languageModuleInfo, setLanguage] = useState("deutsch");
 
   // URL des Backends
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
@@ -50,45 +53,38 @@ function ChooseModule() {
   return (
     <Container fluid>
       <Row>
-        <Dropdown>
-          <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
-            Choose Module
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Header>Choose Module</Dropdown.Header>
-            {/* Dropdown-Elemente */}
+      
+        <DropdownButton
+            variant="secondary"
+            align={{ lg: 'start' }}
+            title="choose module"
+          >
             {modules.map((module, index) => (
-              <Dropdown.Item key={index} eventKey={index} onClick={() => {
-                chooseModule(module);
-              }}>
-                {module.titelde} / {module.titelen}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-        <Dropdown>
-          <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
-            Choose Language 
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Header>Choose Module</Dropdown.Header>
-            {/* Dropdown-Elemente */}
-            <Dropdown.Item  onClick={() => {
-              changeLanguage("deutsch");
-            }}>
-              Deutsch
-            </Dropdown.Item>
-            <Dropdown.Item  onClick={() => {
-              changeLanguage("english");
-            }}>
-              English
-            </Dropdown.Item>
-           
-          </Dropdown.Menu>
-        </Dropdown>
+                <Dropdown.Item key={index} eventKey={index} onClick={() => {
+                  chooseModule(module);
+                }}>
+                  {module.titelde} / {module.titelen}
+                </Dropdown.Item>
+              ))}
+          </DropdownButton> 
+        
       </Row>
       {moduleChosen?
       <div className="content">
+        <Row>
+          <ToggleButtonGroup type="radio" name="options" defaultValue={1} variant="secondary">
+            <ToggleButton value={1} onClick={() => {
+                  changeLanguage("deutsch");
+                }}>
+              deutsch
+            </ToggleButton>
+            <ToggleButton value={2} onClick={() => {
+                  changeLanguage("english");
+                }}>
+              english
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Row>
         <Row>
           <Col lg={4}>
             <Row><Card>
