@@ -1,31 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Card, CardHeader, CardBody } from "react-bootstrap";
 import { VictoryPie, VictoryLabel } from "victory";
 import PropTypes from "prop-types";
 import { sdgIcons, sdgColors } from "./utils.js";
+import axios from "axios";
 
-function XaiFeatures ({ sdgActive, pageData, setSdgActive }){
+function XaiFeatures ({ sdgActive, setSdgActive }){
   const sdgActiveColor =
     sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
-  const activeData =
-    sdgActive !== null
-      ? pageData[sdgActive]
-      : { score: 0.1, factuality: 0.0, tense: 0.1, category: null };
+  const activeData = { score: 0.1, factuality: 0.0, category: null };
 
-  const { score, factuality, tense, category, nl_explanation } = activeData;
+  const { score, factuality, nl_explanation } = activeData;
 
-  const [sdgDescriptions, setSdgDescriptions] = useState(null);
+  //saves the descriptions to all sdgs
+  const [sdgDescriptions, setSdgDescriptions] = useState([]);
+  //saves which sdg was clicked to switch back after onMouseLeave
+  const [sdgClicked, setSdgClicked] = useState("");
   
+   // URL des Backends
+   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
+
+   // function to load sdg_descriptions
+   useEffect(() => {
+     try {
+       axios
+         .get(`${backendUrl}/descriptions`)
+         .then((result) =>{  
+           setSdgDescriptions(result.data)//save result in sdgDescriptions
+           console.log("set SDGdescriptions");
+           console.log(result.data);
+         }); 
+       
+     } catch (error) {
+       console.error("cant get descriptions", error);
+     }
+   }, []);
   
+   
+   const [activeSdgDescription, setActiveSdgDescription] = useState({}); 
+
+   //called by clicking on an sdgIcon
+   const changeSDGActiveDescription = (number) =>{
+    setActiveSdgDescription(sdgDescriptions.find(sdg => sdg.number==number));
+    console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
+   };
+
 
     return (
       <>
         <Container // SDG Icons
           fluid="sm"
-          style={{ maxWidth: "600px" }}
         >
           <Row>
-            <Col lg={8}>
+            <Col lg={4}>
               <Row>
               {sdgIcons.map(({ key, sdgIcon }) => (
                 <Col md={4} lg={3} xl={2} key={key} className="p-0">
@@ -41,12 +68,16 @@ function XaiFeatures ({ sdgActive, pageData, setSdgActive }){
                       filter:
                         key === sdgActive
                           ? "grayscale(0%)" // if sdg is selected normal color
-                          : pageData[key].score > 0
-                            ? "grayscale(50%)" // if sdg has a positive score but not selected less color intensity
-                            : "grayscale(100%)", // if score is 0 and not selected show black&white icon
+                          : "grayscale(50%)" // not selected less color intensity
+                            
                     }}
                     onMouseEnter={() => setSdgActive(key)}
-                    onMouseLeave={() => setSdgActive(null)}
+                    onMouseLeave={() => setSdgActive(sdgClicked)}
+                    onClick={() => {
+                      setSdgActive(key);
+                      changeSDGActiveDescription(key);
+                      setSdgClicked(key);
+                    }}
                   />
                   
                 </Col>
@@ -54,8 +85,23 @@ function XaiFeatures ({ sdgActive, pageData, setSdgActive }){
               </Row>
             </Col>
             {/*display additional information (definition) about the sdg which ist hovered*/}
-            <Col>
-            <h3>SDG Definition:</h3>
+            <Col lg={8}>
+              <Card>
+                <CardHeader>
+                  SDG {activeSdgDescription.number} description
+                </CardHeader>
+                <CardBody>
+                  {activeSdgDescription?
+                  <>
+                    <p>{activeSdgDescription.description}</p>
+                    {/*<p>{activeSdgDescription.targets}</p>*/}
+                    {activeSdgDescription.targets?.map((target)=>( <p>{target}</p>))}
+                  </>
+                  :<p>No sdg chosen.</p>}
+                  
+                </CardBody>
+              </Card>
+            
             
             </Col>  
           </Row>
@@ -130,7 +176,6 @@ function XaiFeatures ({ sdgActive, pageData, setSdgActive }){
  }
 XaiFeatures.propTypes = {
   sdgActive: PropTypes.number,
-  pageData: PropTypes.object.isRequired,
   setSdgActive: PropTypes.func.isRequired,
 };
 
