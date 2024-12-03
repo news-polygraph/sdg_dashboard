@@ -34,7 +34,7 @@ function Dashboard() {
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
 
-  //page state
+  //page state 0 means choose module from list, 1 are PDF functions
   const [pageState, setPageState] = useState(0);
 
   React.useEffect(() => {
@@ -108,8 +108,8 @@ function Dashboard() {
   const keywordsAll = Array.from(keywordsAllSet);
 
   // changes per SDG
-  const keywords = sdgActive !== null ? pageData[sdgActive].keywords : []; // if sdg is active return the keywords else return emplty list
-  const sequences = sdgActive !== null ? pageData[sdgActive].sequences : [];
+  //const keywords = sdgActive !== null ? pageData[sdgActive].keywords : []; // if sdg is active return the keywords else return emplty list
+  //const sequences = sdgActive !== null ? pageData[sdgActive].sequences : [];
 
   return (
     <div className="wrapper">
@@ -165,11 +165,12 @@ function Dashboard() {
                     <Card.Title as="h4">SDGs</Card.Title>
                   </Card.Header>
                   <Card.Body>
-                    <XaiFeatures
-                      sdgActive={sdgActive}
-                      pageData={pageData}
-                      setSdgActive={setSdgActive}
+                  <OldXaiFeatures
+                    sdgActive={sdgActive}
+                    pageData={pageData}
+                    setSdgActive={setSdgActive}
                     />
+                  
                   </Card.Body>
                 </Card>
               </Col>):
@@ -179,17 +180,10 @@ function Dashboard() {
                     <Card.Title as="h4">SDGs</Card.Title>
                   </Card.Header>
                   <Card.Body>
-                  {pageState==1?
-                    <OldXaiFeatures
-                    sdgActive={sdgActive}
-                    pageData={pageData}
-                    setSdgActive={setSdgActive}
-                    />:
-                    <XaiFeatures
+                  <XaiFeatures
                       sdgActive={sdgActive}
-                      pageData={pageData}
                       setSdgActive={setSdgActive}
-                    />}
+                    />
                   </Card.Body>
                 </Card>
               </Col>)}
