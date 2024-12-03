@@ -60,6 +60,14 @@ def create_app(test_config=None):
     def get_sdg_descriptions():
         with open("data_defaults/sdg_descriptions.json", mode='r', encoding='utf-8') as feedsjson:
             descriptions = json.load(feedsjson)
+
+            # transform targets to array of strings
+            for sdg in descriptions:
+                targets_array = [
+                    f"{key} {value}" for key, value in sdg["targets"].items()
+                ]
+                sdg["targets"] = targets_array 
+            
         return descriptions
     
     @app.route('/modules/all', methods=['GET'])
