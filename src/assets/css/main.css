@@ -18,3 +18,13 @@
   border-color: lightgray;
   color: solid 1px lightgray;
 }
+
+.div-abstand{
+  padding: 10px 0px;
+}
+
+.navbar{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}

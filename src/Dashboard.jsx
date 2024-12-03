@@ -113,8 +113,8 @@ function Dashboard() {
 
   return (
     <div className="wrapper">
-      <div ref={mainPanel}>
-        <MainNavbar
+      <Container fluid>
+      <MainNavbar
           dashboardState={pageState}
           changeDashboardState={(newState)=>{
             if (newState !== pageState) {
@@ -123,6 +123,10 @@ function Dashboard() {
             }
           }}
         />
+      </Container>
+      <div ref={mainPanel}>
+
+        
         
         <div className="content">
           <Container fluid>

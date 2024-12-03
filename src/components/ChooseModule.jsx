@@ -70,7 +70,7 @@ function ChooseModule() {
         
       </Row>
       {moduleChosen?
-      <div className="content">
+      <div className="content" class="div-abstand">
         <Row>
           <ToggleButtonGroup type="radio" name="options" defaultValue={1} variant="secondary">
             <ToggleButton value={1} onClick={() => {
@@ -122,7 +122,7 @@ function ChooseModule() {
               </Card>
           </Col>
         </Row>
-      </div>: <div>Bitte wählen Sie ein Modul aus.</div>}
+      </div>: <div class="div-abstand">Bitte wählen Sie ein Modul aus.</div>}
     </Container>
   );
 }
