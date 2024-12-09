@@ -21,9 +21,9 @@ class XaiFeatures extends Component {
     const activeData =
       sdgActive !== null
         ? pageData[sdgActive]
-        : { score: 0.1, factuality: 0.0, tense: 0.1, category: null }; // default values if no sdg is selected
-    const { score, factuality, tense, category, summary, classify, context } = activeData;
-
+        : { score: 0.1, factuality: 0.0, tense: 0.1, category: null, context : {impact: "", pro:"", con:""}}; // default values if no sdg is selected
+    const { score, factuality, tense, category, summary, classify, paragraph } = activeData;
+    const context = activeData.hasOwnProperty('context') ? activeData.context : {"impact":"","pro":"","con":""};
     return (
       <>
         <Container // SDG Icons
@@ -37,7 +37,6 @@ class XaiFeatures extends Component {
                   className="sdgIcon img-fluid"
                   src={sdgIcon}
                   key={key}
-                  sdgId={key}
                   alt={"sdg_icon_".concat(key)}
                   style={{
                     objectFit: "contain",
@@ -57,39 +56,6 @@ class XaiFeatures extends Component {
             ))}
           </Row>
         </Container>
-
-        <Container
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "5px",
-          }}
-        >
-          <svg height="150" viewBox="40 30 70 70">
-            <VictoryPie
-              standalone={false}
-              padAngle={0} // used to hide labels
-              labelComponent={<span />}
-              innerRadius={17}
-              width={150}
-              height={150}
-              data={[
-                { key: "", y: Math.round(score * 100) },
-                { key: "", y: 100 - Math.round(score * 100) },
-              ]}
-              colorScale={[sdgActiveColor, "#F7EFE5"]}
-            />
-            <VictoryLabel
-              textAnchor="middle"
-              style={{ fontSize: 10 }}
-              x={75}
-              y={75}
-              text={`${score * 100}%`}
-            />
-          </svg>
-        </Container>
-
         <style type="text/css">
           {`
                 .progress-bar {
@@ -100,84 +66,28 @@ class XaiFeatures extends Component {
             `}
         </style>
           <Container>
-              <div
-                  style={{
-                      margin: "30px 0",
-                  }}
-              >
-                  <div>Factuality</div>
-                  <ProgressBar
-                      now={Math.round(factuality * 100)}
-                      label={`${Math.round(factuality * 100)}%`}
-                      style={{
-                          height: "25px",
-                          backgroundColor: "#F7EFE5",
-                          // color: "balck",
-                      }}
-                  />
-              </div>
-
-              {/* Tense */}
+              {/* Category */}
 
               <div style={{margin: "30px 0"}}>
-                  <div>Tense</div>
-                  <div style={{position: "relative"}}>
-                      <ProgressBar
-                          now={Math.round(tense * 100)}
-                          style={{
-                              height: "25px", // Set the height of the ProgressBar
-                              backgroundColor: "#F7EFE5",
-                          }}
-                      />
+                  <div>Paragraph</div>
+                  <div
+                      style={{
+                          display: "flex",
+                          background: "#F7EFE5",
+                          borderRadius: "7px",
+                          fontSize: "12px",
+                          overflow: "hidden",
+                      }}
+                  >
                       <div
                           style={{
-                              position: "absolute",
-                              width: "100%",
-                              height: "25px", // Same height as the ProgressBar
-                              display: "flex",
-                              alignItems: "center", // Vertically center the content
-                              top: "0",
-                              left: "0",
-                              fontSize: "12px",
-                              color: "#343a40",
+                              padding: "10px",
                           }}
                       >
-                          <div
-                              style={{
-                                  width: "33.33%",
-                                  textAlign: "center",
-                                  zIndex: 2,
-                                  color: tense < 0.2 ? "black" : "white",
-                              }}
-                          >
-                              Future
-                          </div>
-                          <div
-                              style={{
-                                  width: "33.33%",
-                                  textAlign: "center",
-                                  zIndex: 2,
-                                  color: tense < 0.5 ? "black" : "white",
-                              }}
-                          >
-                              Present
-                          </div>
-                          <div
-                              style={{
-                                  width: "33.33%",
-                                  textAlign: "center",
-                                  zIndex: 2,
-                                  color: tense < 0.7 ? "black" : "white",
-                              }}
-                          >
-                              Past
-                          </div>
+                          {paragraph}
                       </div>
                   </div>
               </div>
-
-              {/* Category */}
-
               <div style={{margin: "30px 0"}}>
                   <div>Impact Type</div>
                   <div
@@ -258,11 +168,11 @@ class XaiFeatures extends Component {
                   </div>
               </div>
               <div style={{margin: "30px 0"}}>
-                  <div>Evaluation</div>
+                  <div>Impact Dimension</div>
                   <div
                       style={{
                           display: "flex",
-                          background: "#F7EFE5",
+                          background: "#F7EFE5", // "#e9ecef", // Default background color
                           borderRadius: "7px",
                           fontSize: "12px",
                           overflow: "hidden",
@@ -270,12 +180,89 @@ class XaiFeatures extends Component {
                   >
                       <div
                           style={{
-                              padding: "10px",
+                              flexGrow: 1,
+                              padding: "2px 5px",
+                              margin: 0, // Ensure no margin between divs
+                              borderRadius: "5px 0 0 5px", // Only round the left corners of the first div
+                              background:
+                                  context.impact === "small" ? sdgActiveColor : "transparent",
+                              color: context.impact === "small" ? "white" : "black",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
                           }}
                       >
-                          {context}
+                          <b>Small</b>
+                      </div>
+                      <div
+                          style={{
+                              flexGrow: 1,
+                              padding: "2px 5px",
+                              margin: 0,
+                              background:
+                                  context.impact === "medium" ? sdgActiveColor : "transparent",
+                              color: context.impact === "medium" ? "white" : "black",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                          }}
+                      >
+                          <b>Medium</b>
+                      </div>
+                      <div
+                          style={{
+                              flexGrow: 1,
+                              padding: "2px 5px",
+                              margin: 0,
+                              background:
+                                  context.impact === "big" ? sdgActiveColor : "transparent",
+                              color: context.impact === "Big" ? "white" : "black",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                          }}
+                      >
+                          <b>Big</b>
                       </div>
                   </div>
+              </div>
+              <div style={{margin: "30px 0"}}>
+                  <div>Pro:</div>
+                   <div
+                       style={{
+                           display: "flex",
+                           background: "#F7EFE5",
+                           borderRadius: "7px",
+                           fontSize: "12px",
+                           overflow: "hidden",
+                       }}
+                   >
+                       <div
+                           style={{
+                               padding: "10px",
+                           }}
+                       >
+                           {context.pro}
+                       </div>
+                   </div>
+                   <div>Con:</div>
+                   <div
+                       style={{
+                           display: "flex",
+                           background: "#F7EFE5",
+                           borderRadius: "7px",
+                           fontSize: "12px",
+                           overflow: "hidden",
+                       }}
+                   >
+                       <div
+                           style={{
+                               padding: "10px",
+                           }}
+                       >
+                           {context.con}
+                       </div>
+                   </div>
               </div>
           </Container>
       </>

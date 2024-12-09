@@ -87,31 +87,31 @@ class PdfViewer extends Component {
     //   return markedTextItem;
     // }
 
-    function textRenderer(textItem) {
-      let markedTextItem = textItem.str;
-      if (sdgActive) {
-        searchWords.forEach((text) => {
-          const regex = new RegExp(text, "gi"); // g for global, i for case-insensitive
-          markedTextItem = markedTextItem.replace(regex, (value) => {
-            return `<mark class="word">${value}</mark>`;
-          });
-        });
-        searchSequences.forEach((text) => {
-          const regex = new RegExp(text, "gi"); // g for global, i for case-insensitive
-          markedTextItem = markedTextItem.replace(regex, (value) => {
-            return `<mark class="sequence">${value}</mark>`;
-          });
-        });
-      } else {
-        keywordsAll.forEach((text) => {
-          const regex = new RegExp(text, "gi"); // g for global, i for case-insensitive
-          markedTextItem = markedTextItem.replace(regex, (value) => {
-            return `<mark class="wordAll">${value}</mark>`;
-          });
-        });
-      }
-      return markedTextItem;
-    }
+    // function textRenderer(textItem) {
+    //   let markedTextItem = textItem.str;
+    //   if (sdgActive) {
+    //     searchWords.forEach((text) => {
+    //       const regex = new RegExp(text, "gi"); // g for global, i for case-insensitive
+    //       markedTextItem = markedTextItem.replace(regex, (value) => {
+    //         return `<mark class="word">${value}</mark>`;
+    //       });
+    //     });
+    //     searchSequences.forEach((text) => {
+    //       const regex = new RegExp(text, "gi"); // g for global, i for case-insensitive
+    //       markedTextItem = markedTextItem.replace(regex, (value) => {
+    //         return `<mark class="sequence">${value}</mark>`;
+    //       });
+    //     });
+    //   } else {
+    //     keywordsAll.forEach((text) => {
+    //       const regex = new RegExp(text, "gi"); // g for global, i for case-insensitive
+    //       markedTextItem = markedTextItem.replace(regex, (value) => {
+    //         return `<mark class="wordAll">${value}</mark>`;
+    //       });
+    //     });
+    //   }
+    //   return markedTextItem;
+    // }
 
     return (
       <>
@@ -170,7 +170,6 @@ class PdfViewer extends Component {
           >
             <Page
               pageNumber={pageNumber}
-              customTextRenderer={textRenderer}
               renderAnnotationLayer={false} // remove empty space under report page
             />
           </Document>

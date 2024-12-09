@@ -1,3 +1,4 @@
+from sys import is_stack_trampoline_active
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -118,6 +119,9 @@ def sentence_extraction_for_page(filename, page_texts):
 
     # Tokenize the text into paragraphs
     paragraphs = sent_tokenize(page_text)
+    # sentence_filter = filter(is_sentence, paragraphs)
+    # paragraphs = list(sentence_filter)
+    
 
     # Combine SDG descriptions and paragraphs for vectorization
     combined_texts = sdg_descriptions + paragraphs
@@ -142,3 +146,6 @@ def sentence_extraction_for_page(filename, page_texts):
             relevant_paragraphs[i] = " ".join(paragraphs[match_idx-1:match_idx+2])
 
     return relevant_paragraphs
+
+def is_sentence(line):
+    return line[-1] in ".?!:" 

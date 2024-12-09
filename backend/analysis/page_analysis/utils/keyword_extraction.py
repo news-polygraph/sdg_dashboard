@@ -64,7 +64,11 @@ def read_keywords_single_page(filename, page_number):
                         "tense": tense,
                         "category": category,
                         "keywords": keywords_included,
-                        "sequences": []
+                        "sequences": [],
+                        "context":{"impact":"","pro":"","con":""},
+                        "summary":"",
+                        "classify":"",
+                        "paragraph":"",
                         }
 
             page_data[str(sdg)] = sdg_data
@@ -73,11 +77,11 @@ def read_keywords_single_page(filename, page_number):
         return text, page_data
 
 def combine_keywords_page_level(relevant_paragraphs, sdg_data):
-   paragraphs_with_keywords = relevant_paragraphs.copy()
-   for sdg in range(1,18):
-      if len(sdg_data[str(sdg)]["keywords"]) == 0:
-         paragraphs_with_keywords.pop(sdg, None)
-   return paragraphs_with_keywords
+    paragraphs_with_keywords = relevant_paragraphs.copy()
+    for sdg in range(1,18):
+       if len(sdg_data[str(sdg)]["keywords"]) == 0:
+          paragraphs_with_keywords.pop(sdg, None)
+    return paragraphs_with_keywords
 
 
 

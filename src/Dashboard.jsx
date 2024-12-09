@@ -56,8 +56,6 @@ function Dashboard() {
       .then((res) => {
         // set Keywords to be shown in PdfViewer
         setFileData(res.data);
-        console.log("Data Initial:")
-        console.log(fileData);
         setLoading(false);
       });
   });
@@ -83,7 +81,6 @@ function Dashboard() {
 
   // changes per page
   const pageData = fileData.sdg_data[pageNumber]; // data for XAI-Features
-  console.log(pageData)
   const numPages = Object.keys(fileData.sdg_data).length;
 
   const keywordsAllSet = new Set();

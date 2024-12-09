@@ -5,6 +5,7 @@ import json
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+
 from .utils.keyword_extraction import read_keywords_single_page, combine_keywords_page_level
 from .utils.sentence_extraction import sentence_extraction_for_page
 from .utils.prompting import summarize_paragraph, contextualize_paragraph
@@ -30,7 +31,6 @@ def analyse_document(filename):
     with fitz.open(filename) as doc:
         num_pages = doc.page_count
 
-    
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         futures = []
         for page_number in tqdm(range(1, num_pages+1)):
@@ -47,10 +47,15 @@ def analyse_document(filename):
                         report["sdg_data"][f"{page_number}"] = page_data
                     except Exception as e:
                         logger.info(f"Failed with error: {e}")
+                if len(report["sdg_data"]) != num_pages:
+                    print("WATCH OUT : sdg_data length is unequal to num_pages")
+
         with open("file_data.json", mode="w", encoding="utf-8") as feedsjson:
             json.dump(reports, feedsjson)
-
-
         executor.shutdown(wait=True) 
+    # data = generate_sample_data(filename)
+    # with open("file_data.json", mode="w", encoding="utf-8") as feedsjson:
+    #     json.dump(data, feedsjson)
+
     print("Everything done")
         

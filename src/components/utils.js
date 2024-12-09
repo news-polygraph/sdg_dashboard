@@ -68,7 +68,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -85,7 +86,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -102,7 +104,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -119,7 +122,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -136,7 +140,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -153,7 +158,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -170,7 +176,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -186,8 +193,8 @@ const fileDataDefault = {
         tense: 0.2,
         category: "action",
         summary: "Generating summary...",
-        classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -203,8 +210,8 @@ const fileDataDefault = {
         tense: 0.2,
         category: "action",
         summary: "Generating summary...",
-        classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -221,7 +228,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -238,7 +246,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -254,8 +263,8 @@ const fileDataDefault = {
         tense: 0.2,
         category: "action",
         summary: "Generating summary...",
-        classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -272,7 +281,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -289,7 +299,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -306,7 +317,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        paragraph: "Sample Paragraph",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -323,7 +335,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },
@@ -340,7 +353,8 @@ const fileDataDefault = {
         category: "action",
         summary: "Generating summary...",
         classify: "Generating classification...",
-        context: "Generating contextualization...",
+        context: {"impact": "Generating impact size...", "pro": "Generating reasoning...", "con":"Generating reasoning..."},
+        paragraph: "Sample Paragraph",
         keywords: [
           { word: "Report", char: (5, 9) },
           { word: "Company", char: (11, 20) },

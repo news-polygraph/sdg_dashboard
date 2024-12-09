@@ -1,5 +1,17 @@
 import unittest
-from ..prompting import perform_api_request
+import json
+from ..prompting import perform_api_request, contextualize_paragraph
+from ..sample_data import generate_sample_data
+
+class SampleTest(unittest.TestCase):
+    def test_sample_data(self):
+        filename = "2016_adidas_sustainability_progress_report_qg3dto-1.pdf"
+        data = generate_sample_data(filename)
+        error_string = f"Value is {type(data)} with content: {data}"
+        self.assertIs(type(data), dict, error_string)
+        print(data)
+
+
 
 class PromptingTest(unittest.TestCase):
 
@@ -188,6 +200,18 @@ class PromptingTest(unittest.TestCase):
             for context_prompt in self.context_prompt_par:
                 response = perform_api_request((system_prompt, context_prompt), 200)
                 self._print_prompts(system_prompt, context_prompt, response)
+
+    def test_context_prompt(self):
+        paragraphs = {6:"paragraph"}
+        page_data = {"6":{"summary":"In 2020, the company achieved 50% water savings at apparel material suppliers, surpassing the 2016 target of 11%, due to the successful implementation of water efficiency measures in textile production as part of their Manufacturing Excellence initiative."}}
+        contextualize_paragraph(paragraphs, page_data)
+        print(page_data["6"]["context"])
+        print(type(page_data["6"]["context"]))
+        answer  = json.loads(page_data["6"]["context"])
+        for key, val in answer.items():
+            print(f"Key:{key} Value:{val}")
+
+
 
 
 

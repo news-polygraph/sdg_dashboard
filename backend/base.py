@@ -3,7 +3,6 @@ from flask import Flask, flash, request, redirect, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import json
-import threading
 from dotenv import load_dotenv
 
 from analysis.page_analysis.analyse_page import analyse_page, analyse_document
@@ -134,14 +133,14 @@ def create_app(test_config=None):
                     if report["title"] == title:
                         file_data = report
 
-
             if file_data:
                 return file_data
             else:
                 return {"status": "no such file"}
     
         except Exception as e:
-            return str(e)
+            print(f"Error in get_initial_file_data: {e}")
+            exit()
 
 
     # is triggered when klicking on next page
