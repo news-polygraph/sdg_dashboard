@@ -58,6 +58,7 @@ function ChooseModule() {
             variant="secondary"
             align={{ lg: 'start' }}
             title="choose module"
+            id="choose-module-btn"
           >
             {modules.map((module, index) => (
                 <Dropdown.Item key={index} eventKey={index} onClick={() => {

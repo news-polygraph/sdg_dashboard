@@ -28,3 +28,20 @@
   justify-content: space-between;
   padding: 10px;
 }
+
+#choose-module-btn{
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  background-color: #777777; 
+  color:#fffbf5;
+  
+  
+}
+
+
+.dropdown-toggle::after {
+    
+
+}
+
