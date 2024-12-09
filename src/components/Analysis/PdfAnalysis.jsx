@@ -21,9 +21,9 @@ import {
   faUserGroup,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { sdgColors } from "./utils.js";
+import { sdgColors } from "../utils.js";
 
-import SDGList from "./Analysis/SDGList";
+import SDGList from "./SDGList.jsx";
 
 function PdfAnalysis({ analysisData }) {
   // prepare data for keyword counts

@@ -10,7 +10,7 @@ import Footer from "components/Footer/Footer";
 
 import PdfViewer from "components/PdfViewer";
 import XaiFeatures from "components/XaiFeatures";
-import PdfAnalysis from "components/PdfAnalysis";
+import PdfAnalysis from "components/Analysis/PdfAnalysis";
 import { fileDataDefault } from "./components/utils.js";
 
 import { useState } from 'react';
