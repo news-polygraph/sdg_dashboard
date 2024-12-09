@@ -34,9 +34,6 @@ function Dashboard() {
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
 
-  //page state 0 means choose module from list, 1 are PDF functions
-  const [pageState, setPageState] = useState(0);
-
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -107,9 +104,14 @@ function Dashboard() {
   }
   const keywordsAll = Array.from(keywordsAllSet);
 
-  // changes per SDG
-  //const keywords = sdgActive !== null ? pageData[sdgActive].keywords : []; // if sdg is active return the keywords else return emplty list
-  //const sequences = sdgActive !== null ? pageData[sdgActive].sequences : [];
+  //page state 0 means choose module from list, 1 are PDF functions
+  const [pageState, setPageState] = useState(0);
+
+  // changes per SDG if PDF-Fuctions are active
+  const keywords = sdgActive !== null ? pageState==1? pageData[sdgActive].keywords : [] : []; // if sdg is active return the keywords else return emplty list
+  const sequences = sdgActive !== null ? pageState==1? pageData[sdgActive].sequences : [] : [];
+
+  
 
   return (
     <div className="wrapper">
@@ -192,6 +194,7 @@ function Dashboard() {
                 </Card>
               </Col>)}
             </Row>
+            {pageState==1?
             <Row>
               <Col>
                 <Card style={cardColor}>
@@ -203,7 +206,7 @@ function Dashboard() {
                   </Card.Body>
                 </Card>
               </Col>
-            </Row>
+            </Row>:(null)}
           </Container>
         </div>
         <Footer />
