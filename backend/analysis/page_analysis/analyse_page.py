@@ -41,7 +41,7 @@ def analyse_document(filename):
             reports = json.load(feedsjson)
         for report in reports:
             if report["filename"] == filename:
-                for idx, future in enumerate(as_completed(futures)):
+                for _, future in enumerate(as_completed(futures)):
                     try:
                         page_data, page_number = future.result()
                         report["sdg_data"][f"{page_number}"] = page_data
@@ -53,9 +53,6 @@ def analyse_document(filename):
         with open("file_data.json", mode="w", encoding="utf-8") as feedsjson:
             json.dump(reports, feedsjson)
         executor.shutdown(wait=True) 
-    # data = generate_sample_data(filename)
-    # with open("file_data.json", mode="w", encoding="utf-8") as feedsjson:
-    #     json.dump(data, feedsjson)
 
     print("Everything done")
         
