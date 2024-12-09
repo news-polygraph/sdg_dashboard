@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, CardHeader, CardBody } from "react-bootstrap";
-import { VictoryPie, VictoryLabel } from "victory";
 import PropTypes from "prop-types";
 import { sdgIcons, sdgColors } from "./utils.js";
 import axios from "axios";
@@ -8,9 +7,9 @@ import axios from "axios";
 function XaiFeatures ({ sdgActive, setSdgActive }){
   const sdgActiveColor =
     sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
-  const activeData = { score: 0.1, factuality: 0.0, category: null };
+  const activeData = { factuality: 0.0, category: null };
 
-  const { score, factuality, nl_explanation } = activeData;
+  const { factuality, nl_explanation } = activeData;
 
   //saves the descriptions to all sdgs
   const [sdgDescriptions, setSdgDescriptions] = useState([]);
@@ -107,37 +106,7 @@ function XaiFeatures ({ sdgActive, setSdgActive }){
           </Row>
         </Container>
 
-        <Container
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "5px",
-          }}
-        >
-          <svg height="150" viewBox="40 30 70 70">
-            <VictoryPie
-              standalone={false}
-              padAngle={0} // used to hide labels
-              labelComponent={<span />}
-              innerRadius={17}
-              width={150}
-              height={150}
-              data={[
-                { key: "", y: Math.round(score * 100) },
-                { key: "", y: 100 - Math.round(score * 100) },
-              ]}
-              colorScale={[sdgActiveColor, "#F7EFE5"]}
-            />
-            <VictoryLabel
-              textAnchor="middle"
-              style={{ fontSize: 10 }}
-              x={75}
-              y={75}
-              text={`${score * 100}%`}
-            />
-          </svg>
-        </Container>
+        
 
         <style type="text/css">
           {`
