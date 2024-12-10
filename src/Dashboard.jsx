@@ -15,6 +15,7 @@ import { fileDataDefault } from "./components/utils.js";
 
 import { useState } from 'react';
 import OldXaiFeatures from "components/OldXaiFeatures.jsx";
+import FeedbackSection from "components/FeedbackSection.jsx";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
@@ -24,7 +25,6 @@ console.log(process.env.REACT_APP_BACKEND_URL);
 console.log("Dashboard.jsx:");
 console.log(backendUrl);
 
-// react-bootstrap components
 function Dashboard() {
   const location = useLocation();
   const mainPanel = React.useRef(null);
@@ -49,7 +49,7 @@ function Dashboard() {
   }, [location]);
 
   const onSelectPdf = useCallback((fileUploadedTitle, fileUploaded) => {
-    //  use uploaded file and get sdg data from backend
+    // use uploaded file and get sdg data from backend
     // set File to be shown in PdfViewer
     setFile(fileUploaded);
 
@@ -65,17 +65,6 @@ function Dashboard() {
 
   const onPageChange = useCallback((newPageNumber) => {
     setPageNumber(newPageNumber);
-
-    // if (fileData.title != "default_title") {
-    //   axios
-    //     .get(
-    //       `${backendUrl}/data/`.concat(fileData.title, "/", pageNumber)
-    //     )
-    //     .then((res) => {
-    //       // set Keywords to be shown in PdfViewer
-    //       setFileData(res.data);
-    //     });
-    // }
   });
 
   React.useEffect(() => {
@@ -127,8 +116,6 @@ function Dashboard() {
         />
       </Container>
       <div ref={mainPanel}>
-
-        
         
         <div className="content">
           <Container fluid>
@@ -194,19 +181,23 @@ function Dashboard() {
                 </Card>
               </Col>)}
             </Row>
-            {pageState==1?
             <Row>
               <Col>
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Analysis</Card.Title>
+                  {pageState==1?<Card.Title as="h4">Analysis</Card.Title>:<Card.Title as="h4">Feedback</Card.Title>}
                   </Card.Header>
                   <Card.Body>
-                    <PdfAnalysis analysisData={analysisData} />
+                  {pageState==1?
+                  <PdfAnalysis analysisData={analysisData} />:
+                  <FeedbackSection
+                    sdgActive={sdgActive}
+                    sdgMissing={[1,2,5,6,7,8,10,11,12,14,15,17]}
+                  />}
                   </Card.Body>
                 </Card>
               </Col>
-            </Row>:(null)}
+            </Row>
           </Container>
         </div>
         <Footer />
