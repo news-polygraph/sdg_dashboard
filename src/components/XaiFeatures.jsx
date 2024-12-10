@@ -8,7 +8,6 @@ function XaiFeatures ({ sdgActive, setSdgActive }){
   const sdgActiveColor =
     sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
   const activeData = { factuality: 0.0, category: null };
-
   const { factuality, nl_explanation } = activeData;
 
   //saves the descriptions to all sdgs
@@ -16,7 +15,7 @@ function XaiFeatures ({ sdgActive, setSdgActive }){
   //saves which sdg was clicked to switch back after onMouseLeave
   const [sdgClicked, setSdgClicked] = useState("");
   
-   // URL des Backends
+    //backend URL
    const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
    // function to load sdg_descriptions
@@ -25,7 +24,7 @@ function XaiFeatures ({ sdgActive, setSdgActive }){
        axios
          .get(`${backendUrl}/descriptions`)
          .then((result) =>{  
-           setSdgDescriptions(result.data)//save result in sdgDescriptions
+           setSdgDescriptions(result.data)
            console.log("set SDGdescriptions");
            console.log(result.data);
          }); 
@@ -54,7 +53,7 @@ function XaiFeatures ({ sdgActive, setSdgActive }){
             <Col lg={4}>
               <Row>
               {sdgIcons.map(({ key, sdgIcon }) => (
-                <Col md={4} lg={3} xl={2} key={key} className="p-0">
+                <Col xs={3} sm={2} md={2} xl={3} key={key} className="p-0">
                   <img
                     className="sdgIcon img-fluid"
                     src={sdgIcon}
