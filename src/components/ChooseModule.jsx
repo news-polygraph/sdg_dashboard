@@ -74,15 +74,12 @@ function ChooseModule() {
           </DropdownButton>     
         </Row>
         {moduleChosen?
-        <div className="content" class="div-abstand">
+        <div className="content" class="div-padding-top-bottom">
           <Row>
           <ButtonGroup>
-            {radios.map((radio, idx) => (
+            {radios.map((radio) => (
               <ToggleButton
-                key={idx}
-                id={`radio-${idx}`}
                 type="radio"
-                variant="secondary"
                 name="radio"
                 value={radio.value}
                 checked={languageModuleInfo === radio.value}
@@ -145,7 +142,16 @@ function ChooseModule() {
                 </Card>
             </Col>
           </Row>
-        </div>: <div class="div-abstand">Bitte wählen Sie ein Modul aus.</div>}
+          <Row class="row-margin-bottom">
+					<Col >
+						<Button className="btn-custom">
+							Send request to Mistral
+						</Button>
+					</Col>
+				</Row>
+        </div>
+        
+        : <div class="div-abstand">Bitte wählen Sie ein Modul aus.</div>}
     </Container> 
   );
 }

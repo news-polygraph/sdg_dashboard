@@ -9,13 +9,14 @@ import ChooseModule from "components/ChooseModule.jsx";
 import Footer from "components/Footer/Footer";
 
 import PdfViewer from "components/PdfViewer";
-import XaiFeatures from "components/XaiFeatures";
+import XaiFeatures from "components/Analysis/XaiFeatures";
 import PdfAnalysis from "components/Analysis/PdfAnalysis";
 import { fileDataDefault } from "./components/utils.js";
 
 import { useState } from 'react';
 import OldXaiFeatures from "components/OldXaiFeatures.jsx";
-import FeedbackSection from "components/FeedbackSection.jsx";
+import FeedbackSection from "components/Feedback/FeedbackSection.jsx";
+import MissingSDGFeedback from "components/Feedback/MissingSDGFeedback.jsx";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
@@ -170,12 +171,14 @@ function Dashboard() {
               (<Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">SDGs</Card.Title>
+                    <Card.Title as="h4">Results</Card.Title>
                   </Card.Header>
                   <Card.Body>
+                  {/*later: only shown when request was send and request-answer is not empty*/}
                   <XaiFeatures
                       sdgActive={sdgActive}
                       setSdgActive={setSdgActive}
+                      sdgAnswer={[1,4,8,11,14]}
                     />
                   </Card.Body>
                 </Card>
@@ -185,15 +188,13 @@ function Dashboard() {
               <Col>
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                  {pageState==1?<Card.Title as="h4">Analysis</Card.Title>:<Card.Title as="h4">Feedback</Card.Title>}
+                  {pageState==1?<Card.Title as="h4">Analysis</Card.Title>:<Card.Title as="h4">Missing SDGs Feedback</Card.Title>}
                   </Card.Header>
                   <Card.Body>
                   {pageState==1?
                   <PdfAnalysis analysisData={analysisData} />:
-                  <FeedbackSection
-                    sdgActive={sdgActive}
-                    sdgMissing={[1,2,5,6,7,8,10,11,12,14,15,17]}
-                  />}
+                  /*later: only shown when request was send and request-answer is not empty*/
+                  <MissingSDGFeedback sdgMissing={[2,3,5,6,7,9,10,12,13,15,16,17]}/>}
                   </Card.Body>
                 </Card>
               </Col>

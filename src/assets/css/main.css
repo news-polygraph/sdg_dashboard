@@ -22,10 +22,16 @@
 
 .btn-custom {
   background-color: var(--beige);
-  border-color: lightgray;
-  color: solid 1px lightgray;
+  border-color: var(--darkgrey);
+  color: var(--darkgrey);
   padding: 10px;
-  border-radius: 15px;
+  border-radius: 10px;
+}
+
+.btn-custom:hover {
+  color: var(--beige);
+  background-color: var(--darkgrey);
+   border-color: var(--darkgrey);
 }
 
 .div-padding-top-bottom{
@@ -48,24 +54,50 @@
   width: 100%;
   display: flex;
   justify-content: start;
+  background-color: var(--beige);
+  color:var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+#choose-module-btn:hover{
   background-color: var(--darkgrey);
   color:var(--beige);
-  
-  
 }
 
-/*
 .dropdown-toggle::after {
-    
-
-}*/
-
-.toggle-button{
-  font-variant: normal;
-  background-color: var(--darkgrey);
+  margin: 10px 0px 0px 10px;
 }
 
-.toggle-button:checked {
+.dropdown-toggle{
+  margin: 0px 0px 10px 0px;
+  font-size: large;
+}
+
+
+/*css für toggle buttons*/
+.card label {
+  text-transform:none;
+  font-size: medium;
+}
+
+.btn-check + .btn{
+  color: var(--darkgrey);
+  background-color: var(--beige);
+  border-color: var(--darkgrey);
+}
+.btn-check:checked + .btn{
+  color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+.btn-check:hover + .btn{
+  color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+.btn-check + .btn:hover{
   color: var(--beige);
   background-color: var(--darkgrey);
   border-color: var(--darkgrey);
