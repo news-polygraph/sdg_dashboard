@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Dropdown, Row, Card, Button} from "react-bootstrap";
+import { Col, Container, Dropdown, Row, Card, Button, CardBody} from "react-bootstrap";
 import axios from "axios";
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 function ChooseModule() {
   // Zustand für die Module
@@ -50,81 +51,109 @@ function ChooseModule() {
 
   }
 
+  const [checked, setChecked] = useState(false);
+  const [radioValue, setRadioValue] = useState('1');
+
+  const radios = [
+    { name: 'deutsch', value: '1' },
+    { name: 'english', value: '2' },
+  ];
+
   return (
-    <Container fluid>
-      <Row>
-      
-        <DropdownButton
-            variant="secondary"
-            align={{ lg: 'start' }}
-            title="choose module"
-            id="choose-module-btn"
-          >
-            {modules.map((module, index) => (
-                <Dropdown.Item key={index} eventKey={index} onClick={() => {
-                  chooseModule(module);
-                }}>
-                  {module.titelde} / {module.titelen}
-                </Dropdown.Item>
-              ))}
-          </DropdownButton> 
-        
-      </Row>
-      {moduleChosen?
-      <div className="content" class="div-abstand">
-        <Row>
-          <ToggleButtonGroup type="radio" name="options" defaultValue={1} variant="secondary">
-            <ToggleButton value={1} onClick={() => {
-                  changeLanguage("deutsch");
-                }}>
-              deutsch
-            </ToggleButton>
-            <ToggleButton value={2} onClick={() => {
-                  changeLanguage("english");
-                }}>
-              english
-            </ToggleButton>
-          </ToggleButtonGroup>
+    <Container xl={12}>
+        <Row>        
+          <DropdownButton
+              variant="secondary"
+              align={{ lg: 'start' }}
+              title="choose module"
+              id="choose-module-btn"
+            >
+              {modules.map((module, index) => (
+                  <Dropdown.Item key={index} eventKey={index} onClick={() => {
+                    chooseModule(module);
+                  }}>
+                    {module.titelde} / {module.titelen}
+                  </Dropdown.Item>
+                ))}
+          </DropdownButton>     
         </Row>
-        <Row>
-          <Col lg={4}>
-            <Row><Card>
-              <Card.Header>Modultitel</Card.Header>
-              <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.titelde || "Kein Titel verfügbar" ):(moduleChosen?.modulinfos?.titelen || "no title available" )}</Card.Body>
+        {moduleChosen?
+        <div className="content" class="div-abstand">
+          <Row>
+          <ButtonGroup>
+            {radios.map((radio, idx) => (
+              <ToggleButton
+                key={idx}
+                id={`radio-${idx}`}
+                type="radio"
+                variant="secondary"
+                name="radio"
+                value={radio.value}
+                checked={radioValue === radio.value}
+                onChange={(e) => 
+                  setRadioValue(e.currentTarget.value)
+                }
+                onClick={() => {
+                  changeLanguage(radio.name);
+                }}
+                
+              >
+                {radio.name}
+              </ToggleButton>
+            ))}
+          </ButtonGroup>
+            {/*<ToggleButtonGroup type="radio" name="options" defaultValue={1} variant="secondary">
+              <ToggleButton value={1} onClick={() => {
+                    changeLanguage("deutsch");
+                  }}>
+                deutsch
+              </ToggleButton>
+              <ToggleButton value={2} onClick={() => {
+                    changeLanguage("english");
+                  }}>
+                english
+              </ToggleButton>
+            </ToggleButtonGroup>*/}
+          </Row>
+          <Row>
+            <Col lg={4}>
+              <Row><Card>
+                <Card.Header>Modultitel</Card.Header>
+                <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.titelde || "Kein Titel verfügbar" ):(moduleChosen?.modulinfos?.titelen || "no title available" )}</Card.Body>
+                </Card></Row>
+              <Row><Card>
+                <Card.Header>ID</Card.Header>
+                <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.modulnummer || "Keine ID verfügbar"):(moduleChosen?.modulinfos?.modulnummer || "no ID available")}</Card.Body>
               </Card></Row>
-            <Row><Card>
-              <Card.Header>ID</Card.Header>
-              <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.modulnummer || "Keine ID verfügbar"):(moduleChosen?.modulinfos?.modulnummer || "no ID available")}</Card.Body>
-            </Card></Row>
-          </Col>
-          <Col lg={8}>
-              <Card>
-                <Card.Header>Moduledesription</Card.Header>
-                <Card.Body>
-                  {languageModuleInfo=="deutsch"?
-                    <div>
-                      <p>Lehrinhalte</p>
-                      {moduleChosen?.modulinfos?.lehrinhaltede || "Keine lehrinhalte verfügbar"}
-                      <p></p>
-                      <p>Lernergebnisse</p>
-                      <p></p>
-                      {moduleChosen?.modulinfos?.lehrnergebnissede || "Keine lernergebnisse verfügbar"}
-                    </div>
-                   :
-                    <div>
-                      <p>subjects</p>
-                      {moduleChosen?.modulinfos?.lehrinhalteen || "no subjects available"}
-                      <p></p>
-                      <p>learnig goals</p>
-                      <p></p>
-                      {moduleChosen?.modulinfos?.lehrnergebnisseen || "no goals available"}
-                    </div>}
-                </Card.Body>
-              </Card>
-          </Col>
-        </Row>
-      </div>: <div class="div-abstand">Bitte wählen Sie ein Modul aus.</div>}
-    </Container>
+            </Col>
+            <Col lg={8}>
+                <Card>
+                  <Card.Header>Moduledesription</Card.Header>
+                  <Card.Body>
+                    {languageModuleInfo=="deutsch"?
+                      <div>
+                        <p>Lehrinhalte</p>
+                        {moduleChosen?.modulinfos?.lehrinhaltede || "Keine lehrinhalte verfügbar"}
+                        <p></p>
+                        <p>Lernergebnisse</p>
+                        <p></p>
+                        {moduleChosen?.modulinfos?.lehrnergebnissede || "Keine lernergebnisse verfügbar"}
+                      </div>
+                    :
+                      <div>
+                        <p>subjects</p>
+                        {moduleChosen?.modulinfos?.lehrinhalteen || "no subjects available"}
+                        <p></p>
+                        <p>learnig goals</p>
+                        <p></p>
+                        {moduleChosen?.modulinfos?.lehrnergebnisseen || "no goals available"}
+                      </div>}
+                  </Card.Body>
+                </Card>
+            </Col>
+          </Row>
+        </div>: <div class="div-abstand">Bitte wählen Sie ein Modul aus.</div>}
+    </Container> 
   );
 }
 

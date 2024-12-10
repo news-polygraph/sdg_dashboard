@@ -1,7 +1,12 @@
 /* Colorpalatte:  FFFBF5, F7EFE5, C3ACD0, 674188 Link: https://colorhunt.co/palette/fffbf5f7efe5c3acd0674188 */
 
+:root{
+  --darkgrey:#777777;
+  --beige: #fffbf5;
+}
+
 .form-control {
-  background-color: #fffbf5;
+  background-color: var(--beige);
   border: solid 1px lightgray;
 }
 
@@ -11,10 +16,12 @@
 
 .card {
   border-color: lightgray;
+  padding:10px;
+  margin-bottom: 20px;
 }
 
 .btn-custom {
-  background-color: #fffbf5;
+  background-color: var(--beige);
   border-color: lightgray;
   color: solid 1px lightgray;
   padding: 10px;
@@ -30,6 +37,7 @@
 }
 
 
+
 .navbar{
   display: flex;
   justify-content: space-between;
@@ -40,8 +48,8 @@
   width: 100%;
   display: flex;
   justify-content: start;
-  background-color: #777777; 
-  color:#fffbf5;
+  background-color: var(--darkgrey);
+  color:var(--beige);
   
   
 }
@@ -52,3 +60,13 @@
 
 }*/
 
+.toggle-button{
+  font-variant: normal;
+  background-color: var(--darkgrey);
+}
+
+.toggle-button:checked {
+  color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
