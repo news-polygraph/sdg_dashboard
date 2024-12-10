@@ -48,84 +48,65 @@ def summarize_paragraph(paragraphs, page_data):
     ]
     for sdg_idx, paragraph in paragraphs.items():
         sdg = sdg_descriptions[int(sdg_idx)-1]
-        summary_system_prompt = f"""
+        system_prompt = f"""
         You are a analyst that has to write a single sentence summary about a report for his boss. 
         """
-        summary_prompt = f"""
+        task_prompt = f"""
         Sum up the following text: '{paragraph}'
         Extract the most important facts concerning the sustainable developement goal {sdg_idx}:'{sdg}' 
         Keep your summary very short!
         Response: 
         """
-        classify_system_prompt = f"""
-        You are a robot that labels statements with categories.
-        """
-        classify_prompt = f"""
-        Classify the actions performed by companies described in the following text, in one of 3 categories. 
-        Act to avoid harm(when an action reduces harm a company causes), Benefit stakeholders(an action benefits stakeholders in the company while having a positive effect on the world), Contribute to solutions(a company wants to tackle an external problem).
-
-        
-        Text: We donate parts of our income to charities in the third world. 
-        Class: Contribute to solutions
-        
-        Text: We reduce our carbon emissions by 20 %.
-        Class: Act to avoid harm
-        
-        Text: I want our business to profit from sustainability.
-        Class: Benefit stakeholders 
-        
-        Text: {paragraph}  
-        Class: 
-        """
-        analyse_prompts = [(summary_system_prompt, summary_prompt), (classify_system_prompt, classify_prompt)]
-        page_data[f"{sdg_idx}"]["paragraph"] = paragraph 
+        prompt = (system_prompt, task_prompt)
         try:
-            for idx, prompt in enumerate(analyse_prompts):
-                max_tokens = 200 if idx==0 else 20
-                response = perform_api_request(prompt, max_tokens)
-                # response = "Act to avoid harm"
-                if idx == 0:
-                    page_data[f"{sdg_idx}"]["summary"] = response
-                    continue
-                if idx == 1:
-                    if "act to avoid harm" in response.lower():
-                        page_data[f"{sdg_idx}"]["classify"] = "Act to avoid harm" 
-                    elif "benefit stakeholders" in response.lower():
-                        page_data[f"{sdg_idx}"]["classify"] = "Benefit stakeholders" 
-                    elif "contribute to solutions" in response.lower():
-                        page_data[f"{sdg_idx}"]["classify"] = "Contribute to solutions" 
-                    else:
-                        page_data[f"{sdg_idx}"]["classify"] = "empty" 
+            max_tokens = 200 
+            response = perform_api_request(prompt, max_tokens)
+            page_data[f"{sdg_idx}"]["summary"] = response
 
 
-                    continue 
         except Exception as e:
             print(f"An error occurred: {e}")
 
 
 def contextualize_paragraph(paragraphs, page_data):
-    for sdg_idx,_ in paragraphs.items():
-        summary = page_data[f"{sdg_idx}"]["summary"]
+    for sdg_idx,paragraph in paragraphs.items():
         context_system_prompt = f"""
         You are an analysis api that allows a user to evaluate an action taken by a company to contribute to solutions for to ensure 
         access to affordable, reliable, sustainable and modern energy for all. Answer in a json format.  
         """        
         context_prompt = f"""
-        Classify the described actions impact in the categories small, medium or big and underline your decision with pro and con arguments. Compare the company with competitors in the same field if necessary Generate an answer in json format an make impact, pro and con the keys of the json object.
+        Your task is to classify the following actions into one of the categories in the ABC model of impact frontiers and provide a detailed reasoning process with pro and con arguments. 
+        Return the result in JSON format with the keys:
+            impact_type: The classification (A, B, or C).
+            pro: Arguments that support your claim of the classification.
+            con: Arguments that challenging the chosen classification.
 
-        Action:We compensate 10% of our fossil energy use by buying forest in canada. 
-        Evaluation:  {{"impact": "small", "pro:" "forests are usefull by storing and converting greenhouse gasses.", "con": "10% is not a big amount and buying a forest does not create new forest."}} 
-        Action:We invest 5% of our income into renewable energy sources, because we believe that green energy is the key to a green future. 
-        Evaluation: {{"impact": "big", "pro": "5% of the whole income is a significant amount and renewable energy is a key factor in CO2 neutrality.", "con": "it is unclear if new power plants are built, or of which nature their investment is."}} 
+        The ABC model categories are:
+            A: Act to avoid harm – The action minimizes negative social or environmental impacts.
+            B: Benefit stakeholders – The action creates positive outcomes for stakeholders but is not transformative.
+            C: Contribute to solutions – The action aims to create transformational change or solve critical challenges.
 
-        Action:{summary}
-        Evaluation: 
+        Example Action:
+            "The company reduces its greenhouse gas emissions to comply with local regulations."
+        Output:
+         {{
+          "impact_type": "A",
+          "pro": "The action reduces negative environmental impacts, which aligns with minimizing harm.",
+          "con": "The action is reactive rather than proactive."
+        }}
+        Input Action:
+        "{paragraph}"
+        Output:
         """
         prompt = (context_system_prompt, context_prompt)
-        response = perform_api_request(prompt, 200)
+        response = perform_api_request(prompt, 250)
+        start = response.find("{")
+        end = response.rfind("}")
+        response = response[start:end+1]
+
         try:
             page_data[f"{sdg_idx}"]["context"] = json.loads(response)
         except Exception as e:
-            print("Exception when parsing json:", e)
+            print(f"Exception when parsing json:", e)
 
 

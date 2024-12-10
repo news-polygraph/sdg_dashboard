@@ -22,8 +22,8 @@ class XaiFeatures extends Component {
       sdgActive !== null
         ? pageData[sdgActive]
         : { score: 0.1, factuality: 0.0, tense: 0.1, category: null, context : {impact: "", pro:"", con:""}}; // default values if no sdg is selected
-    const { score, factuality, tense, category, summary, classify, paragraph } = activeData;
-    const context = activeData.hasOwnProperty('context') ? activeData.context : {"impact":"","pro":"","con":""};
+    const { score, factuality, tense, category, summary } = activeData;
+    const context = activeData.hasOwnProperty('context') ? activeData.context : {"impact_type":"","pro":"","con":""};
     return (
       <>
         <Container // SDG Icons
@@ -69,7 +69,7 @@ class XaiFeatures extends Component {
               {/* Category */}
 
               <div style={{margin: "30px 0"}}>
-                  <div>Paragraph</div>
+                  <div>Summary</div>
                   <div
                       style={{
                           display: "flex",
@@ -84,7 +84,7 @@ class XaiFeatures extends Component {
                               padding: "10px",
                           }}
                       >
-                          {paragraph}
+                          {summary}
                       </div>
                   </div>
               </div>
@@ -106,8 +106,8 @@ class XaiFeatures extends Component {
                               margin: 0, // Ensure no margin between divs
                               borderRadius: "5px 0 0 5px", // Only round the left corners of the first div
                               background:
-                                  classify === "Act to avoid harm" ? sdgActiveColor : "transparent",
-                              color: classify === "Act to avoid harm" ? "white" : "black",
+                                  context.impact_type === "Act to avoid harm" ? sdgActiveColor : "transparent",
+                              color: context.impact_type === "Act to avoid harm" ? "white" : "black",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -121,8 +121,8 @@ class XaiFeatures extends Component {
                               padding: "2px 5px",
                               margin: 0,
                               background:
-                                  classify === "Benefit stakeholders" ? sdgActiveColor : "transparent",
-                              color: classify === "Benefit stakeholders" ? "white" : "black",
+                                  context.impact_type === "Benefit stakeholders" ? sdgActiveColor : "transparent",
+                              color: context.impact_type === "Benefit stakeholders" ? "white" : "black",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -136,93 +136,14 @@ class XaiFeatures extends Component {
                               padding: "2px 5px",
                               margin: 0,
                               background:
-                                  classify === "Contribute to solutions" ? sdgActiveColor : "transparent",
-                              color: classify === "Contribute to solutions" ? "white" : "black",
+                                  context.impact_type === "Contribute to solutions" ? sdgActiveColor : "transparent",
+                              color: context.impact_type === "Contribute to solutions" ? "white" : "black",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                           }}
                       >
                           <b>C</b>ontribute to solutions
-                      </div>
-                  </div>
-              </div>
-              <div style={{margin: "30px 0"}}>
-                  <div>Summary</div>
-                  <div
-                      style={{
-                          display: "flex",
-                          background: "#F7EFE5",
-                          borderRadius: "7px",
-                          fontSize: "12px",
-                          overflow: "hidden",
-                      }}
-                  >
-                      <div
-                          style={{
-                              padding: "10px",
-                          }}
-                      >
-                          {summary}
-                      </div>
-                  </div>
-              </div>
-              <div style={{margin: "30px 0"}}>
-                  <div>Impact Dimension</div>
-                  <div
-                      style={{
-                          display: "flex",
-                          background: "#F7EFE5", // "#e9ecef", // Default background color
-                          borderRadius: "7px",
-                          fontSize: "12px",
-                          overflow: "hidden",
-                      }}
-                  >
-                      <div
-                          style={{
-                              flexGrow: 1,
-                              padding: "2px 5px",
-                              margin: 0, // Ensure no margin between divs
-                              borderRadius: "5px 0 0 5px", // Only round the left corners of the first div
-                              background:
-                                  context.impact === "small" ? sdgActiveColor : "transparent",
-                              color: context.impact === "small" ? "white" : "black",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                          }}
-                      >
-                          <b>Small</b>
-                      </div>
-                      <div
-                          style={{
-                              flexGrow: 1,
-                              padding: "2px 5px",
-                              margin: 0,
-                              background:
-                                  context.impact === "medium" ? sdgActiveColor : "transparent",
-                              color: context.impact === "medium" ? "white" : "black",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                          }}
-                      >
-                          <b>Medium</b>
-                      </div>
-                      <div
-                          style={{
-                              flexGrow: 1,
-                              padding: "2px 5px",
-                              margin: 0,
-                              background:
-                                  context.impact === "big" ? sdgActiveColor : "transparent",
-                              color: context.impact === "Big" ? "white" : "black",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                          }}
-                      >
-                          <b>Big</b>
                       </div>
                   </div>
               </div>

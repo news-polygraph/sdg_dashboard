@@ -92,7 +92,7 @@ def sentence_extraction(filename, page_texts):
     return relevant_paragraphs
 
 
-def sentence_extraction_for_page(filename, page_texts):
+def sentence_extraction_for_page(page_texts):
     # Predefined descriptions for each of the 17 SDGs
     sdg_descriptions = [
         "No Poverty",
@@ -119,8 +119,6 @@ def sentence_extraction_for_page(filename, page_texts):
 
     # Tokenize the text into paragraphs
     paragraphs = sent_tokenize(page_text)
-    # sentence_filter = filter(is_sentence, paragraphs)
-    # paragraphs = list(sentence_filter)
     
 
     # Combine SDG descriptions and paragraphs for vectorization
@@ -139,11 +137,11 @@ def sentence_extraction_for_page(filename, page_texts):
         cos_similarities = cosine_similarity(sdg_vector, vectorized_texts[len(sdg_descriptions):])[0]
         match_idx = np.argmax(cos_similarities)
         if len(paragraphs) <= 3:
-            relevant_paragraphs[i] = " ".join(paragraphs)
+            relevant_paragraphs[str(i)] = " ".join(paragraphs)
         elif len(paragraphs) == (match_idx + 1):
-            relevant_paragraphs[i] = " ".join(paragraphs[-3:])
+            relevant_paragraphs[str(i)] = " ".join(paragraphs[-3:])
         else:
-            relevant_paragraphs[i] = " ".join(paragraphs[match_idx-1:match_idx+2])
+            relevant_paragraphs[str(i)] = " ".join(paragraphs[match_idx-1:match_idx+2])
 
     return relevant_paragraphs
 
