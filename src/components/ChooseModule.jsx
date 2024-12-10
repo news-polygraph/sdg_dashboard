@@ -7,21 +7,19 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 function ChooseModule() {
-  // Zustand für die Module
+  // states for modules
   const [modules, setModules] = useState([]);
   const [moduleChosen, setModuleChosen] = useState();
-  const [languageModuleInfo, setLanguage] = useState("deutsch");
 
-  // URL des Backends
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
-  // Funktion zum Abrufen der Module
+  // function to get modules frpm backend and save in modules
   useEffect(() => {
     try {
       axios
         .get(`${backendUrl}/modules/all`)
         .then((result) =>{  
-          setModules(result.data)//save result modules in modules
+          setModules(result.data)
           console.log("Module abgerufen");
         }); 
       
@@ -45,18 +43,16 @@ function ChooseModule() {
     }
   }
 
+  //language to display modules
+  const [languageModuleInfo, setLanguage] = useState("deutsch");
   const changeLanguage = (language) =>{
     setLanguage(language);
     console.log("changed language to "+ language)
 
   }
-
-  const [checked, setChecked] = useState(false);
-  const [radioValue, setRadioValue] = useState('1');
-
   const radios = [
-    { name: 'deutsch', value: '1' },
-    { name: 'english', value: '2' },
+    { name: 'deutsch', value: 'deutsch' },
+    { name: 'english', value: 'english' },
   ];
 
   return (
@@ -89,10 +85,7 @@ function ChooseModule() {
                 variant="secondary"
                 name="radio"
                 value={radio.value}
-                checked={radioValue === radio.value}
-                onChange={(e) => 
-                  setRadioValue(e.currentTarget.value)
-                }
+                checked={languageModuleInfo === radio.value}
                 onClick={() => {
                   changeLanguage(radio.name);
                 }}
