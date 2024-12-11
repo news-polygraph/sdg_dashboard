@@ -101,6 +101,8 @@ function Dashboard() {
   const keywords = sdgActive !== null ? pageState==1? pageData[sdgActive].keywords : [] : []; // if sdg is active return the keywords else return emplty list
   const sequences = sdgActive !== null ? pageState==1? pageData[sdgActive].sequences : [] : [];
 
+  //only for demo
+  const [sentRequest, setSentRequest] = useState(false);
   
 
   return (
@@ -126,14 +128,16 @@ function Dashboard() {
                   <Card.Title as="h4">Choose module and send request</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                  <ChooseModule></ChooseModule>
+                  <ChooseModule
+                    setSentRequest={setSentRequest}
+                  /> 
                 </Card.Body>
               </Card>
             )}
           </Container>
           <Container fluid>
             <Row>
-            {pageState==1?(
+            {pageState==1?
               <Col md="8">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
@@ -152,8 +156,8 @@ function Dashboard() {
                     />
                   </Card.Body>
                 </Card>
-              </Col>):(null)}
-              {pageState==1?(<Col md="4">
+              </Col>:(null)}
+              {pageState==1?<Col md="4">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
                     <Card.Title as="h4">SDGs</Card.Title>
@@ -167,8 +171,8 @@ function Dashboard() {
                   
                   </Card.Body>
                 </Card>
-              </Col>):
-              (<Col md="12">
+              </Col>:sentRequest?
+              <Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
                     <Card.Title as="h4">Results</Card.Title>
@@ -182,21 +186,28 @@ function Dashboard() {
                     />
                   </Card.Body>
                 </Card>
-              </Col>)}
+              </Col>:(null)}
             </Row>
             <Row>
               <Col>
+              {pageState==1?
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                  {pageState==1?<Card.Title as="h4">Analysis</Card.Title>:<Card.Title as="h4">Missing SDGs Feedback</Card.Title>}
+                    <Card.Title as="h4">Analysis</Card.Title>
                   </Card.Header>
                   <Card.Body>
-                  {pageState==1?
-                  <PdfAnalysis analysisData={analysisData} />:
-                  /*later: only shown when request was send and request-answer is not empty*/
-                  <MissingSDGFeedback sdgMissing={[2,3,5,6,7,9,10,12,13,15,16,17]}/>}
+                    <PdfAnalysis analysisData={analysisData} />
                   </Card.Body>
-                </Card>
+                </Card>:sentRequest?
+                <Card style={cardColor}>
+                  <Card.Header style={cardColor}>
+                    <Card.Title as="h4">Missing SDGs Feedback</Card.Title>
+                  </Card.Header>
+                  <Card.Body>
+                  {/*later: only shown when request was send and request-answer is not empty*/}
+                  <MissingSDGFeedback sdgMissing={[2,3,5,6,7,9,10,12,13,15,16,17]}/>
+                  </Card.Body>
+                </Card>:(null)}
               </Col>
             </Row>
           </Container>

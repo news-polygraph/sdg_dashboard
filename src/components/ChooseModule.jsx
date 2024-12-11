@@ -5,8 +5,9 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import PropTypes from "prop-types";
 
-function ChooseModule() {
+function ChooseModule({setSentRequest}) {
   // states for modules
   const [modules, setModules] = useState([]);
   const [moduleChosen, setModuleChosen] = useState();
@@ -144,7 +145,7 @@ function ChooseModule() {
           </Row>
           <Row class="row-margin-bottom">
 					<Col >
-						<Button className="btn-custom">
+						<Button className="btn-custom" onClick={()=>(setSentRequest(true))}>
 							Send request to Mistral
 						</Button>
 					</Col>
@@ -155,5 +156,7 @@ function ChooseModule() {
     </Container> 
   );
 }
-
+ChooseModule.propTypes = {
+  setSentRequest:PropTypes.func.isRequired,
+};
 export default ChooseModule;
