@@ -34,6 +34,18 @@
    border-color: var(--darkgrey);
 }
 
+.btn-custom:hover {
+  color: var(--beige);
+  background-color: var(--darkgrey);
+   border-color: var(--darkgrey);
+}
+
+.btn-custom:active {
+  color: var(--beige);
+  background-color: var(--darkgrey);
+   border-color: var(--darkgrey);
+}
+
 .div-padding-top-bottom{
   padding: 10px 0px;
 }
