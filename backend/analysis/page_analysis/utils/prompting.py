@@ -85,7 +85,7 @@ def contextualize_paragraph(paragraphs, page_data):
             A: Act to avoid harm – The action minimizes negative social or environmental impacts.
             B: Benefit stakeholders – The action creates positive outcomes for stakeholders but is not transformative.
             C: Contribute to solutions – The action aims to create transformational change or solve critical challenges.
-
+        It is imperative that you use the json format!
         Example Action:
             "The company reduces its greenhouse gas emissions to comply with local regulations."
         Output:
@@ -100,13 +100,18 @@ def contextualize_paragraph(paragraphs, page_data):
         """
         prompt = (context_system_prompt, context_prompt)
         response = perform_api_request(prompt, 250)
+        response = response.strip()
+        response = response.replace("\\", "")
         start = response.find("{")
         end = response.rfind("}")
         response = response[start:end+1]
 
         try:
-            page_data[f"{sdg_idx}"]["context"] = json.loads(response)
+            response = json.loads(response)
+            if "impact_type" in response.keys() and "pro" in response.keys() and "con" in response.keys():
+                page_data[f"{sdg_idx}"]["context"]    
         except Exception as e:
             print(f"Exception when parsing json:", e)
+            print(response)
 
 
