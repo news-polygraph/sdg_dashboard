@@ -7,6 +7,32 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 function ActiveSdgFeedback ({sdgActive}){	
+
+	const sendFeedback = (active, sdg, explanation, modulnr) => {
+		// eigentlich sowas:
+		const feedback = {
+			"chosen": active,
+			"sdg": sdg,
+			"explanation": explanation
+		}
+
+		// bspw so:
+		const m = {
+			"chosen": true,
+			"sdg": 4,
+			"explanation": "test"
+		}
+		try {
+		  axios
+			.post(`${backendUrl}/feedback/${modulnr}`, m)
+			.then((result) =>{
+			  console.log(result.data);
+			});
+			
+		} catch (error) {
+		  console.error("Req Fehler", error);
+		}
+	}
 	
 
 	//fit doesnt toggle
