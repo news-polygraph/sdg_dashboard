@@ -147,7 +147,7 @@ def create_app(test_config=None):
                 json.dump(data, f, indent=4)
                 f.truncate()     # remove remaining part
 
-        return {'success': True}
+        return m
 
     def find_module(modules, id):
         for m in modules:
