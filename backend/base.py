@@ -6,6 +6,7 @@ import json
 from dotenv import load_dotenv
 
 from analysis.page_analysis.analyse_page import analyse_page
+from openai import OpenAI
 
 load_dotenv()
 
@@ -133,6 +134,36 @@ def create_app(test_config=None):
         return response.choices[0].message.content """
     
         return json.loads('[{ "sdg_number": "3", "found_in": "b", "explanation": "The learning outcome focuses specifically on understanding medical device requirements within hospitals which contributes directly towards ensuring healthy lives at all ages." }, { "sdg_number": "9", "found_in": "c", "explanation": "The inclusionof \'Medical IT\' within operations implies building resilient infrastructure within healthcare institutions which relates back towards strengthening Industry Innovation & Infrastructure." }]')
+    
+    @app.route('/feedback/<id>', methods=['POST'])
+    def process_feedback(id):
+        with open('all_modules.json', 'r+') as f:
+            data = json.load(f)
+            m = find_module(data, int(id))
+            if "modulinfos" in m:
+                r = request.get_json()
+                m['editorinfos'] = insert_feedback(m['editorinfos'], r)
+                f.seek(0)        # <--- should reset file position to the beginning.
+                json.dump(data, f, indent=4)
+                f.truncate()     # remove remaining part
+
+        return {'success': True}
+
+    def find_module(modules, id):
+        for m in modules:
+            if m['modulinfos']['modulnummer'] == id:
+                return m
+        return {}
+    
+    def insert_feedback(m, data):
+        for e in m:
+            if e['sdg'] == data['sdg']:
+                e['chosen'] = data['chosen']
+                e['explanation'] = data['explanation']
+                return m
+        m.append({"chosen": data['chosen'], "sdg": int(data['sdg']), "explanation": data['explanation']})
+        return m
+    
 
     @app.route('/upload', methods=['GET', 'POST'])
     def upload_file():
