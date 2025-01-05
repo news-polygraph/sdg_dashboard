@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import re
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
@@ -99,19 +100,26 @@ def contextualize_paragraph(paragraphs, page_data):
         Output:
         """
         prompt = (context_system_prompt, context_prompt)
-        response = perform_api_request(prompt, 250)
-        response = response.strip()
-        response = response.replace("\\", "")
-        start = response.find("{")
-        end = response.rfind("}")
-        response = response[start:end+1]
+        response_1 = perform_api_request(prompt, 250)
+        response_2 = response_1.strip()
+        response_3 = response_2.replace("\\", "")
+        response_4 = re.sub(r"/('(?= ?\n?,| ?\n?:| ?\n?}))|((?<={|{ |{\n|,|, |,\n|:|: |:\n)')/gm", '"', response_3)
+        start = response_4.find("{")
+        end = response_4.rfind("}")
+        response_5 = response_4[start:end+1]
 
         try:
-            response = json.loads(response)
-            if "impact_type" in response.keys() and "pro" in response.keys() and "con" in response.keys():
-                page_data[f"{sdg_idx}"]["context"]    
+            response_json = json.loads(response_5)
+            if "impact_type" in response_json.keys() and "pro" in response_json.keys() and "con" in response_json.keys():
+                page_data[f"{sdg_idx}"]["context"] = response_json    
         except Exception as e:
             print(f"Exception when parsing json:", e)
-            print(response)
+            print(type(e))
+            print(e)
+            print("Response_1", response_1)
+            print("Response_2", response_2)
+            print("Response_3", response_3)
+            print("Response_4", response_4)
+            print("Response_5", response_5)
 
 
