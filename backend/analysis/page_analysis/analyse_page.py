@@ -18,11 +18,17 @@ logger.setLevel(logging.INFO)
 def analyse_page(filename, page_number):
     page_data = {}
     # read keywords
+    print(f"analyse_page nr {page_number} step 1")
     page_text, page_data = read_keywords_single_page(filename, page_number)
+    print(f"analyse_page nr {page_number} step 2")
     relevant_paragraphs = sentence_extraction_for_page(page_text)
+    print(f"analyse_page nr {page_number} step 3")
     paragraphs_with_keywords = combine_keywords_page_level(relevant_paragraphs, page_data)
+    print(f"analyse_page nr {page_number} step 4")
     summarize_paragraph(paragraphs_with_keywords, page_data)
+    print(f"analyse_page nr {page_number} step 5")
     contextualize_paragraph(paragraphs_with_keywords, page_data)
+    print(f"analyse_page nr {page_number} step 6")
 
     return page_data, page_number
 
@@ -46,9 +52,11 @@ def analyse_document(filename):
                         page_data, page_number = future.result()
                         report["sdg_data"][f"{page_number}"] = page_data
                     except Exception as e:
-                        logger.info(f"Failed with error: {e}")
+                        print(f"Failed: {e}")
                 if len(report["sdg_data"]) != num_pages:
-                    print("WATCH OUT : sdg_data length is unequal to num_pages")
+                    len_sdg = len(report["sdg_data"])
+                    print(f"ERROR | len(sdg_data)({len_sdg}) != to num_pages({num_pages})")
+                    # print(report["sdg_data"])
 
         with open("file_data.json", mode="w", encoding="utf-8") as feedsjson:
             json.dump(reports, feedsjson)

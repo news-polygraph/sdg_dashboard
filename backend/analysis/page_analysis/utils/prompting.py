@@ -103,7 +103,7 @@ def contextualize_paragraph(paragraphs, page_data):
         response_1 = perform_api_request(prompt, 250)
         response_2 = response_1.strip()
         response_3 = response_2.replace("\\", "")
-        response_4 = re.sub(r"/('(?= ?\n?,| ?\n?:| ?\n?}))|((?<={|{ |{\n|,|, |,\n|:|: |:\n)')/gm", '"', response_3)
+        response_4 = re.sub(r"/('(?= ?\n?,| ?\n?:| ?\n?}))|((?<={|,|:)')|((?<={ |{\n|, |,\n|: |:\n)')/gm", '"', response_3)
         start = response_4.find("{")
         end = response_4.rfind("}")
         response_5 = response_4[start:end+1]
