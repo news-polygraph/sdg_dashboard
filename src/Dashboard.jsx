@@ -31,10 +31,10 @@ function Dashboard() {
   const mainPanel = React.useRef(null);
   const [file, setFile] = React.useState(null);
   const [fileData, setFileData] = React.useState(fileDataDefault);
-  const [sdgActive, setSdgActive] = React.useState(null);
+  const [sdgActive, setSdgActive] = React.useState(null); //which sdg is chosen in analysis Section
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
-  const [mistralAnswer, setMistralAnswer] = React.useState([]) //maybe not the richt Data-Type for UnseState, proof befor use
+  const [mistralAnswer, setMistralAnswer] = React.useState([{}]) //maybe not the richt Data-Type for UnseState, proof befor use
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -96,8 +96,10 @@ function Dashboard() {
     try {
       axios
         .post(`${backendUrl}/model`, m)
-        .then((result) =>{
-          console.log(result.data);
+        .then((res) =>{
+          console.log(res.data);
+          setMistralAnswer(res.data)
+          console.log("speichere Answer in MistralAnswer");
         });
         
     } catch (error) {
