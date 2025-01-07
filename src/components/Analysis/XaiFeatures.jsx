@@ -5,9 +5,11 @@ import { sdgIcons, sdgColors } from "../utils.js";
 import axios from "axios";
 import ActiveSdgFeedback from "components/Feedback/ActiveSDGFeedback.jsx";
 
-function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
+function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer}){
+  const sdgsAnswer = mistralAnswer.map(object =>Number(object.sdg_number))
+  console.log(sdgsAnswer);
   //saves the iconObjects with the same key as listed in sdgMissing
-	const sdgIconsAnswer = sdgAnswer
+	const sdgIconsAnswer = sdgsAnswer
   .map(number => sdgIcons.find(icon => icon.key === number))
   .filter(Boolean);
   const sdgActiveColor =
@@ -30,8 +32,8 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
          .get(`${backendUrl}/descriptions`)
          .then((result) =>{  
            setSdgDescriptions(result.data)
-           console.log("set SDGdescriptions");
-           console.log(result.data);
+           //console.log("set SDGdescriptions");
+           //console.log(result.data);
          }); 
        
      } catch (error) {
@@ -45,7 +47,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
    //called by clicking on an sdgIcon
    const changeSDGActiveDescription = (number) =>{
     setActiveSdgDescription(sdgDescriptions.find(sdg => sdg.number==number));
-    console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
+    //console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
    };
 
 
@@ -113,7 +115,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
                       </Col>  
                       <Col lg={6}>
                         Mistrals explanation
-                        {nl_explanation}
+                        {sdgActive? mistralAnswer.find(object => toString(object.sdg_number)==sdgActive): "no explanation / has not worked yet"}
                       </Col>
                     </Row>
                   </CardBody>
@@ -140,7 +142,8 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
 XaiFeatures.propTypes = {
   sdgActive: PropTypes.number,
   setSdgActive: PropTypes.func.isRequired,
-  sdgAnswer: PropTypes.array,
+  mistralAnswer: PropTypes.array
+  
 };
 
 export default XaiFeatures;

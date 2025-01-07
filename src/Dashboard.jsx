@@ -34,7 +34,7 @@ function Dashboard() {
   const [sdgActive, setSdgActive] = React.useState(null); //which sdg is chosen in analysis Section
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
-  const [mistralAnswer, setMistralAnswer] = React.useState([{}]) //maybe not the richt Data-Type for UnseState, proof befor use
+  const [mistralAnswer, setMistralAnswer] = React.useState([]) //maybe not the richt Data-Type for UnseState, proof befor use
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -211,7 +211,7 @@ function Dashboard() {
                   <XaiFeatures
                       sdgActive={sdgActive}
                       setSdgActive={setSdgActive}
-                      sdgAnswer={[1,4,8,11,14]}
+                      mistralAnswer = {mistralAnswer}
                     />
                   </Card.Body>
                 </Card>
