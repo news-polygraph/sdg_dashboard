@@ -50,6 +50,14 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer}){
     //console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
    };
 
+   //save mistrals explanation
+   const [explanation, setExplanation] = useState("");
+   useEffect(()=>{
+    if (mistralAnswer===undefined || mistralAnswer.length == 0) return;
+    console.log(mistralAnswer)
+    setExplanation(mistralAnswer.find(object => object.sdg_number==toString(sdgActive)).explanation)
+    },sdgActive)
+    
 
     return (
       <>
@@ -114,8 +122,8 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer}){
                       
                       </Col>  
                       <Col lg={6}>
-                        Mistrals explanation
-                        {sdgActive? mistralAnswer.find(object => toString(object.sdg_number)==sdgActive): "no explanation / has not worked yet"}
+                       <p> Mistrals explanation </p>
+                       <p> {sdgActive?explanation:"no sdg chosen"} </p>
                       </Col>
                     </Row>
                   </CardBody>
