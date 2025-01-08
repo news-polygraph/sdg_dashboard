@@ -34,7 +34,7 @@ function Dashboard() {
   const [sdgActive, setSdgActive] = React.useState(null); //which sdg is chosen in analysis Section
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
-  const [mistralAnswer, setMistralAnswer] = React.useState([]) //maybe not the right Data-Type for UnseState, proof befor use
+  const [mistralAnswer, setMistralAnswer] = useState([]) //maybe not the right Data-Type for UnseState, proof befor use
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -139,8 +139,15 @@ function Dashboard() {
   const changeSDGActive = (sdgNumber) =>{
     setSdgActive (Number(sdgNumber))
     console.log("mistralAnswer: " + toString(mistralAnswer))
-    setExplanation (mistralAnswer.find(object => object.sdg_number==toString(sdgActive)).explanation)
+    const sdgExplanation = mistralAnswer.find(
+      (object) => object.sdg_number == String(sdgNumber) // String-Vergleich für `sdg_number`
+    )?.explanation;
   
+    if (sdgExplanation) {
+      setExplanation(sdgExplanation); // Erklärung setzen, wenn gefunden
+    } else {
+      setExplanation("No explanation available."); // Fallback
+    }
   }
 
   return (
