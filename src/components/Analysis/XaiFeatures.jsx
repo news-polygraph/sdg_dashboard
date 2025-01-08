@@ -5,9 +5,9 @@ import { sdgIcons, sdgColors } from "../utils.js";
 import axios from "axios";
 import ActiveSdgFeedback from "components/Feedback/ActiveSDGFeedback.jsx";
 
-function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer}){
+function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, explanation}){
   const sdgsAnswer = mistralAnswer.map(object =>Number(object.sdg_number))
-  console.log(sdgsAnswer);
+  console.log("sdgsAnswer " + sdgsAnswer);
   //saves the iconObjects with the same key as listed in sdgMissing
 	const sdgIconsAnswer = sdgsAnswer
   .map(number => sdgIcons.find(icon => icon.key === number))
@@ -15,7 +15,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer}){
   const sdgActiveColor =
     sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
   const activeData = { factuality: 0.0, category: null };
-  const { factuality, nl_explanation } = activeData;
+  const {factuality, nl_explanation } = activeData;
 
   //saves the descriptions to all sdgs
   const [sdgDescriptions, setSdgDescriptions] = useState([]);
@@ -50,14 +50,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer}){
     //console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
    };
 
-   //save mistrals explanation
-   const [explanation, setExplanation] = useState("");
-   useEffect(()=>{
-    if (mistralAnswer===undefined || mistralAnswer.length == 0) return;
-    console.log(mistralAnswer)
-    setExplanation(mistralAnswer.find(object => object.sdg_number==toString(sdgActive)).explanation)
-    },sdgActive)
-    
+   
 
     return (
       <>
@@ -135,8 +128,10 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer}){
                   Feedback Active SDG {sdgActive}
                 </CardHeader>
                 <CardBody>
-                  <ActiveSdgFeedback sdgActive={sdgActive}/>
-                  
+                {sdgActive?
+                  <ActiveSdgFeedback sdgActive={sdgActive}/>:
+                  <p>No SDG chosen</p>
+                }
                 </CardBody>
               </Card>
             </Col> 

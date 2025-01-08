@@ -34,7 +34,7 @@ function Dashboard() {
   const [sdgActive, setSdgActive] = React.useState(null); //which sdg is chosen in analysis Section
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
-  const [mistralAnswer, setMistralAnswer] = React.useState([]) //maybe not the richt Data-Type for UnseState, proof befor use
+  const [mistralAnswer, setMistralAnswer] = React.useState([]) //maybe not the right Data-Type for UnseState, proof befor use
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -97,8 +97,9 @@ function Dashboard() {
       axios
         .post(`${backendUrl}/model`, m)
         .then((res) =>{
-          console.log(res.data);
           setMistralAnswer(res.data)
+          console.log("Answer: ");
+          console.log(res.data);
           console.log("speichere Answer in MistralAnswer");
         });
         
@@ -132,7 +133,15 @@ function Dashboard() {
   //only for demo
   const [sentRequest, setSentRequest] = useState(false);
 
+  //change all relevant state for Xai Features if active SDG changes
+  const [explanation, setExplanation] = useState("no sdg chosen");
+
+  const changeSDGActive = (sdgNumber) =>{
+    setSdgActive (Number(sdgNumber))
+    console.log("mistralAnswer: " + toString(mistralAnswer))
+    setExplanation (mistralAnswer.find(object => object.sdg_number==toString(sdgActive)).explanation)
   
+  }
 
   return (
     <div className="wrapper">
@@ -211,9 +220,10 @@ function Dashboard() {
                   {/*later: only shown when request was send and request-answer is not empty*/}
                   <XaiFeatures
                       sdgActive={sdgActive}
-                      setSdgActive={setSdgActive}
+                      setSdgActive={changeSDGActive}
                       mistralAnswer = {mistralAnswer}
-                    />
+                      explanation={explanation}
+                 />
                   </Card.Body>
                 </Card>
               </Col>:(null)}
