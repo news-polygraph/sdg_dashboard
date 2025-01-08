@@ -90,11 +90,7 @@ def contextualize_paragraph(paragraphs, page_data):
         Example Action:
             "The company reduces its greenhouse gas emissions to comply with local regulations."
         Output:
-         {{
-          "impact_type": "A",
-          "pro": "The action reduces negative environmental impacts, which aligns with minimizing harm.",
-          "con": "The action is reactive rather than proactive."
-        }}
+         {{"impact_type": "A", "pro": "The action reduces negative environmental impacts, which aligns with minimizing harm.","con": "The action is reactive rather than proactive."}}
         Input Action:
         "{paragraph}"
         Output:
@@ -105,7 +101,7 @@ def contextualize_paragraph(paragraphs, page_data):
         response_3 = response_2.replace("\\", "")
         response_4 = re.sub(r"/('(?= ?\n?,| ?\n?:| ?\n?}))|((?<={|,|:)')|((?<={ |{\n|, |,\n|: |:\n)')/gm", '"', response_3)
         start = response_4.find("{")
-        end = response_4.rfind("}")
+        end = response_4.find("}")
         response_5 = response_4[start:end+1]
 
         try:
@@ -114,12 +110,5 @@ def contextualize_paragraph(paragraphs, page_data):
                 page_data[f"{sdg_idx}"]["context"] = response_json    
         except Exception as e:
             print(f"Exception when parsing json:", e)
-            print(type(e))
-            print(e)
-            print("Response_1", response_1)
-            print("Response_2", response_2)
-            print("Response_3", response_3)
-            print("Response_4", response_4)
-            print("Response_5", response_5)
 
 

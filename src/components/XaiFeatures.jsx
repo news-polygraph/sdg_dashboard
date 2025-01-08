@@ -106,8 +106,8 @@ class XaiFeatures extends Component {
                               margin: 0, // Ensure no margin between divs
                               borderRadius: "5px 0 0 5px", // Only round the left corners of the first div
                               background:
-                                  context.impact_type === "Act to avoid harm" ? sdgActiveColor : "transparent",
-                              color: context.impact_type === "Act to avoid harm" ? "white" : "black",
+                                  context.impact_type === "A" ? sdgActiveColor : "transparent",
+                              color: context.impact_type === "A" ? "white" : "black",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -121,8 +121,8 @@ class XaiFeatures extends Component {
                               padding: "2px 5px",
                               margin: 0,
                               background:
-                                  context.impact_type === "Benefit stakeholders" ? sdgActiveColor : "transparent",
-                              color: context.impact_type === "Benefit stakeholders" ? "white" : "black",
+                                  context.impact_type === "B" ? sdgActiveColor : "transparent",
+                              color: context.impact_type === "B" ? "white" : "black",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -136,8 +136,8 @@ class XaiFeatures extends Component {
                               padding: "2px 5px",
                               margin: 0,
                               background:
-                                  context.impact_type === "Contribute to solutions" ? sdgActiveColor : "transparent",
-                              color: context.impact_type === "Contribute to solutions" ? "white" : "black",
+                                  context.impact_type === "C" ? sdgActiveColor : "transparent",
+                              color: context.impact_type === "C" ? "white" : "black",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
