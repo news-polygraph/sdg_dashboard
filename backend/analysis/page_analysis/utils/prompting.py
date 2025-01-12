@@ -53,8 +53,7 @@ def summarize_paragraph(paragraphs, page_data):
         You are a analyst that has to write a single sentence summary about a report for his boss. 
         """
         task_prompt = f"""
-        Sum up the following text: '{paragraph}'
-        Extract the most important facts concerning the sustainable developement goal {sdg_idx}:'{sdg}' 
+        Sum up the text in the curly braces and extract the information concerning sdg {sdg_idx}:'{sdg}': '{{{paragraph}}}'
         Keep your summary very short!
         Response: 
         """
@@ -79,8 +78,8 @@ def contextualize_paragraph(paragraphs, page_data):
         Your task is to classify the following actions into one of the categories in the ABC model of impact frontiers and provide a detailed reasoning process with pro and con arguments. 
         Return the result in JSON format with the keys:
             impact_type: The classification (A, B, or C).
-            pro: Arguments that support your claim of the classification.
-            con: Arguments that challenging the chosen classification.
+            pro: A single string containing arguments that support your claim of the classification.
+            con: A single string containing arguments that challenging the chosen classification.
 
         The ABC model categories are:
             A: Act to avoid harm – The action minimizes negative social or environmental impacts.
@@ -110,5 +109,7 @@ def contextualize_paragraph(paragraphs, page_data):
                 page_data[f"{sdg_idx}"]["context"] = response_json    
         except Exception as e:
             print(f"Exception when parsing json:", e)
+            print("Response 1: ", response_1)
+            print("Response 5: ", response_5)
 
 
