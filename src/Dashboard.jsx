@@ -14,12 +14,6 @@ import { fileDataDefault } from "./components/utils.js";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
-console.log("REACT_APP_BACKEND_URL:");
-console.log(process.env.REACT_APP_BACKEND_URL);
-
-console.log("Dashboard.jsx:");
-console.log(backendUrl);
-
 // react-bootstrap components
 function Dashboard() {
   const location = useLocation();
@@ -61,17 +55,6 @@ function Dashboard() {
 
   const onPageChange = useCallback((newPageNumber) => {
     setPageNumber(newPageNumber);
-
-    // if (fileData.title != "default_title") {
-    //   axios
-    //     .get(
-    //       `${backendUrl}/data/`.concat(fileData.title, "/", pageNumber)
-    //     )
-    //     .then((res) => {
-    //       // set Keywords to be shown in PdfViewer
-    //       setFileData(res.data);
-    //     });
-    // }
   });
 
   React.useEffect(() => {
