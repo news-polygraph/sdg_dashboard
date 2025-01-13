@@ -1,5 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM node:14
+FROM node:16
 
 # Set the working directory in the container
 WORKDIR /
@@ -8,7 +8,9 @@ WORKDIR /
 COPY package*.json ./
 
 # Install any needed packages
+RUN npm cache clean --force
 RUN npm install
+RUN npm dedupe
 
 # Bundle app source
 COPY . .
