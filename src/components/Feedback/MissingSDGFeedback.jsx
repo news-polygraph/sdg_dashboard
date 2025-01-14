@@ -57,7 +57,10 @@ function MissingSDGFeedback ({ sdgMissing }){
 			<Form>
 				<Row class="row-margin-bottom">
 					<Card>
-						<CardHeader>please select a sdg which you think would also have fitted too</CardHeader>
+						<CardHeader>
+							<p>only work with this section if you think there are sdgs missing in the answer by mistral</p>
+							<p>please select a sdg which you think would also have fitted too</p>
+						</CardHeader>
 						<CardBody>
 							<Row class="row-padding-side">
 							{missingSDGIcons.map(({key, sdgIcon}) => (
@@ -74,7 +77,7 @@ function MissingSDGFeedback ({ sdgMissing }){
 									filter:
 										key === missingSdgActive
 										? "grayscale(0%)" // if sdg is selected normal color
-										: "grayscale(90%)" // not selected less color intensity
+										: "grayscale(50%)" // not selected less color intensity
 											
 									}}
 									onMouseEnter={() => setMissingSdgActive(key)}
@@ -95,7 +98,7 @@ function MissingSDGFeedback ({ sdgMissing }){
 				<Row class="row-margin-bottom">
 					<Card>
 						<CardHeader>
-							<Card.Title>Chosen SDG description:</Card.Title>
+							<Card.Title><h5>Chosen SDG description:</h5></Card.Title>
 						</CardHeader>
 						<CardBody>
 						{activeSdgDescription.description?activeSdgDescription.description

@@ -7,7 +7,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import PropTypes from "prop-types";
 
-function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen}) {
+function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, setModuleChosen}) {
   // states for modules
   const [modules, setModules] = useState([]);
 
@@ -126,6 +126,9 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen}) {
               onClick={()=>{
                 setSentRequest(true);
                 sendRequest(moduleChosen);
+                //console.log("moduleChosen: "+moduleChosen)
+                
+                
               }}>
 							Send request to Mistral
 						</Button>
@@ -141,6 +144,7 @@ ChooseModule.propTypes = {
   setSentRequest:PropTypes.func.isRequired,
   sendRequest:PropTypes.func.isRequired,
   chooseModule:PropTypes.func.isRequired,
-  moduleChosen:PropTypes.object
+  moduleChosen:PropTypes.object,
+  setModuleChosen:PropTypes.func.isRequired,
 };
 export default ChooseModule;

@@ -123,7 +123,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, m
             <Col lg={4}class="col-no-margin">
               <Card              >
                 <CardHeader>
-                  Feedback Active SDG {sdgActive}
+                  Feedback Active SDG {sdgActive} and module {moduleNr}
                 </CardHeader>
                 <CardBody>
                 {sdgActive?

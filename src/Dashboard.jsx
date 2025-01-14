@@ -18,6 +18,7 @@ import OldXaiFeatures from "components/OldXaiFeatures.jsx";
 import FeedbackSection from "components/Feedback/FeedbackSection.jsx";
 import MissingSDGFeedback from "components/Feedback/MissingSDGFeedback.jsx";
 
+
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
 console.log("REACT_APP_BACKEND_URL:");
@@ -101,6 +102,7 @@ function Dashboard() {
           console.log("Answer: ");
           console.log(res.data);
           console.log("speichere Answer in MistralAnswer");
+
         });
         
     } catch (error) {
@@ -135,33 +137,29 @@ function Dashboard() {
 
   const [moduleChosen, setModuleChosen] = useState();
 
-  const chooseModule = (module) => {
-      try {
-        axios
-          .get(`${backendUrl}/modules/${module.modulnummer}`)
-          .then((result) =>{  
-            setModuleChosen(result.data);
-          });
-          
-      } catch (error) {
-        console.error("Fehler beim Auswählen eines Moduls:", error);
-      }
+  const chooseModule = useCallback(async (module) => {
+    try {
+      const response = await axios.get(`${backendUrl}/modules/${module.modulnummer}`);
+      setModuleChosen(response.data);
+    } catch (error) {
+      console.error("Fehler beim Auswählen eines Moduls:", error);
     }
+  }, []);
   
 
-  /*React.useEffect(() => {
+  React.useEffect(() => {
         if (moduleChosen) {
           console.log("Aktualisiertes moduleChosen:", moduleChosen);
           // Hier kannst du den Wert weitergeben oder darauf reagieren
         }
-      }, [moduleChosen]);*/
+      }, [moduleChosen]);
 
   //change all relevant state for Xai Features if active SDG changes
   const [nlExplanation, setNlExplanation] = useState("no sdg chosen");
 
   const changeSDGActive = (sdgNumber) =>{
     setSdgActive (Number(sdgNumber))
-    console.log("mistralAnswer: " + toString(mistralAnswer))
+    //console.log("mistralAnswer: " + toString(mistralAnswer))
     const sdgExplanation = mistralAnswer.find(
       (object) => object.sdg_number == String(sdgNumber) // String-Vergleich für `sdg_number`
     )?.explanation;
@@ -201,6 +199,7 @@ function Dashboard() {
                     sendRequest={sendModelReq}
                     chooseModule={chooseModule}
                     moduleChosen={moduleChosen}
+                    setModuleChosen={setModuleChosen}
                   /> 
                 </Card.Body>
               </Card>
@@ -246,7 +245,7 @@ function Dashboard() {
               <Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Results for {moduleChosen.titelde}/{moduleChosen.titelen} sent by mistral</Card.Title>
+                    <Card.Title as="h4">Results for {moduleChosen.modulnummer} sent by mistral</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
