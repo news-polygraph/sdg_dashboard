@@ -59,7 +59,7 @@ function MissingSDGFeedback ({ sdgMissing }){
 					<Card>
 						<CardHeader>please select a sdg which you think would also have fitted too</CardHeader>
 						<CardBody>
-							<Row>
+							<Row class="row-padding-side">
 							{missingSDGIcons.map(({key, sdgIcon}) => (
 								<Col xs={3} md={2} xl={1} key={key} className="p-0">
 								<img

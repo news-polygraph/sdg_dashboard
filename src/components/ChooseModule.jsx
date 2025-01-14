@@ -7,10 +7,9 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import PropTypes from "prop-types";
 
-function ChooseModule({setSentRequest,sendRequest}) {
+function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen}) {
   // states for modules
   const [modules, setModules] = useState([]);
-  const [moduleChosen, setModuleChosen] = useState();
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
@@ -29,21 +28,7 @@ function ChooseModule({setSentRequest,sendRequest}) {
     }
   }, []);
  
-
-  const chooseModule = (module) => {
-    try {
-      axios
-        .get(`${backendUrl}/modules/${module.modulnummer}`)
-        .then((result) =>{  
-          setModuleChosen(result.data);
-          console.log("ModuleChosen: " + result.data);
-        });
-        
-    } catch (error) {
-      console.error("Fehler beim Auswählen eines Moduls:", error);
-    }
-  }
-
+  
 
   //language to display modules
   const [languageModuleInfo, setLanguage] = useState("deutsch");
@@ -77,66 +62,57 @@ function ChooseModule({setSentRequest,sendRequest}) {
         </Row>
         {moduleChosen?
         <div className="content" class="div-padding-top-bottom">
-          <Row>
-          <ButtonGroup>
-            {radios.map((radio) => (
-              <ToggleButton
-                type="radio"
-                name="radio"
-                value={radio.value}
-                checked={languageModuleInfo === radio.value}
-                onClick={() => {
-                  changeLanguage(radio.name);
-                }}
-                
-              >
-                {radio.name}
-              </ToggleButton>
-            ))}
-          </ButtonGroup>
-            {/*<ToggleButtonGroup type="radio" name="options" defaultValue={1} variant="secondary">
-              <ToggleButton value={1} onClick={() => {
-                    changeLanguage("deutsch");
-                  }}>
-                deutsch
-              </ToggleButton>
-              <ToggleButton value={2} onClick={() => {
-                    changeLanguage("english");
-                  }}>
-                english
-              </ToggleButton>
-            </ToggleButtonGroup>*/}
+          <Row class="row-margin-bottom">
+            <Col xl={6}>
+              <p>Choose module language</p>
+              <ButtonGroup>
+                {radios.map((radio) => (
+                  <ToggleButton
+                    type="radio"
+                    name="radio"
+                    value={radio.value}
+                    checked={languageModuleInfo === radio.value}
+                    onClick={() => {
+                      changeLanguage(radio.name);
+                    }}
+                    
+                  >
+                    {radio.name}
+                  </ToggleButton>
+                ))}
+              </ButtonGroup>
+              </Col>
           </Row>
           <Row>
             <Col lg={4}>
-              <Row><Card>
-                <Card.Header>Modultitel</Card.Header>
+              <Card>
+                <Card.Header><h5>Modultitel</h5></Card.Header>
                 <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.titelde || "Kein Titel verfügbar" ):(moduleChosen?.modulinfos?.titelen || "no title available" )}</Card.Body>
-                </Card></Row>
-              <Row><Card>
-                <Card.Header>ID</Card.Header>
+                </Card>
+              <Card>
+                <Card.Header><h5>ID</h5></Card.Header>
                 <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.modulnummer || "Keine ID verfügbar"):(moduleChosen?.modulinfos?.modulnummer || "no ID available")}</Card.Body>
-              </Card></Row>
+              </Card>
             </Col>
             <Col lg={8}>
                 <Card>
-                  <Card.Header>Moduledesription</Card.Header>
+                  <Card.Header><h5>Moduledesription</h5></Card.Header>
                   <Card.Body>
                     {languageModuleInfo=="deutsch"?
                       <div>
-                        <p>Lehrinhalte</p>
+                        <h6>Lehrinhalte</h6>
                         {moduleChosen?.modulinfos?.lehrinhaltede || "Keine lehrinhalte verfügbar"}
                         <p></p>
-                        <p>Lernergebnisse</p>
+                        <h6>Lernergebnisse</h6>
                         <p></p>
                         {moduleChosen?.modulinfos?.lehrnergebnissede || "Keine lernergebnisse verfügbar"}
                       </div>
                     :
                       <div>
-                        <p>subjects</p>
+                        <h6>subjects</h6>
                         {moduleChosen?.modulinfos?.lehrinhalteen || "no subjects available"}
                         <p></p>
-                        <p>learnig goals</p>
+                        <h6>learnig goals</h6>
                         <p></p>
                         {moduleChosen?.modulinfos?.lehrnergebnisseen || "no goals available"}
                       </div>}
@@ -163,5 +139,8 @@ function ChooseModule({setSentRequest,sendRequest}) {
 }
 ChooseModule.propTypes = {
   setSentRequest:PropTypes.func.isRequired,
+  sendRequest:PropTypes.func.isRequired,
+  chooseModule:PropTypes.func.isRequired,
+  moduleChosen:PropTypes.object
 };
 export default ChooseModule;

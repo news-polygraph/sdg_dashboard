@@ -18,7 +18,7 @@ import OldXaiFeatures from "components/OldXaiFeatures.jsx";
 import FeedbackSection from "components/Feedback/FeedbackSection.jsx";
 import MissingSDGFeedback from "components/Feedback/MissingSDGFeedback.jsx";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
 console.log("REACT_APP_BACKEND_URL:");
 console.log(process.env.REACT_APP_BACKEND_URL);
@@ -133,8 +133,31 @@ function Dashboard() {
   //only for demo
   const [sentRequest, setSentRequest] = useState(false);
 
+  const [moduleChosen, setModuleChosen] = useState();
+
+  const chooseModule = (module) => {
+      try {
+        axios
+          .get(`${backendUrl}/modules/${module.modulnummer}`)
+          .then((result) =>{  
+            setModuleChosen(result.data);
+          });
+          
+      } catch (error) {
+        console.error("Fehler beim Auswählen eines Moduls:", error);
+      }
+    }
+  
+
+  /*React.useEffect(() => {
+        if (moduleChosen) {
+          console.log("Aktualisiertes moduleChosen:", moduleChosen);
+          // Hier kannst du den Wert weitergeben oder darauf reagieren
+        }
+      }, [moduleChosen]);*/
+
   //change all relevant state for Xai Features if active SDG changes
-  const [explanation, setExplanation] = useState("no sdg chosen");
+  const [nlExplanation, setNlExplanation] = useState("no sdg chosen");
 
   const changeSDGActive = (sdgNumber) =>{
     setSdgActive (Number(sdgNumber))
@@ -144,9 +167,9 @@ function Dashboard() {
     )?.explanation;
   
     if (sdgExplanation) {
-      setExplanation(sdgExplanation); // Erklärung setzen, wenn gefunden
+      setNlExplanation(sdgExplanation); // Erklärung setzen, wenn gefunden
     } else {
-      setExplanation("No explanation available."); // Fallback
+      setNlExplanation("No explanation available."); // Fallback
     }
   }
 
@@ -176,6 +199,8 @@ function Dashboard() {
                   <ChooseModule
                     setSentRequest={setSentRequest}
                     sendRequest={sendModelReq}
+                    chooseModule={chooseModule}
+                    moduleChosen={moduleChosen}
                   /> 
                 </Card.Body>
               </Card>
@@ -221,7 +246,7 @@ function Dashboard() {
               <Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Results</Card.Title>
+                    <Card.Title as="h4">Results for {moduleChosen.titelde}/{moduleChosen.titelen} sent by mistral</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
@@ -229,7 +254,8 @@ function Dashboard() {
                       sdgActive={sdgActive}
                       setSdgActive={changeSDGActive}
                       mistralAnswer = {mistralAnswer}
-                      explanation={explanation}
+                      nlExplanation={nlExplanation}
+                      moduleNr={moduleChosen.modulnummer}
                  />
                   </Card.Body>
                 </Card>

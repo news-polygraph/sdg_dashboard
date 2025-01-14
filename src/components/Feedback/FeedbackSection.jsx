@@ -62,18 +62,8 @@ function FeedbackSection ({ sdgActive, sdgMissing }){
 	];
 
 
-    return (
-		//TODO:
-		//sdg active Section (show only when sdg Active is not [])
-			//button fits/not
-			//text input personal explanation
-			//button send feedback for active sdg 
 
-		//missing sdg section
-			//icon list missing sdgs to choose one by clicking
-			//eplanations field for displaying sdg description
-			//text input personal explanation (show only when missing one is chosen)
-			//button send feedback for missing sdgs (show only when missing one is chosen)
+    return (
 		<Container>
 			<Row>
 				<Col md={12} lg={6}>
