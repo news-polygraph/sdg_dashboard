@@ -5,22 +5,22 @@ import { sdgIcons, sdgColors } from "../utils.js";
 import axios from "axios";
 import ActiveSdgFeedback from "components/Feedback/ActiveSDGFeedback.jsx";
 
-function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
+function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, moduleNr}){
+  const sdgsAnswer = mistralAnswer.map(object =>Number(object.sdg_number))
+  console.log("sdgsAnswer " + sdgsAnswer);
   //saves the iconObjects with the same key as listed in sdgMissing
-	const sdgIconsAnswer = sdgAnswer
+	const sdgIconsAnswer = sdgsAnswer
   .map(number => sdgIcons.find(icon => icon.key === number))
   .filter(Boolean);
   const sdgActiveColor =
     sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
-  const activeData = { factuality: 0.0, category: null };
-  const { factuality, nl_explanation } = activeData;
 
   //saves the descriptions to all sdgs
   const [sdgDescriptions, setSdgDescriptions] = useState([]);
   //saves which sdg was clicked to switch back after onMouseLeave
   const [sdgClicked, setSdgClicked] = useState("");
   
-    //backend URL
+  //backend URL
    const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
    // function to load sdg_descriptions
@@ -30,8 +30,8 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
          .get(`${backendUrl}/descriptions`)
          .then((result) =>{  
            setSdgDescriptions(result.data)
-           console.log("set SDGdescriptions");
-           console.log(result.data);
+           //console.log("set SDGdescriptions");
+           //console.log(result.data);
          }); 
        
      } catch (error) {
@@ -45,9 +45,10 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
    //called by clicking on an sdgIcon
    const changeSDGActiveDescription = (number) =>{
     setActiveSdgDescription(sdgDescriptions.find(sdg => sdg.number==number));
-    console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
+    //console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
    };
 
+   
 
     return (
       <>
@@ -56,10 +57,10 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
         >
           <Row>
             <Card>
-              <CardHeader><h5>Read about the SDGs chosen by Mistral and give Feedback</h5>
+              <CardHeader><h5>Select a sdg-icon to read about the SDGs by Mistral and mistrals explanation why it fits and give feedback</h5>
               </CardHeader>
               <CardBody>
-                <Row>
+                <Row class="row-padding-side">
                   {sdgIconsAnswer.map(({ key, sdgIcon }) => (
                     <Col xs={3} sm={2}  xl={1} key={key} className="p-0">
                       <img
@@ -92,15 +93,15 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
               </CardBody>
             </Card>
           </Row>
-           <Row> 
+           <Row class="row-padding-side row-margin-bottom"> 
             {/*display additional information (definition) about the sdg which ist hovered*/}
-            <Col lg={8}>
+            <Col lg={8} class="col-no-margin" >
                 <Card>
-                  <CardHeader>info about chosen SDG</CardHeader>
+                  <CardHeader><h5>info about chosen SDG</h5></CardHeader>
                   <CardBody>
                     <Row>
                       <Col lg={6}>
-                        <h5>SDG {sdgActive} description</h5>
+                        <h6>SDG {sdgActive} description</h6>
                       
                         {activeSdgDescription?
                         <>
@@ -112,21 +113,26 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
                       
                       </Col>  
                       <Col lg={6}>
-                        Mistrals explanation
-                        {nl_explanation}
+                       <h6> Mistrals explanation </h6>
+                       <p> {sdgActive?nlExplanation:"no sdg chosen"} </p>
                       </Col>
                     </Row>
                   </CardBody>
                 </Card>
             </Col> 
-            <Col lg={4}>
+            <Col lg={4}class="col-no-margin">
               <Card              >
                 <CardHeader>
-                  Feedback Active SDG {sdgActive}
+                  Feedback Active SDG {sdgActive} and module {moduleNr}
                 </CardHeader>
                 <CardBody>
-                  <ActiveSdgFeedback sdgActive={sdgActive}/>
-                  
+                {sdgActive?
+                  <ActiveSdgFeedback 
+                  sdgActive={sdgActive}
+                  moduleNr={moduleNr}
+                  />:
+                  <p>No SDG chosen</p>
+                }
                 </CardBody>
               </Card>
             </Col> 
@@ -140,7 +146,10 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgAnswer}){
 XaiFeatures.propTypes = {
   sdgActive: PropTypes.number,
   setSdgActive: PropTypes.func.isRequired,
-  sdgAnswer: PropTypes.array,
+  mistralAnswer: PropTypes.array,
+  nlExplanation: PropTypes.string,
+  moduleNr: PropTypes.number
+  
 };
 
 export default XaiFeatures;

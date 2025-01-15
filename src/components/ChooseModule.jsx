@@ -7,14 +7,13 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import PropTypes from "prop-types";
 
-function ChooseModule({setSentRequest}) {
+function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, setModuleChosen}) {
   // states for modules
   const [modules, setModules] = useState([]);
-  const [moduleChosen, setModuleChosen] = useState();
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
-  // function to get modules frpm backend and save in modules
+  // function to get modules from backend and save in modules
   useEffect(() => {
     try {
       axios
@@ -29,45 +28,7 @@ function ChooseModule({setSentRequest}) {
     }
   }, []);
  
-
-  const chooseModule = (module) => {
-    try {
-      axios
-        .get(`${backendUrl}/modules/${module.modulnummer}`)
-        .then((result) =>{  
-          setModuleChosen(result.data);
-          console.log("ModuleChosen: " + result.data);
-        });
-        
-    } catch (error) {
-      console.error("Fehler beim Auswählen eines Moduls:", error);
-    }
-  }
-
-  const sendModelReq = (module) => {
-    // bspw sowas:
-    const m = {"modulinfos": {
-        "modulnummer": 51088,
-        "versionsnummer": 1,
-        "link": "https://moseskonto.tu-berlin.de/moses/modultransfersystem/bolognamodule/beschreibung/anzeigen.html?number=51088&version=1&sprache=1",
-        "titelde": "Medizintechnik im Krankenhaus",
-        "titelen": "Medical technology in hospitals",
-        "lernergebnissede": "Die Absolvent*innen dieses Moduls erlernen die erforderlichen Grundlagen des/der in der Medizintechnikabteilung eines Krankenhauses tätige/n Ingenieur*in bei der Anwendung dort eingesetzter Medizinprodukte. Durch die Vermittlung der zugehörigen Aufgaben und Tätigkeiten und deren relevanter Aspekte werden die Teilnehmer*innen in die Lage versetzt, Anforderungen an Medizinprodukte aus Sicht eines Krankenhauses zu verstehen. Mit Abschluss des Moduls verfügen die Absolvent*innen grundlegende Kenntnisse zur medizintechnischen Planung, zur Beschaffung sowie zum Betreiben von Medizinprodukten in einer Gesundheitseinrichtung. Die Absolvent*innen werden befähigt, Entscheidungen zur zielgerichteten Anwendung der Medizintechnik im Krankenhausumfeld zu treffen.",
-        "lernergebnisseen": "Graduates of this module learn the necessary basics of the engineer working in the medical technology department of a hospital in the application of medical devices used there. By learning about the associated tasks and activities and their relevant aspects, participants will be able to understand the requirements for medical devices from the perspective of a hospital. On completion of the module, graduates will have basic knowledge of medical technology planning, procurement and the operation of medical devices in a healthcare facility. Graduates will be able to make decisions on the targeted application of medical technology in the hospital environment.",
-        "lehrinhaltede": "• Funktionsweise und Aufbau Krankenhaus • Medizintechnische Planung • Beschaffung von Medizinprodukten • Betreiben von Medizinprodukten • Medizinische IT: Vernetzung und Informationssicherheit",
-        "lehrinhalteen": "Functionality and organisation of hospitals - Medical technology planning - Procurement of Medical devices - Operation of Medical devices - Medical IT: networking and information security"
-    }}
-    try {
-      axios
-        .post(`${backendUrl}/model`, m)
-        .then((result) =>{
-          console.log(result.data);
-        });
-        
-    } catch (error) {
-      console.error("Req Fehler", error);
-    }
-  }
+  
 
   //language to display modules
   const [languageModuleInfo, setLanguage] = useState("deutsch");
@@ -101,66 +62,57 @@ function ChooseModule({setSentRequest}) {
         </Row>
         {moduleChosen?
         <div className="content" class="div-padding-top-bottom">
-          <Row>
-          <ButtonGroup>
-            {radios.map((radio) => (
-              <ToggleButton
-                type="radio"
-                name="radio"
-                value={radio.value}
-                checked={languageModuleInfo === radio.value}
-                onClick={() => {
-                  changeLanguage(radio.name);
-                }}
-                
-              >
-                {radio.name}
-              </ToggleButton>
-            ))}
-          </ButtonGroup>
-            {/*<ToggleButtonGroup type="radio" name="options" defaultValue={1} variant="secondary">
-              <ToggleButton value={1} onClick={() => {
-                    changeLanguage("deutsch");
-                  }}>
-                deutsch
-              </ToggleButton>
-              <ToggleButton value={2} onClick={() => {
-                    changeLanguage("english");
-                  }}>
-                english
-              </ToggleButton>
-            </ToggleButtonGroup>*/}
+          <Row class="row-margin-bottom">
+            <Col xl={6}>
+              <p>Choose module language</p>
+              <ButtonGroup>
+                {radios.map((radio) => (
+                  <ToggleButton
+                    type="radio"
+                    name="radio"
+                    value={radio.value}
+                    checked={languageModuleInfo === radio.value}
+                    onClick={() => {
+                      changeLanguage(radio.name);
+                    }}
+                    
+                  >
+                    {radio.name}
+                  </ToggleButton>
+                ))}
+              </ButtonGroup>
+              </Col>
           </Row>
           <Row>
             <Col lg={4}>
-              <Row><Card>
-                <Card.Header>Modultitel</Card.Header>
+              <Card>
+                <Card.Header><h5>Modultitel</h5></Card.Header>
                 <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.titelde || "Kein Titel verfügbar" ):(moduleChosen?.modulinfos?.titelen || "no title available" )}</Card.Body>
-                </Card></Row>
-              <Row><Card>
-                <Card.Header>ID</Card.Header>
+                </Card>
+              <Card>
+                <Card.Header><h5>ID</h5></Card.Header>
                 <Card.Body>{languageModuleInfo=="deutsch"?(moduleChosen?.modulinfos?.modulnummer || "Keine ID verfügbar"):(moduleChosen?.modulinfos?.modulnummer || "no ID available")}</Card.Body>
-              </Card></Row>
+              </Card>
             </Col>
             <Col lg={8}>
                 <Card>
-                  <Card.Header>Moduledesription</Card.Header>
+                  <Card.Header><h5>Moduledesription</h5></Card.Header>
                   <Card.Body>
                     {languageModuleInfo=="deutsch"?
                       <div>
-                        <p>Lehrinhalte</p>
+                        <h6>Lehrinhalte</h6>
                         {moduleChosen?.modulinfos?.lehrinhaltede || "Keine lehrinhalte verfügbar"}
                         <p></p>
-                        <p>Lernergebnisse</p>
+                        <h6>Lernergebnisse</h6>
                         <p></p>
                         {moduleChosen?.modulinfos?.lehrnergebnissede || "Keine lernergebnisse verfügbar"}
                       </div>
                     :
                       <div>
-                        <p>subjects</p>
+                        <h6>subjects</h6>
                         {moduleChosen?.modulinfos?.lehrinhalteen || "no subjects available"}
                         <p></p>
-                        <p>learnig goals</p>
+                        <h6>learnig goals</h6>
                         <p></p>
                         {moduleChosen?.modulinfos?.lehrnergebnisseen || "no goals available"}
                       </div>}
@@ -170,7 +122,14 @@ function ChooseModule({setSentRequest}) {
           </Row>
           <Row class="row-margin-bottom">
 					<Col >
-						<Button className="btn-custom" onClick={()=>(setSentRequest(true))}>
+						<Button className="btn-custom" 
+              onClick={()=>{
+                setSentRequest(true);
+                sendRequest(moduleChosen);
+                //console.log("moduleChosen: "+moduleChosen)
+                
+                
+              }}>
 							Send request to Mistral
 						</Button>
 					</Col>
@@ -183,5 +142,9 @@ function ChooseModule({setSentRequest}) {
 }
 ChooseModule.propTypes = {
   setSentRequest:PropTypes.func.isRequired,
+  sendRequest:PropTypes.func.isRequired,
+  chooseModule:PropTypes.func.isRequired,
+  moduleChosen:PropTypes.object,
+  setModuleChosen:PropTypes.func.isRequired,
 };
 export default ChooseModule;

@@ -5,8 +5,12 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import axios from "axios";
 
-function ActiveSdgFeedback ({sdgActive}){	
+function ActiveSdgFeedback ({sdgActive, moduleNr}){	
+
+	//backend URL
+	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
 	const sendFeedback = (active, sdg, explanation, modulnr) => {
 		// eigentlich sowas:
@@ -17,14 +21,14 @@ function ActiveSdgFeedback ({sdgActive}){
 		}
 
 		// bspw so:
-		const m = {
+		/*const m = {
 			"chosen": true,
 			"sdg": 4,
 			"explanation": "test"
-		}
+		}*/
 		try {
 		  axios
-			.post(`${backendUrl}/feedback/${modulnr}`, m)
+			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
 			.then((result) =>{
 			  console.log(result.data);
 			});
@@ -43,6 +47,11 @@ function ActiveSdgFeedback ({sdgActive}){
 		{ name: 'does not fit', value: '1' },
 	];
 
+	const [textinput, setTextinput] = useState("");
+
+	function handleTextinput(event){
+		setTextinput(event.target.value);
+	}
 
     return (
 		//(show only when sdg Active is not [])
@@ -75,12 +84,16 @@ function ActiveSdgFeedback ({sdgActive}){
 				<Row class="row-margin-bottom">
 					<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
 						<Form.Label>please explain in short words why you think the active SDG is fitting or not fitting to the chosen module</Form.Label>
-						<Form.Control type="text" placeholder="personal explanation" />
+						<Form.Control as="textarea" placeholder="personal explanation" value={textinput} onChange={handleTextinput} />
 					</Form.Group>	
 				</Row>
 				<Row class="row-margin-bottom">
 					<Col >
-						<Button className="btn-custom">
+						<Button className="btn-custom"
+						onClick={()=>
+							sendFeedback(true,sdgActive,textinput,moduleNr)
+						}
+						>
 							Send feedback for active SDG
 						</Button>
 					</Col>
@@ -91,6 +104,7 @@ function ActiveSdgFeedback ({sdgActive}){
  }
 ActiveSdgFeedback.propTypes = {
   sdgActive: PropTypes.number,
+  moduleNr: PropTypes.number
 };
 
 export default ActiveSdgFeedback;

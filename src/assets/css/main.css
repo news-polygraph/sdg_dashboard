@@ -1,5 +1,10 @@
 /* Colorpalatte:  FFFBF5, F7EFE5, C3ACD0, 674188 Link: https://colorhunt.co/palette/fffbf5f7efe5c3acd0674188 */
 
+h5{ 
+  font-size: 18px;
+  font-weight: 500;
+}
+
 :root{
   --darkgrey:#777777;
   --beige: #fffbf5;
@@ -51,10 +56,33 @@
 }
 
 .row-margin-bottom{
-  margin: 0px 0px 30px 0px;
+  margin: 0px 0px 20px 0px;
 }
 
+.col-no-margin{
+  margin: 0px;
+}
 
+.row-no-padding-side{
+  padding: 10px 0px;
+
+}
+
+.row-padding-side{
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: row;
+
+}
+
+.row > *{
+  padding:0px;
+}
+
+.row > *:not(:first-child) {
+  /* Stile für alle Elemente außer dem ersten */
+  padding-left: 20px;
+}
 
 .navbar{
   display: flex;

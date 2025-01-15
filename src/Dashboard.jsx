@@ -18,7 +18,8 @@ import OldXaiFeatures from "components/OldXaiFeatures.jsx";
 import FeedbackSection from "components/Feedback/FeedbackSection.jsx";
 import MissingSDGFeedback from "components/Feedback/MissingSDGFeedback.jsx";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
+
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
 
 console.log("REACT_APP_BACKEND_URL:");
 console.log(process.env.REACT_APP_BACKEND_URL);
@@ -31,9 +32,10 @@ function Dashboard() {
   const mainPanel = React.useRef(null);
   const [file, setFile] = React.useState(null);
   const [fileData, setFileData] = React.useState(fileDataDefault);
-  const [sdgActive, setSdgActive] = React.useState(null);
+  const [sdgActive, setSdgActive] = React.useState(null); //which sdg is chosen in analysis Section
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
+  const [mistralAnswer, setMistralAnswer] = useState([]) //maybe not the right Data-Type for UnseState, proof befor use
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -79,6 +81,35 @@ function Dashboard() {
     }
   }, [pageNumber]);
 
+  const sendModelReq = (module) => {
+    // bspw sowas:
+    const m = {"modulinfos": {
+        "modulnummer": 51088,
+        "versionsnummer": 1,
+        "link": "https://moseskonto.tu-berlin.de/moses/modultransfersystem/bolognamodule/beschreibung/anzeigen.html?number=51088&version=1&sprache=1",
+        "titelde": "Medizintechnik im Krankenhaus",
+        "titelen": "Medical technology in hospitals",
+        "lernergebnissede": "Die Absolvent*innen dieses Moduls erlernen die erforderlichen Grundlagen des/der in der Medizintechnikabteilung eines Krankenhauses tätige/n Ingenieur*in bei der Anwendung dort eingesetzter Medizinprodukte. Durch die Vermittlung der zugehörigen Aufgaben und Tätigkeiten und deren relevanter Aspekte werden die Teilnehmer*innen in die Lage versetzt, Anforderungen an Medizinprodukte aus Sicht eines Krankenhauses zu verstehen. Mit Abschluss des Moduls verfügen die Absolvent*innen grundlegende Kenntnisse zur medizintechnischen Planung, zur Beschaffung sowie zum Betreiben von Medizinprodukten in einer Gesundheitseinrichtung. Die Absolvent*innen werden befähigt, Entscheidungen zur zielgerichteten Anwendung der Medizintechnik im Krankenhausumfeld zu treffen.",
+        "lernergebnisseen": "Graduates of this module learn the necessary basics of the engineer working in the medical technology department of a hospital in the application of medical devices used there. By learning about the associated tasks and activities and their relevant aspects, participants will be able to understand the requirements for medical devices from the perspective of a hospital. On completion of the module, graduates will have basic knowledge of medical technology planning, procurement and the operation of medical devices in a healthcare facility. Graduates will be able to make decisions on the targeted application of medical technology in the hospital environment.",
+        "lehrinhaltede": "• Funktionsweise und Aufbau Krankenhaus • Medizintechnische Planung • Beschaffung von Medizinprodukten • Betreiben von Medizinprodukten • Medizinische IT: Vernetzung und Informationssicherheit",
+        "lehrinhalteen": "Functionality and organisation of hospitals - Medical technology planning - Procurement of Medical devices - Operation of Medical devices - Medical IT: networking and information security"
+    }}
+    try {
+      axios
+        .post(`${backendUrl}/model`, m)
+        .then((res) =>{
+          setMistralAnswer(res.data)
+          console.log("Answer: ");
+          console.log(res.data);
+          console.log("speichere Answer in MistralAnswer");
+
+        });
+        
+    } catch (error) {
+      console.error("Req Fehler", error);
+    }
+  }
+
   // filter sdgData to feed relevent attributes to child-components
   // changes per file
   const analysisData = fileData.analysis_data;
@@ -103,7 +134,42 @@ function Dashboard() {
 
   //only for demo
   const [sentRequest, setSentRequest] = useState(false);
+
+  const [moduleChosen, setModuleChosen] = useState();
+
+  const chooseModule = useCallback(async (module) => {
+    try {
+      const response = await axios.get(`${backendUrl}/modules/${module.modulnummer}`);
+      setModuleChosen(response.data);
+    } catch (error) {
+      console.error("Fehler beim Auswählen eines Moduls:", error);
+    }
+  }, []);
   
+
+  React.useEffect(() => {
+        if (moduleChosen) {
+          console.log("Aktualisiertes moduleChosen:", moduleChosen);
+          // Hier kannst du den Wert weitergeben oder darauf reagieren
+        }
+      }, [moduleChosen]);
+
+  //change all relevant state for Xai Features if active SDG changes
+  const [nlExplanation, setNlExplanation] = useState("no sdg chosen");
+
+  const changeSDGActive = (sdgNumber) =>{
+    setSdgActive (Number(sdgNumber))
+    //console.log("mistralAnswer: " + toString(mistralAnswer))
+    const sdgExplanation = mistralAnswer.find(
+      (object) => object.sdg_number == String(sdgNumber) // String-Vergleich für `sdg_number`
+    )?.explanation;
+  
+    if (sdgExplanation) {
+      setNlExplanation(sdgExplanation); // Erklärung setzen, wenn gefunden
+    } else {
+      setNlExplanation("No explanation available."); // Fallback
+    }
+  }
 
   return (
     <div className="wrapper">
@@ -130,6 +196,10 @@ function Dashboard() {
                 <Card.Body>
                   <ChooseModule
                     setSentRequest={setSentRequest}
+                    sendRequest={sendModelReq}
+                    chooseModule={chooseModule}
+                    moduleChosen={moduleChosen}
+                    setModuleChosen={setModuleChosen}
                   /> 
                 </Card.Body>
               </Card>
@@ -175,15 +245,17 @@ function Dashboard() {
               <Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Results</Card.Title>
+                    <Card.Title as="h4">Results for {moduleChosen.modulnummer} sent by mistral</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
                   <XaiFeatures
                       sdgActive={sdgActive}
-                      setSdgActive={setSdgActive}
-                      sdgAnswer={[1,4,8,11,14]}
-                    />
+                      setSdgActive={changeSDGActive}
+                      mistralAnswer = {mistralAnswer}
+                      nlExplanation={nlExplanation}
+                      moduleNr={moduleChosen.modulnummer}
+                 />
                   </Card.Body>
                 </Card>
               </Col>:(null)}
