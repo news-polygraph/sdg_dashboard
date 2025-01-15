@@ -202,16 +202,9 @@ def create_app(test_config=None):
                 max_tokens=4096
             )
 
-            # write result into db
-
-            print(response)
-            print(json.loads(response.choices[0].message.content))
+            # write result into dd
 
             update = {"$set": {"sdgs": json.loads(response.choices[0].message.content)}}
-
-            # print(json.loads(response.choices[0].message.content))
-            print(module)
-            print(int(module["modulnummer"]))
 
             result = db["modules"].update_one({"modulinfos.modulnummer": int(module["modulnummer"])}, update)
 
