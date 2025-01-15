@@ -277,7 +277,7 @@ function Dashboard() {
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
-                  <MissingSDGFeedback sdgMissing={[2,3,5,6,7,9,10,12,13,15,16,17]}/>
+                  <MissingSDGFeedback sdgMissing={Array.from({length: 17}, (_, i) => i + 1).filter(x => !mistralAnswer.map(object => Number(object.sdg_number)).includes(x))}/>
                   </Card.Body>
                 </Card>:(null)}
               </Col>
