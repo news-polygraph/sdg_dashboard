@@ -11,6 +11,8 @@ function MissingSDGFeedback ({ sdgMissing, moduleChosen}){
 	const missingSDGIcons = sdgMissing
         .map(number => sdgIcons.find(icon => icon.key === number))
         .filter(Boolean);
+	const moduleNr = moduleChosen.modulinfos.modulnummer
+
 	const [missingSdgActive, setMissingSdgActive] = React.useState(null);
 	 //saves the descriptions to all sdgs
 	 const [sdgDescriptions, setSdgDescriptions] = useState([]);
@@ -28,17 +30,12 @@ function MissingSDGFeedback ({ sdgMissing, moduleChosen}){
 			"explanation": explanation
 		}
 
-		// bspw so:
-		/*const m = {
-			"chosen": true,
-			"sdg": 4,
-			"explanation": "test"
-		}*/
 		try {
 		  axios
 			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
 			.then((result) =>{
-			  console.log(result.data);
+				console.log("Feedback Missing SDG");
+			  	console.log(result.data);
 			});
 			
 		} catch (error) {
@@ -146,7 +143,11 @@ function MissingSDGFeedback ({ sdgMissing, moduleChosen}){
 				</Row>
 				<Row class="row-margin-bottom">
 					<Col xs={12} sm={8}>
-						<Button className="btn-custom">
+						<Button className="btn-custom"
+							onClick={()=>
+								sendFeedback(true,sdgMissing,textinput,moduleNr)
+							}
+						>
 							Send feedback for active SDG
 						</Button>
 					</Col>

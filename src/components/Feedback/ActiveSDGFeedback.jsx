@@ -30,7 +30,8 @@ function ActiveSdgFeedback ({sdgActive, moduleNr}){
 		  axios
 			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
 			.then((result) =>{
-			  console.log(result.data);
+				console.log("Feedback Missing SDG");
+			  	console.log(result.data);
 			});
 			
 		} catch (error) {
