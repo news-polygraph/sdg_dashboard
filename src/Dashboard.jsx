@@ -96,7 +96,7 @@ function Dashboard() {
     }}
     try {
       axios
-        .post(`${backendUrl}/model`, m)
+        .post(`${backendUrl}/model`, module.modulinfos)
         .then((res) =>{
           setMistralAnswer(res.data)
           console.log("Answer: ");
@@ -245,7 +245,7 @@ function Dashboard() {
               <Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Results for {moduleChosen.modulnummer} sent by mistral</Card.Title>
+                    <Card.Title as="h4">Results for {moduleChosen.modulinfos.modulnummer} sent by mistral</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
@@ -254,7 +254,7 @@ function Dashboard() {
                       setSdgActive={changeSDGActive}
                       mistralAnswer = {mistralAnswer}
                       nlExplanation={nlExplanation}
-                      moduleNr={moduleChosen.modulnummer}
+                      moduleNr={moduleChosen.modulinfos.modulnummer}
                  />
                   </Card.Body>
                 </Card>

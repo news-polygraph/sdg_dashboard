@@ -93,11 +93,18 @@ def create_app(test_config=None):
         if full == True:
             return list(db["modules"].find({}, {"_id": 0}))
         
-        return list(db["modules"].find({},{"_id": 0, "modulinfos.modulnummer": 1, "modulinfos.titelde": 1, "modulinfos.titelen": 1})) 
-    
+        # return list(db["modules"].find({},{"_id": 0, "modulinfos.modulnummer": 1, "modulinfos.titelde": 1, "modulinfos.titelen": 1})) 
+
+        pipeline = [
+            {"$project": {"_id": 0, "modulinfos.modulnummer": 1, "modulinfos.titelde": 1, "modulinfos.titelen": 1}},
+            {"$replaceRoot": {"newRoot": "$modulinfos"}}
+        ]
+
+        return list(db["modules"].aggregate(pipeline))
+
     @app.route('/modules/<id>', methods=['GET'])
     def get_module(id):
-        return list(db["modules"].find({"modulinfos.modulnummer": int(id)}, {"_id": 0}))
+        return list(db["modules"].find({"modulinfos.modulnummer": int(id)}, {"_id": 0}))[0]
     
     def format_req(message, m):
         # titel
@@ -182,7 +189,7 @@ def create_app(test_config=None):
                 },
                 {
                     "role": "user",
-                    "content": format_req(mr["model_req"], module["modulinfos"])
+                    "content": format_req(mr["model_req"], module)
                 }
             ]
             
@@ -190,16 +197,23 @@ def create_app(test_config=None):
                 model="mistral-7b-instruct",
                 messages=m,
                 response_format = {
-                    "type": "json_object",
+                    "type": "json",
                 },
                 max_tokens=4096
             )
 
             # write result into db
 
+            print(response)
+            print(json.loads(response.choices[0].message.content))
+
             update = {"$set": {"sdgs": json.loads(response.choices[0].message.content)}}
 
-            result = db["modules"].update_one({"modulinfos.modulnummer": int(module["modulinfos"]["modulnummer"])}, update)
+            # print(json.loads(response.choices[0].message.content))
+            print(module)
+            print(int(module["modulnummer"]))
+
+            result = db["modules"].update_one({"modulinfos.modulnummer": int(module["modulnummer"])}, update)
 
             if result.matched_count > 0:
                 print(f"Successfully updated")

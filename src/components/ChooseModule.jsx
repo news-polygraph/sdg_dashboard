@@ -96,7 +96,7 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
             </Col>
             <Col lg={8}>
                 <Card>
-                  <Card.Header><h5>Moduledesription</h5></Card.Header>
+                  <Card.Header><h5>Moduledescription</h5></Card.Header>
                   <Card.Body>
                     {languageModuleInfo=="deutsch"?
                       <div>

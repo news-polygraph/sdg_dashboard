@@ -149,7 +149,6 @@ XaiFeatures.propTypes = {
   mistralAnswer: PropTypes.array,
   nlExplanation: PropTypes.string,
   moduleNr: PropTypes.number
-  
 };
 
 export default XaiFeatures;
