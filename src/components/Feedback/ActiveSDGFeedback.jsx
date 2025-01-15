@@ -41,11 +41,11 @@ function ActiveSdgFeedback ({sdgActive, moduleNr}){
 	
 
 	//fit doesnt toggle
-	const [fitToggle, setFitToggle] = useState('0');
+	const [fitToggle, setFitToggle] = useState(false);
 
 	const fitRadios = [
-		{ name: 'fits', value: '0' },
-		{ name: 'does not fit', value: '1' },
+		{ name: 'fits', value: true},
+		{ name: 'does not fit', value: false},
 	];
 
 	const [textinput, setTextinput] = useState("");
@@ -92,7 +92,7 @@ function ActiveSdgFeedback ({sdgActive, moduleNr}){
 					<Col >
 						<Button className="btn-custom"
 						onClick={()=>
-							sendFeedback(true,sdgActive,textinput,moduleNr)
+							sendFeedback(fitToggle,sdgActive,textinput,moduleNr)
 						}
 						>
 							Send feedback for active SDG
