@@ -5,7 +5,7 @@ import { sdgIcons, sdgColors } from "../utils.js";
 import axios from "axios";
 import ActiveSdgFeedback from "components/Feedback/ActiveSDGFeedback.jsx";
 
-function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, moduleNr}){
+function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, moduleChosen}){
   
 
   //saves the iconObjects with the same key as listed in sdgMissing
@@ -124,13 +124,13 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
             <Col lg={4}class="col-no-margin">
               <Card              >
                 <CardHeader>
-                  Feedback Active SDG {sdgActive} and module {moduleNr}
+                  Feedback Active SDG {sdgActive} and module {moduleChosen?.modulinfos?.titelen}
                 </CardHeader>
                 <CardBody>
                 {sdgActive?
                   <ActiveSdgFeedback 
                   sdgActive={sdgActive}
-                  moduleNr={moduleNr}
+                  moduleNr={moduleChosen.modulinfos.modulnummer}
                   />:
                   <p>No SDG chosen</p>
                 }
@@ -149,7 +149,7 @@ XaiFeatures.propTypes = {
   setSdgActive: PropTypes.func.isRequired,
   sdgsAnswer: PropTypes.array,
   nlExplanation: PropTypes.string,
-  moduleNr: PropTypes.number
+  moduleChosen: PropTypes.object
 };
 
 export default XaiFeatures;

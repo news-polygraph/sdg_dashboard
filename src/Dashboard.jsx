@@ -35,10 +35,20 @@ function Dashboard() {
   const [sdgActive, setSdgActive] = React.useState(null); //which sdg is chosen in analysis Section
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
-  const [mistralAnswer, setMistralAnswer] = useState([]) //maybe not the right Data-Type for UnseState, proof befor use
-  const sdgsAnswer = mistralAnswer?mistralAnswer.map(object =>Number(object.sdg_number)):[]
-  console.log("sdgsAnswer " + sdgsAnswer);
+  const [mistralAnswer, setMistralAnswer] = React.useState([]); //maybe not the right Data-Type for UnseState, proof befor use
+  const [sdgsAnswer, setSdgsAnswer] =React.useState([]);
+  const [missingSdgsAnswer, setMissingSdgsAnswer] = React.useState([]);
+  
 
+  //if Mistral sent answer, actualize sdgsAnswer and missingSdgsAnswer automaticly
+  React.useEffect(() => {
+    if (mistralAnswer) {
+      const sdgsAnswerArray =mistralAnswer.map(object =>Number(object.sdg_number))
+      setSdgsAnswer(sdgsAnswerArray);
+      setMissingSdgsAnswer([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].filter((sdgnumber)=>  !sdgsAnswerArray.includes(sdgnumber)));
+
+    }
+  }, [mistralAnswer]);
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -257,7 +267,7 @@ function Dashboard() {
                       setSdgActive={changeSDGActive}
                       sdgsAnswer = {sdgsAnswer}
                       nlExplanation={nlExplanation}
-                      moduleNr={moduleChosen.modulinfos.modulnummer}
+                      moduleChosen={moduleChosen}
                  />
                   </Card.Body>
                 </Card>
@@ -281,8 +291,8 @@ function Dashboard() {
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
                   <MissingSDGFeedback 
-                    sdgMissing={[2,3,5,6,7,9,10,12,13,15,16,17]}
-                    modulNr={moduleChosen.modulNr}
+                    sdgMissing={missingSdgsAnswer}
+                    moduleChosen={moduleChosen}
                     />
                   </Card.Body>
                 </Card>:(null)}

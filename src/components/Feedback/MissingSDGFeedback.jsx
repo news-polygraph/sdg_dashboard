@@ -6,7 +6,7 @@ import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-function MissingSDGFeedback ({ sdgMissing, modulNr}){
+function MissingSDGFeedback ({ sdgMissing, moduleChosen}){
 	//saves the iconObjects with the same key as listed in sdgMissing
 	const missingSDGIcons = sdgMissing
         .map(number => sdgIcons.find(icon => icon.key === number))
@@ -159,7 +159,7 @@ function MissingSDGFeedback ({ sdgMissing, modulNr}){
  }
 MissingSDGFeedback.propTypes = {
   sdgMissing: PropTypes.array,
-  modulNr: PropTypes.number,
+  moduleChosen: PropTypes.object,
 };
 
 export default MissingSDGFeedback;
