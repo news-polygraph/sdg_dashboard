@@ -5,13 +5,14 @@ import { sdgIcons, sdgColors } from "../utils.js";
 import axios from "axios";
 import ActiveSdgFeedback from "components/Feedback/ActiveSDGFeedback.jsx";
 
-function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, moduleNr}){
-  const sdgsAnswer = mistralAnswer.map(object =>Number(object.sdg_number))
-  console.log("sdgsAnswer " + sdgsAnswer);
+function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, moduleNr}){
+  
+
   //saves the iconObjects with the same key as listed in sdgMissing
 	const sdgIconsAnswer = sdgsAnswer
   .map(number => sdgIcons.find(icon => icon.key === number))
   .filter(Boolean);
+
   const sdgActiveColor =
     sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
 
@@ -146,7 +147,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, m
 XaiFeatures.propTypes = {
   sdgActive: PropTypes.number,
   setSdgActive: PropTypes.func.isRequired,
-  mistralAnswer: PropTypes.array,
+  sdgsAnswer: PropTypes.array,
   nlExplanation: PropTypes.string,
   moduleNr: PropTypes.number
 };

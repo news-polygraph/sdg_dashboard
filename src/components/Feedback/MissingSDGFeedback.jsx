@@ -6,7 +6,7 @@ import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-function MissingSDGFeedback ({ sdgMissing }){
+function MissingSDGFeedback ({ sdgMissing, modulNr}){
 	//saves the iconObjects with the same key as listed in sdgMissing
 	const missingSDGIcons = sdgMissing
         .map(number => sdgIcons.find(icon => icon.key === number))
@@ -18,8 +18,34 @@ function MissingSDGFeedback ({ sdgMissing }){
 	 const [sdgClicked, setSdgClicked] = useState("");
 	 
 	// URL des Backends
-	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
-	
+	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";  
+
+	const sendFeedback = (active, sdg, explanation, modulnr) => {
+		// eigentlich sowas:
+		const feedback = {
+			"chosen": active,
+			"sdg": sdg,
+			"explanation": explanation
+		}
+
+		// bspw so:
+		/*const m = {
+			"chosen": true,
+			"sdg": 4,
+			"explanation": "test"
+		}*/
+		try {
+		  axios
+			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
+			.then((result) =>{
+			  console.log(result.data);
+			});
+			
+		} catch (error) {
+		  console.error("Req Fehler", error);
+		}
+	}
+
 	// function to load sdg_descriptions
 	useEffect(() => {
 	try {
@@ -36,7 +62,7 @@ function MissingSDGFeedback ({ sdgMissing }){
 	}
 	}, []);
 	 
-	  //only the missing SDGs from this section
+	//only the missing SDGs from this section
 	const [activeSdgDescription, setActiveSdgDescription] = useState({}); 
    
 	//called by clicking on an sdgIcon from the missing SDGS
@@ -45,6 +71,12 @@ function MissingSDGFeedback ({ sdgMissing }){
 	console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
 	};
 
+	//for saving and handling form textarea-input
+	const [textinput, setTextinput] = useState("");
+
+	function handleTextinput(event){
+		setTextinput(event.target.value);
+	}
 
 
     return (
@@ -109,7 +141,7 @@ function MissingSDGFeedback ({ sdgMissing }){
 				<Row class="row-margin-bottom">
 					<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
 						<Form.Label>please explain in short words why you think the chosen SDG would have fitted to the chosen module</Form.Label>
-						<Form.Control type="text" placeholder="personal explanation" />
+						<Form.Control as="textarea" placeholder="personal explanation" value={textinput} onChange={handleTextinput} />
 					</Form.Group>		
 				</Row>
 				<Row class="row-margin-bottom">
@@ -126,8 +158,8 @@ function MissingSDGFeedback ({ sdgMissing }){
 	);
  }
 MissingSDGFeedback.propTypes = {
-  sdgActive: PropTypes.number,
   sdgMissing: PropTypes.array,
+  modulNr: PropTypes.number,
 };
 
 export default MissingSDGFeedback;
