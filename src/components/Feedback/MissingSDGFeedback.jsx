@@ -6,11 +6,18 @@ import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-function MissingSDGFeedback ({ sdgMissing, moduleChosen}){
-	//saves the iconObjects with the same key as listed in sdgMissing
-	const missingSDGIcons = sdgMissing
+function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
+	//saves the iconObjects with the same key as listed in sdgsMissing
+	const missingSDGIcons = sdgsMissing
         .map(number => sdgIcons.find(icon => icon.key === number))
         .filter(Boolean);
+	
+	//saves for which sdgs feedback was sent
+	const [sdgsFeedbackSent, setSdgsFeedbackSent] = useState([]);
+	const saveInFeedbackSent = (sdgNumber) =>{
+	setSdgsFeedbackSent(sdgsFeedbackSent+sdgNumber);
+	}
+	
 	const moduleNr = moduleChosen.modulinfos.modulnummer
 
 	const [missingSdgActive, setMissingSdgActive] = React.useState(null);
@@ -87,8 +94,8 @@ function MissingSDGFeedback ({ sdgMissing, moduleChosen}){
 				<Row class="row-margin-bottom">
 					<Card>
 						<CardHeader>
-							<p>only work with this section if you think there are sdgs missing in the answer by mistral</p>
-							<p>please select a sdg which you think would also have fitted too</p>
+							<p><strong>Please check if one of the following SDGS are missing and give short feedback why.</strong></p>
+							<p>Give feedback for one SDG once a time. You can repeat this as often as you want to.</p>
 						</CardHeader>
 						<CardBody>
 							<Row class="row-padding-side">
@@ -104,9 +111,12 @@ function MissingSDGFeedback ({ sdgMissing, moduleChosen}){
 									objectFit: "contain",
 									paddingLeft: "0px", // remove style
 									filter:
-										key === missingSdgActive
-										? "grayscale(0%)" // if sdg is selected normal color
-										: "grayscale(50%)" // not selected less color intensity
+										sdgsFeedbackSent.includes(key)
+										?"opacity(30%)"
+										:
+											key === missingSdgActive
+											? "grayscale(0%)" // if sdg is selected normal color
+											: "grayscale(50%)" // not selected less color intensity
 											
 									}}
 									onMouseEnter={() => setMissingSdgActive(key)}
@@ -134,32 +144,39 @@ function MissingSDGFeedback ({ sdgMissing, moduleChosen}){
 						:"please select a SDG to read the description"}
 						</CardBody>
 					</Card>
+				</Row>
+				<Row>
+					<Card>
+						<CardHeader>
+							Feedback for SDG {missingSdgActive} missing in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}	
+						</CardHeader>
+						<CardBody>
+							<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+								<Form.Label>please explain in short words why you think the SDG {missingSdgActive} would have fitted in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}	</Form.Label>
+								<Form.Control as="textarea" placeholder="personal explanation" value={textinput} onChange={handleTextinput} />
+							</Form.Group>
+							<Row>
+								<Col xs={12} sm={8}>
+									<Button className="btn-custom"
+										onClick={()=>{
+											sendFeedback(true,missingSdgActive,textinput,moduleNr);
+											saveInFeedbackSent(missingSdgActive);
+										}}
+									>
+										Send feedback for SDG {missingSdgActive}
+									</Button>
+								</Col>
+							</Row>
+						</CardBody>
+					</Card>
 				</Row>	
-				<Row class="row-margin-bottom">
-					<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-						<Form.Label>please explain in short words why you think the chosen SDG would have fitted to the chosen module</Form.Label>
-						<Form.Control as="textarea" placeholder="personal explanation" value={textinput} onChange={handleTextinput} />
-					</Form.Group>		
-				</Row>
-				<Row class="row-margin-bottom">
-					<Col xs={12} sm={8}>
-						<Button className="btn-custom"
-							onClick={()=>
-								sendFeedback(true,sdgMissing,textinput,moduleNr)
-							}
-						>
-							Send feedback for active SDG
-						</Button>
-					</Col>
-				</Row>
-
 			</Form>
 						
 		</Container>
 	);
  }
 MissingSDGFeedback.propTypes = {
-  sdgMissing: PropTypes.array,
+  sdgsMissing: PropTypes.array,
   moduleChosen: PropTypes.object,
 };
 

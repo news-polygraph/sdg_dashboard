@@ -258,7 +258,7 @@ function Dashboard() {
               <Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Results for {moduleChosen.modulinfos.modulnummer} sent by mistral</Card.Title>
+                    <Card.Title as="h4">2. Results for SDGs for {moduleChosen.modulinfos.titelde}/{moduleChosen.modulinfos.titelen} chosen by AI model</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
@@ -286,12 +286,12 @@ function Dashboard() {
                 </Card>:sentRequest?
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Missing SDGs Feedback</Card.Title>
+                    <Card.Title as="h4">2. Missing SDGs Feedback</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
                   <MissingSDGFeedback 
-                    sdgMissing={missingSdgsAnswer}
+                    sdgsMissing={missingSdgsAnswer}
                     moduleChosen={moduleChosen}
                     />
                   </Card.Body>

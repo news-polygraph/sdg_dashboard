@@ -130,7 +130,7 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
                 
                 
               }}>
-							Send request to Mistral
+							Get SDGs from AI model
 						</Button>
 					</Col>
 				</Row>

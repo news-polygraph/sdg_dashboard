@@ -13,8 +13,11 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
   .map(number => sdgIcons.find(icon => icon.key === number))
   .filter(Boolean);
 
-  const sdgActiveColor =
-    sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
+  //saves for which sdgs feedback was sent
+  const [sdgsFeedbackSent, setSdgsFeedbackSent] = useState([]);
+  const saveInFeedbackSent = (sdgNumber) =>{
+    setSdgsFeedbackSent(sdgsFeedbackSent+sdgNumber);
+  }
 
   //saves the descriptions to all sdgs
   const [sdgDescriptions, setSdgDescriptions] = useState([]);
@@ -74,9 +77,13 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
                           objectFit: "contain",
                           paddingLeft: "0px", // remove style
                           filter:
-                            key === sdgActive
-                              ? "grayscale(0%)" // if sdg is selected normal color
-                              : "grayscale(50%)" // not selected less color intensity
+                            sdgsFeedbackSent.includes(key)
+                              ?"opacity(30%)"
+                              :
+                              key === sdgActive
+                                ? "grayscale(0%)" // if sdg is selected normal color
+                                : "grayscale(50%)" // not selected less color intensity
+                            
                                 
                         }}
                         onMouseEnter={() => setSdgActive(key)}
@@ -124,13 +131,14 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
             <Col lg={4}class="col-no-margin">
               <Card              >
                 <CardHeader>
-                  Feedback Active SDG {sdgActive} and module {moduleChosen?.modulinfos?.titelen}
+                  Feedback for SDG {sdgActive} in module {moduleChosen?.modulinfos?.titelen}
                 </CardHeader>
                 <CardBody>
                 {sdgActive?
                   <ActiveSdgFeedback 
                   sdgActive={sdgActive}
                   moduleNr={moduleChosen.modulinfos.modulnummer}
+                  feedbackSent={saveInFeedbackSent}
                   />:
                   <p>No SDG chosen</p>
                 }
