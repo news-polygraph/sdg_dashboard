@@ -94,7 +94,8 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 				<Row class="row-margin-bottom">
 					<Card>
 						<CardHeader>
-							<p><strong>Please check if one of the following SDGS are missing and give short feedback why.</strong></p>
+							<h5>Missing SDGs</h5>
+							<p><strong>Please check if one of the following SDGs would have fittet too and give short feedback why.</strong></p>
 							<p>Give feedback for one SDG once a time. You can repeat this as often as you want to.</p>
 						</CardHeader>
 						<CardBody>
@@ -116,11 +117,17 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 										:
 											key === missingSdgActive
 											? "grayscale(0%)" // if sdg is selected normal color
-											: "grayscale(50%)" // not selected less color intensity
+											: "grayscale(70%)" // not selected less color intensity
 											
 									}}
-									onMouseEnter={() => setMissingSdgActive(key)}
-									onMouseLeave={() => setMissingSdgActive(sdgClicked)}
+									onMouseEnter={() => {
+										setMissingSdgActive(key);
+										changeSDGActiveDescription(key);
+									}}
+									onMouseLeave={() => {
+										setMissingSdgActive(sdgClicked);
+										changeSDGActiveDescription(sdgClicked);
+									}}
 									onClick={() => {
 									setMissingSdgActive(key);
 									changeSDGActiveDescription(key);
@@ -137,18 +144,20 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 				<Row class="row-margin-bottom">
 					<Card>
 						<CardHeader>
-							<Card.Title><h5>Chosen SDG description:</h5></Card.Title>
+							<Card.Title><h5>SDG {missingSdgActive} description:</h5></Card.Title>
 						</CardHeader>
 						<CardBody>
-						{activeSdgDescription.description?activeSdgDescription.description
+						{activeSdgDescription.description?
+						<p><strong>{activeSdgDescription.description}</strong></p>
 						:"please select a SDG to read the description"}
+						{activeSdgDescription.targets?.map((target)=>( <p>{target}</p>))}
 						</CardBody>
 					</Card>
 				</Row>
 				<Row>
 					<Card>
 						<CardHeader>
-							Feedback for SDG {missingSdgActive} missing in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}	
+							<h5>Feedback for SDG {missingSdgActive} missing in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}</h5>	
 						</CardHeader>
 						<CardBody>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">

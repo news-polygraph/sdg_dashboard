@@ -61,7 +61,9 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
         >
           <Row>
             <Card>
-              <CardHeader><h5>Select a sdg-icon to read about the SDGs by Mistral and mistrals explanation why it fits and give feedback</h5>
+              <CardHeader>
+                <h5>Chosen SDGs</h5>
+                <p><strong>Select a sdg-icon to read about the SDGs the AI Model has decided to fit on to the given module description and its explanation why it fits and give feedback</strong></p>
               </CardHeader>
               <CardBody>
                 <Row class="row-padding-side">
@@ -82,12 +84,18 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
                               :
                               key === sdgActive
                                 ? "grayscale(0%)" // if sdg is selected normal color
-                                : "grayscale(50%)" // not selected less color intensity
+                                : "grayscale(70%)" // not selected less color intensity
                             
                                 
                         }}
-                        onMouseEnter={() => setSdgActive(key)}
-                        onMouseLeave={() => setSdgActive(sdgClicked)}
+                        onMouseEnter={() => {
+                          setSdgActive(key);
+                          changeSDGActiveDescription(key);
+                        }}
+                        onMouseLeave={() => {
+                          setSdgActive(sdgClicked);
+                          changeSDGActiveDescription(sdgClicked);
+                        }}
                         onClick={() => {
                           setSdgActive(key);
                           changeSDGActiveDescription(key);
