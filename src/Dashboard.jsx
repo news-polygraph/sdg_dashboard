@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { Card, Container, Row, Col, CardBody } from "react-bootstrap";
+import { Card, Container, Row, Col, CardBody, CardHeader } from "react-bootstrap";
 
 import MainNavbar from "components/Navbars/MainNavbar";
 import UploadNavbar from "components/Navbars/UploadNavbar";
@@ -17,6 +17,7 @@ import { useState } from 'react';
 import OldXaiFeatures from "components/OldXaiFeatures.jsx";
 import FeedbackSection from "components/Feedback/FeedbackSection.jsx";
 import MissingSDGFeedback from "components/Feedback/MissingSDGFeedback.jsx";
+import Button from 'react-bootstrap/Button';
 
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
@@ -35,7 +36,22 @@ function Dashboard() {
   const [sdgActive, setSdgActive] = React.useState(null); //which sdg is chosen in analysis Section
   const [pageNumber, setPageNumber] = React.useState(1);
   const cardColor = { backgroundColor: "#FFFBF5" };
-  const [mistralAnswer, setMistralAnswer] = useState([]) //maybe not the right Data-Type for UnseState, proof befor use
+  const [mistralAnswer, setMistralAnswer] = React.useState([]); //maybe not the right Data-Type for UnseState, proof befor use
+  const [sdgsAnswer, setSdgsAnswer] =React.useState([]);
+  const [missingSdgsAnswer, setMissingSdgsAnswer] = React.useState([]);
+  
+
+  const [finishedFeedback, setFinishedFeedback] = useState(false);
+
+  //if Mistral sent answer, actualize sdgsAnswer and missingSdgsAnswer automaticly
+  React.useEffect(() => {
+    if (mistralAnswer) {
+      const sdgsAnswerArray =mistralAnswer.map(object =>Number(object.sdg_number))
+      setSdgsAnswer(sdgsAnswerArray);
+      setMissingSdgsAnswer([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].filter((sdgnumber)=>  !sdgsAnswerArray.includes(sdgnumber)));
+
+    }
+  }, [mistralAnswer]);
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -171,7 +187,19 @@ function Dashboard() {
     }
   }
 
-  return (
+  if (finishedFeedback){
+    return (
+      <div className="wrapper">
+      <Card>
+        <CardBody>
+          <h4>Thank you for your Feedback!</h4>
+          <p>If you want to give Feedback for anothe module, reload your browser.</p>
+        </CardBody>
+      </Card>
+    </div>
+    );}
+  else{
+    return(
     <div className="wrapper">
       <Container fluid>
       <MainNavbar
@@ -245,16 +273,16 @@ function Dashboard() {
               <Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Results for {moduleChosen.modulinfos.modulnummer} sent by mistral</Card.Title>
+                    <Card.Title as="h4">2. Results for SDGs for {moduleChosen.modulinfos.titelde}/{moduleChosen.modulinfos.titelen} chosen by AI model</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
                   <XaiFeatures
                       sdgActive={sdgActive}
                       setSdgActive={changeSDGActive}
-                      mistralAnswer = {mistralAnswer}
+                      sdgsAnswer = {sdgsAnswer}
                       nlExplanation={nlExplanation}
-                      moduleNr={moduleChosen.modulinfos.modulnummer}
+                      moduleChosen={moduleChosen}
                  />
                   </Card.Body>
                 </Card>
@@ -273,21 +301,45 @@ function Dashboard() {
                 </Card>:sentRequest?
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">Missing SDGs Feedback</Card.Title>
+                    <Card.Title as="h4">2. Missing SDGs Feedback</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
-                  <MissingSDGFeedback sdgMissing={Array.from({length: 17}, (_, i) => i + 1).filter(x => !mistralAnswer.map(object => Number(object.sdg_number)).includes(x))}/>
+                  <MissingSDGFeedback 
+                    sdgsMissing={missingSdgsAnswer}
+                    moduleChosen={moduleChosen}
+                    />
                   </Card.Body>
                 </Card>:(null)}
               </Col>
             </Row>
+            {sentRequest?
+              <Row>
+                <Col>
+                  <Container>
+                    <Card>
+                      <CardHeader>
+                        <h4>Finished feedback</h4>
+                      </CardHeader>
+                      <CardBody>
+                        <p><strong>Have you finished your feedback for all chosen SDGs?</strong></p>
+                        <p>Have you also checked the mising SDGs if some of them would have fittet too?</p>
+                        <Button className="btn-cta" onClick={()=> setFinishedFeedback(true)}>
+                          finished feedback
+                        </Button>
+                      </CardBody>
+                    </Card>
+                  </Container>
+                </Col>
+            </Row>:(null)}
+            
           </Container>
         </div>
         <Footer />
       </div>
     </div>
-  );
+  );}
 }
+
 
 export default Dashboard;

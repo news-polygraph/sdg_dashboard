@@ -36,19 +36,25 @@ h5{
 .btn-custom:hover {
   color: var(--beige);
   background-color: var(--darkgrey);
-   border-color: var(--darkgrey);
+  border-color: var(--darkgrey);
 }
 
 .btn-custom:hover {
   color: var(--beige);
   background-color: var(--darkgrey);
-   border-color: var(--darkgrey);
+  border-color: var(--darkgrey);
 }
 
 .btn-custom:active {
   color: var(--beige);
-  background-color: var(--darkgrey);
-   border-color: var(--darkgrey);
+  background-color: lightblue;
+  border-color: lightblue;
+}
+
+.btn:active {
+  color: var(--beige);
+  background-color: lightblue;
+  border-color: lightblue;
 }
 
 .div-padding-top-bottom{
@@ -94,14 +100,14 @@ h5{
   width: 100%;
   display: flex;
   justify-content: start;
-  background-color: var(--beige);
+  background-color: lightblue;
   color:var(--darkgrey);
   border-color: var(--darkgrey);
 }
 
 #choose-module-btn:hover{
   background-color: var(--darkgrey);
-  color:var(--beige);
+  color:lightblue;;
 }
 
 .dropdown-toggle::after {
@@ -139,6 +145,29 @@ h5{
 
 .btn-check + .btn:hover{
   color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+.feedback-card{
+  background-color:lightblue;
+  border-radius: var(--bs-border-radius);
+}
+
+.feedback-card .card-header{
+  background-color:lightblue;
+}
+
+.btn-cta {
+  background-color: lightblue;;
+  border-color: var(--darkgrey);
+  color: var(--darkgrey);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.btn-cta:hover {
+  color: lightblue;;
   background-color: var(--darkgrey);
   border-color: var(--darkgrey);
 }

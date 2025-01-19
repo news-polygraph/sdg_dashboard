@@ -7,7 +7,7 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import axios from "axios";
 
-function ActiveSdgFeedback ({sdgActive, moduleNr}){	
+function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent}){	
 
 	//backend URL
 	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
@@ -30,8 +30,10 @@ function ActiveSdgFeedback ({sdgActive, moduleNr}){
 		  axios
 			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
 			.then((result) =>{
-			  console.log(result.data);
-			});
+				console.log("Feedback Missing SDG");
+			  	console.log(result.data);
+			})
+			
 			
 		} catch (error) {
 		  console.error("Req Fehler", error);
@@ -40,11 +42,11 @@ function ActiveSdgFeedback ({sdgActive, moduleNr}){
 	
 
 	//fit doesnt toggle
-	const [fitToggle, setFitToggle] = useState('0');
+	const [fitToggle, setFitToggle] = useState(false);
 
 	const fitRadios = [
-		{ name: 'fits', value: '0' },
-		{ name: 'does not fit', value: '1' },
+		{ name: 'fits', value: true},
+		{ name: 'does not fit', value: false},
 	];
 
 	const [textinput, setTextinput] = useState("");
@@ -90,11 +92,12 @@ function ActiveSdgFeedback ({sdgActive, moduleNr}){
 				<Row class="row-margin-bottom">
 					<Col >
 						<Button className="btn-custom"
-						onClick={()=>
-							sendFeedback(true,sdgActive,textinput,moduleNr)
-						}
+						onClick={()=>{
+							sendFeedback(fitToggle,sdgActive,textinput,moduleNr);
+							feedbackSent(sdgActive);
+						}}
 						>
-							Send feedback for active SDG
+							Send feedback for SDG {sdgActive}
 						</Button>
 					</Col>
 				</Row>
@@ -104,7 +107,8 @@ function ActiveSdgFeedback ({sdgActive, moduleNr}){
  }
 ActiveSdgFeedback.propTypes = {
   sdgActive: PropTypes.number,
-  moduleNr: PropTypes.number
+  moduleNr: PropTypes.number,
+  feedbackSent: PropTypes.func.isRequired,
 };
 
 export default ActiveSdgFeedback;

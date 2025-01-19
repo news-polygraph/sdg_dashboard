@@ -6,11 +6,20 @@ import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-function MissingSDGFeedback ({ sdgMissing }){
-	//saves the iconObjects with the same key as listed in sdgMissing
-	const missingSDGIcons = sdgMissing
+function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
+	//saves the iconObjects with the same key as listed in sdgsMissing
+	const missingSDGIcons = sdgsMissing
         .map(number => sdgIcons.find(icon => icon.key === number))
         .filter(Boolean);
+	
+	//saves for which sdgs feedback was sent
+	const [sdgsFeedbackSent, setSdgsFeedbackSent] = useState([]);
+	const saveInFeedbackSent = (sdgNumber) =>{
+	setSdgsFeedbackSent(sdgsFeedbackSent+sdgNumber);
+	}
+	
+	const moduleNr = moduleChosen.modulinfos.modulnummer
+
 	const [missingSdgActive, setMissingSdgActive] = React.useState(null);
 	 //saves the descriptions to all sdgs
 	 const [sdgDescriptions, setSdgDescriptions] = useState([]);
@@ -18,8 +27,29 @@ function MissingSDGFeedback ({ sdgMissing }){
 	 const [sdgClicked, setSdgClicked] = useState("");
 	 
 	// URL des Backends
-	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
-	
+	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";  
+
+	const sendFeedback = (active, sdg, explanation, modulnr) => {
+		// eigentlich sowas:
+		const feedback = {
+			"chosen": active,
+			"sdg": sdg,
+			"explanation": explanation
+		}
+
+		try {
+		  axios
+			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
+			.then((result) =>{
+				console.log("Feedback Missing SDG");
+			  	console.log(result.data);
+			});
+			
+		} catch (error) {
+		  console.error("Req Fehler", error);
+		}
+	}
+
 	// function to load sdg_descriptions
 	useEffect(() => {
 	try {
@@ -36,7 +66,7 @@ function MissingSDGFeedback ({ sdgMissing }){
 	}
 	}, []);
 	 
-	  //only the missing SDGs from this section
+	//only the missing SDGs from this section
 	const [activeSdgDescription, setActiveSdgDescription] = useState({}); 
    
 	//called by clicking on an sdgIcon from the missing SDGS
@@ -45,6 +75,12 @@ function MissingSDGFeedback ({ sdgMissing }){
 	console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
 	};
 
+	//for saving and handling form textarea-input
+	const [textinput, setTextinput] = useState("");
+
+	function handleTextinput(event){
+		setTextinput(event.target.value);
+	}
 
 
     return (
@@ -58,8 +94,9 @@ function MissingSDGFeedback ({ sdgMissing }){
 				<Row class="row-margin-bottom">
 					<Card>
 						<CardHeader>
-							<p>only work with this section if you think there are sdgs missing in the answer by mistral</p>
-							<p>please select a sdg which you think would also have fitted too</p>
+							<h5>Missing SDGs</h5>
+							<p><strong>Please check if one of the following SDGs would have fittet too and give short feedback why.</strong></p>
+							<p>Give feedback for one SDG once a time. You can repeat this as often as you want to.</p>
 						</CardHeader>
 						<CardBody>
 							<Row class="row-padding-side">
@@ -75,13 +112,22 @@ function MissingSDGFeedback ({ sdgMissing }){
 									objectFit: "contain",
 									paddingLeft: "0px", // remove style
 									filter:
-										key === missingSdgActive
-										? "grayscale(0%)" // if sdg is selected normal color
-										: "grayscale(50%)" // not selected less color intensity
+										sdgsFeedbackSent.includes(key)
+										?"opacity(30%)"
+										:
+											key === missingSdgActive
+											? "grayscale(0%)" // if sdg is selected normal color
+											: "grayscale(70%)" // not selected less color intensity
 											
 									}}
-									onMouseEnter={() => setMissingSdgActive(key)}
-									onMouseLeave={() => setMissingSdgActive(sdgClicked)}
+									onMouseEnter={() => {
+										setMissingSdgActive(key);
+										changeSDGActiveDescription(key);
+									}}
+									onMouseLeave={() => {
+										setMissingSdgActive(sdgClicked);
+										changeSDGActiveDescription(sdgClicked);
+									}}
 									onClick={() => {
 									setMissingSdgActive(key);
 									changeSDGActiveDescription(key);
@@ -98,36 +144,50 @@ function MissingSDGFeedback ({ sdgMissing }){
 				<Row class="row-margin-bottom">
 					<Card>
 						<CardHeader>
-							<Card.Title><h5>Chosen SDG description:</h5></Card.Title>
+							<Card.Title><h5>SDG {missingSdgActive} description:</h5></Card.Title>
 						</CardHeader>
 						<CardBody>
-						{activeSdgDescription.description?activeSdgDescription.description
-						:"please select a SDG to read the description"}
+						{activeSdgDescription?
+						<>
+							<p><strong>{activeSdgDescription.description}</strong></p>
+							{activeSdgDescription?.targets?.map((target)=>( <p>{target}</p>))}
+						</>:"please select a SDG to read the description"}
+						</CardBody>
+					</Card>
+				</Row>
+				<Row>
+					<Card className="feedback-card">
+						<CardHeader>
+							<h5>Feedback for SDG {missingSdgActive} missing in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}</h5>	
+						</CardHeader>
+						<CardBody>
+							<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+								<Form.Label>please explain in short words why you think the SDG {missingSdgActive} would have fitted in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}	</Form.Label>
+								<Form.Control as="textarea" placeholder="personal explanation" value={textinput} onChange={handleTextinput} />
+							</Form.Group>
+							<Row>
+								<Col xs={12} sm={8}>
+									<Button className="btn-custom"
+										onClick={()=>{
+											sendFeedback(true,missingSdgActive,textinput,moduleNr);
+											saveInFeedbackSent(missingSdgActive);
+										}}
+									>
+										Send feedback for SDG {missingSdgActive}
+									</Button>
+								</Col>
+							</Row>
 						</CardBody>
 					</Card>
 				</Row>	
-				<Row class="row-margin-bottom">
-					<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-						<Form.Label>please explain in short words why you think the chosen SDG would have fitted to the chosen module</Form.Label>
-						<Form.Control type="text" placeholder="personal explanation" />
-					</Form.Group>		
-				</Row>
-				<Row class="row-margin-bottom">
-					<Col xs={12} sm={8}>
-						<Button className="btn-custom">
-							Send feedback for active SDG
-						</Button>
-					</Col>
-				</Row>
-
 			</Form>
 						
 		</Container>
 	);
  }
 MissingSDGFeedback.propTypes = {
-  sdgActive: PropTypes.number,
-  sdgMissing: PropTypes.array,
+  sdgsMissing: PropTypes.array,
+  moduleChosen: PropTypes.object,
 };
 
 export default MissingSDGFeedback;

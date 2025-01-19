@@ -5,15 +5,19 @@ import { sdgIcons, sdgColors } from "../utils.js";
 import axios from "axios";
 import ActiveSdgFeedback from "components/Feedback/ActiveSDGFeedback.jsx";
 
-function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, moduleNr}){
-  const sdgsAnswer = mistralAnswer.map(object =>Number(object.sdg_number))
-  console.log("sdgsAnswer " + sdgsAnswer);
+function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, moduleChosen}){
+  
+
   //saves the iconObjects with the same key as listed in sdgMissing
 	const sdgIconsAnswer = sdgsAnswer
   .map(number => sdgIcons.find(icon => icon.key === number))
   .filter(Boolean);
-  const sdgActiveColor =
-    sdgActive !== null ? sdgColors[sdgActive] : "#F7EFE5";
+
+  //saves for which sdgs feedback was sent
+  const [sdgsFeedbackSent, setSdgsFeedbackSent] = useState([]);
+  const saveInFeedbackSent = (sdgNumber) =>{
+    setSdgsFeedbackSent(sdgsFeedbackSent+sdgNumber);
+  }
 
   //saves the descriptions to all sdgs
   const [sdgDescriptions, setSdgDescriptions] = useState([]);
@@ -57,7 +61,9 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, m
         >
           <Row>
             <Card>
-              <CardHeader><h5>Select a sdg-icon to read about the SDGs by Mistral and mistrals explanation why it fits and give feedback</h5>
+              <CardHeader>
+                <h5>Chosen SDGs</h5>
+                <p><strong>Select a sdg-icon to read about the SDGs the AI Model has decided to fit on to the given module description and its explanation why it fits and give feedback if you agree or why not</strong></p>
               </CardHeader>
               <CardBody>
                 <Row class="row-padding-side">
@@ -73,13 +79,23 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, m
                           objectFit: "contain",
                           paddingLeft: "0px", // remove style
                           filter:
-                            key === sdgActive
-                              ? "grayscale(0%)" // if sdg is selected normal color
-                              : "grayscale(50%)" // not selected less color intensity
+                            sdgsFeedbackSent.includes(key)
+                              ?"opacity(30%)"
+                              :
+                              key === sdgActive
+                                ? "grayscale(0%)" // if sdg is selected normal color
+                                : "grayscale(70%)" // not selected less color intensity
+                            
                                 
                         }}
-                        onMouseEnter={() => setSdgActive(key)}
-                        onMouseLeave={() => setSdgActive(sdgClicked)}
+                        onMouseEnter={() => {
+                          setSdgActive(key);
+                          changeSDGActiveDescription(key);
+                        }}
+                        onMouseLeave={() => {
+                          setSdgActive(sdgClicked);
+                          changeSDGActiveDescription(sdgClicked);
+                        }}
                         onClick={() => {
                           setSdgActive(key);
                           changeSDGActiveDescription(key);
@@ -107,7 +123,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, m
                         <>
                           <p>{activeSdgDescription.description}</p>
                           {/*<p>{activeSdgDescription.targets}</p>*/}
-                          {activeSdgDescription.targets?.map((target)=>( <p>{target}</p>))}
+                          {activeSdgDescription?.targets?.map((target)=>( <p>{target}</p>))}
                         </>
                         :<p>No sdg chosen.</p>}
                       
@@ -121,15 +137,16 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, m
                 </Card>
             </Col> 
             <Col lg={4}class="col-no-margin">
-              <Card              >
+              <Card className="feedback-card">
                 <CardHeader>
-                  Feedback Active SDG {sdgActive} and module {moduleNr}
+                  Feedback for SDG {sdgActive} in module {moduleChosen?.modulinfos?.titelen}
                 </CardHeader>
                 <CardBody>
                 {sdgActive?
                   <ActiveSdgFeedback 
                   sdgActive={sdgActive}
-                  moduleNr={moduleNr}
+                  moduleNr={moduleChosen.modulinfos.modulnummer}
+                  feedbackSent={saveInFeedbackSent}
                   />:
                   <p>No SDG chosen</p>
                 }
@@ -146,9 +163,9 @@ function XaiFeatures ({ sdgActive, setSdgActive, mistralAnswer, nlExplanation, m
 XaiFeatures.propTypes = {
   sdgActive: PropTypes.number,
   setSdgActive: PropTypes.func.isRequired,
-  mistralAnswer: PropTypes.array,
+  sdgsAnswer: PropTypes.array,
   nlExplanation: PropTypes.string,
-  moduleNr: PropTypes.number
+  moduleChosen: PropTypes.object
 };
 
 export default XaiFeatures;
