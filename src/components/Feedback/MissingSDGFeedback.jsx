@@ -155,7 +155,7 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 					</Card>
 				</Row>
 				<Row>
-					<Card>
+					<Card class="feedback-card">
 						<CardHeader>
 							<h5>Feedback for SDG {missingSdgActive} missing in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}</h5>	
 						</CardHeader>

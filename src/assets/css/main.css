@@ -36,19 +36,19 @@ h5{
 .btn-custom:hover {
   color: var(--beige);
   background-color: var(--darkgrey);
-   border-color: var(--darkgrey);
+  border-color: var(--darkgrey);
 }
 
 .btn-custom:hover {
   color: var(--beige);
   background-color: var(--darkgrey);
-   border-color: var(--darkgrey);
+  border-color: var(--darkgrey);
 }
 
 .btn-custom:active {
   color: var(--beige);
-  background-color: var(--darkgrey);
-   border-color: var(--darkgrey);
+  background-color: lightblue;
+  border-color: lightblue;
 }
 
 .div-padding-top-bottom{
@@ -141,4 +141,13 @@ h5{
   color: var(--beige);
   background-color: var(--darkgrey);
   border-color: var(--darkgrey);
+}
+
+.feedback-card{
+  background-color:lightblue;
+  border-radius: var(--bs-border-radius);
+}
+
+.feedback-card .card-header{
+  background-color:lightblue;
 }

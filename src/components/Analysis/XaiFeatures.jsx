@@ -63,7 +63,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
             <Card>
               <CardHeader>
                 <h5>Chosen SDGs</h5>
-                <p><strong>Select a sdg-icon to read about the SDGs the AI Model has decided to fit on to the given module description and its explanation why it fits and give feedback</strong></p>
+                <p><strong>Select a sdg-icon to read about the SDGs the AI Model has decided to fit on to the given module description and its explanation why it fits and give feedback if you agree or why not</strong></p>
               </CardHeader>
               <CardBody>
                 <Row class="row-padding-side">
@@ -137,7 +137,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
                 </Card>
             </Col> 
             <Col lg={4}class="col-no-margin">
-              <Card              >
+              <Card class="feedback-card">
                 <CardHeader>
                   Feedback for SDG {sdgActive} in module {moduleChosen?.modulinfos?.titelen}
                 </CardHeader>
