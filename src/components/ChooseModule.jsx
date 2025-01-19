@@ -122,7 +122,7 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
           </Row>
           <Row class="row-margin-bottom">
 					<Col >
-						<Button className="btn-custom" 
+						<Button className="btn-cta" 
               onClick={()=>{
                 setSentRequest(true);
                 sendRequest(moduleChosen);
@@ -136,7 +136,7 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
 				</Row>
         </div>
         
-        : <div class="div-abstand">Bitte wählen Sie ein Modul aus.</div>}
+        : <div class="div-abstand">Please choose your module from the dropdown above.</div>}
     </Container> 
   );
 }

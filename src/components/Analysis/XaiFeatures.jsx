@@ -123,7 +123,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
                         <>
                           <p>{activeSdgDescription.description}</p>
                           {/*<p>{activeSdgDescription.targets}</p>*/}
-                          {activeSdgDescription.targets?.map((target)=>( <p>{target}</p>))}
+                          {activeSdgDescription?.targets?.map((target)=>( <p>{target}</p>))}
                         </>
                         :<p>No sdg chosen.</p>}
                       
@@ -137,7 +137,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
                 </Card>
             </Col> 
             <Col lg={4}class="col-no-margin">
-              <Card class="feedback-card">
+              <Card className="feedback-card">
                 <CardHeader>
                   Feedback for SDG {sdgActive} in module {moduleChosen?.modulinfos?.titelen}
                 </CardHeader>

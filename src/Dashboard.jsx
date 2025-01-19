@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { Card, Container, Row, Col, CardBody } from "react-bootstrap";
+import { Card, Container, Row, Col, CardBody, CardHeader } from "react-bootstrap";
 
 import MainNavbar from "components/Navbars/MainNavbar";
 import UploadNavbar from "components/Navbars/UploadNavbar";
@@ -17,6 +17,7 @@ import { useState } from 'react';
 import OldXaiFeatures from "components/OldXaiFeatures.jsx";
 import FeedbackSection from "components/Feedback/FeedbackSection.jsx";
 import MissingSDGFeedback from "components/Feedback/MissingSDGFeedback.jsx";
+import Button from 'react-bootstrap/Button';
 
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
@@ -39,6 +40,8 @@ function Dashboard() {
   const [sdgsAnswer, setSdgsAnswer] =React.useState([]);
   const [missingSdgsAnswer, setMissingSdgsAnswer] = React.useState([]);
   
+
+  const [finishedFeedback, setFinishedFeedback] = useState(false);
 
   //if Mistral sent answer, actualize sdgsAnswer and missingSdgsAnswer automaticly
   React.useEffect(() => {
@@ -184,7 +187,19 @@ function Dashboard() {
     }
   }
 
-  return (
+  if (finishedFeedback){
+    return (
+      <div className="wrapper">
+      <Card>
+        <CardBody>
+          <h4>Thank you for your Feedback!</h4>
+          <p>If you want to give Feedback for anothe module, reload your browser.</p>
+        </CardBody>
+      </Card>
+    </div>
+    );}
+  else{
+    return(
     <div className="wrapper">
       <Container fluid>
       <MainNavbar
@@ -298,12 +313,33 @@ function Dashboard() {
                 </Card>:(null)}
               </Col>
             </Row>
+            {sentRequest?
+              <Row>
+                <Col>
+                  <Container>
+                    <Card>
+                      <CardHeader>
+                        <h4>Finished feedback</h4>
+                      </CardHeader>
+                      <CardBody>
+                        <p><strong>Have you finished your feedback for all chosen SDGs?</strong></p>
+                        <p>Have you also checked the mising SDGs if some of them would have fittet too?</p>
+                        <Button className="btn-cta" onClick={()=> setFinishedFeedback(true)}>
+                          finished feedback
+                        </Button>
+                      </CardBody>
+                    </Card>
+                  </Container>
+                </Col>
+            </Row>:(null)}
+            
           </Container>
         </div>
         <Footer />
       </div>
     </div>
-  );
+  );}
 }
+
 
 export default Dashboard;

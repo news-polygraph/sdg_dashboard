@@ -147,15 +147,16 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 							<Card.Title><h5>SDG {missingSdgActive} description:</h5></Card.Title>
 						</CardHeader>
 						<CardBody>
-						{activeSdgDescription.description?
-						<p><strong>{activeSdgDescription.description}</strong></p>
-						:"please select a SDG to read the description"}
-						{activeSdgDescription.targets?.map((target)=>( <p>{target}</p>))}
+						{activeSdgDescription?
+						<>
+							<p><strong>{activeSdgDescription.description}</strong></p>
+							{activeSdgDescription?.targets?.map((target)=>( <p>{target}</p>))}
+						</>:"please select a SDG to read the description"}
 						</CardBody>
 					</Card>
 				</Row>
 				<Row>
-					<Card class="feedback-card">
+					<Card className="feedback-card">
 						<CardHeader>
 							<h5>Feedback for SDG {missingSdgActive} missing in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}</h5>	
 						</CardHeader>
