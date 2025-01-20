@@ -24,6 +24,7 @@ class XaiFeatures extends Component {
         : { score: 0.1, factuality: 0.0, tense: 0.1, category: null, context : {impact: "", pro:"", con:""}}; // default values if no sdg is selected
     const { score, factuality, tense, category, summary } = activeData;
     const context = activeData.hasOwnProperty('context') ? activeData.context : {"impact_type":"","pro":"","con":""};
+    let sdgLocked = false 
     return (
       <>
         <Container // SDG Icons
@@ -49,7 +50,12 @@ class XaiFeatures extends Component {
                           : "grayscale(100%)", // if score is 0 and not selected show black&white icon
                   }}
                   onMouseEnter={() => this.setSdgActive(key)}
-                  onMouseLeave={() => this.setSdgActive(null)}
+                  onMouseDown={() => sdgLocked = true} 
+                  onMouseLeave={() => {
+                    if (sdgLocked == false){
+                      this.setSdgActive(null)
+                    }
+                  }}
                 />
               </Col>
               //
