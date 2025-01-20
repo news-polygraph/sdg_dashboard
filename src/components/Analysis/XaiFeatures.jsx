@@ -5,8 +5,7 @@ import { sdgIcons, sdgColors } from "../utils.js";
 import axios from "axios";
 import ActiveSdgFeedback from "components/Feedback/ActiveSDGFeedback.jsx";
 
-function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, moduleChosen}){
-  
+function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, moduleChosen, editorinfos, setModuleChosen}){
 
   //saves the iconObjects with the same key as listed in sdgMissing
 	const sdgIconsAnswer = sdgsAnswer
@@ -20,7 +19,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
   }
 
   //saves the descriptions to all sdgs
-  const [sdgDescriptions, setSdgDescriptions] = useState([]);
+  const [sdgDescriptions, setSdgDescriptions] = useState();
   //saves which sdg was clicked to switch back after onMouseLeave
   const [sdgClicked, setSdgClicked] = useState("");
   
@@ -29,18 +28,17 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
 
    // function to load sdg_descriptions
    useEffect(() => {
-     try {
-       axios
-         .get(`${backendUrl}/descriptions`)
-         .then((result) =>{  
-           setSdgDescriptions(result.data)
-           //console.log("set SDGdescriptions");
-           //console.log(result.data);
-         }); 
-       
-     } catch (error) {
-       console.error("cant get descriptions", error);
-     }
+    if(sdgDescriptions?.length != 0) return;
+    try {
+      axios
+        .get(`${backendUrl}/descriptions`)
+        .then((result) =>{
+          setSdgDescriptions(result.data)
+        }); 
+      
+    } catch (error) {
+      console.error("cant get descriptions", error);
+    }
    }, []);
   
    
@@ -48,8 +46,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
 
    //called by clicking on an sdgIcon
    const changeSDGActiveDescription = (number) =>{
-    setActiveSdgDescription(sdgDescriptions.find(sdg => sdg.number==number));
-    //console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
+    setActiveSdgDescription(sdgDescriptions?.find(sdg => sdg.number==number));
    };
 
    
@@ -63,7 +60,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
             <Card>
               <CardHeader>
                 <h5>Chosen SDGs</h5>
-                <p><strong>Select a sdg-icon to read about the SDGs the AI Model has decided to fit on to the given module description and its explanation why it fits and give feedback if you agree or why not</strong></p>
+                <p><strong>Select a sdg-icon to read about the SDGs that the AI Model has decided to fit to the given module. As soon as an SDG has been selected, an explanation of why the AI model has assigned this SDG to the module appears, as well as the possibility to give feedback on whether the SDG fits the module.</strong></p>
               </CardHeader>
               <CardBody>
                 <Row class="row-padding-side">
@@ -73,7 +70,6 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
                         className="sdgIcon img-fluid"
                         src={sdgIcon}
                         key={key}
-                        sdgId={key}
                         alt={"sdg_icon_".concat(key)}
                         style={{
                           objectFit: "contain",
@@ -139,7 +135,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
             <Col lg={4}class="col-no-margin">
               <Card className="feedback-card">
                 <CardHeader>
-                  Feedback for SDG {sdgActive} in module {moduleChosen?.modulinfos?.titelen}
+                  Feedback for SDG {sdgActive} in module {moduleChosen.modulinfos.titelde ? moduleChosen.modulinfos.titelde : moduleChosen.modulinfos.titelen}
                 </CardHeader>
                 <CardBody>
                 {sdgActive?
@@ -147,6 +143,9 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
                   sdgActive={sdgActive}
                   moduleNr={moduleChosen.modulinfos.modulnummer}
                   feedbackSent={saveInFeedbackSent}
+                  moduleChosen={moduleChosen}
+                  editorinfos={editorinfos}
+                  setModuleChosen={setModuleChosen}
                   />:
                   <p>No SDG chosen</p>
                 }
@@ -165,7 +164,9 @@ XaiFeatures.propTypes = {
   setSdgActive: PropTypes.func.isRequired,
   sdgsAnswer: PropTypes.array,
   nlExplanation: PropTypes.string,
-  moduleChosen: PropTypes.object
+  moduleChosen: PropTypes.object,
+  editorinfos: PropTypes.array,
+  setModuleChosen: PropTypes.func,
 };
 
 export default XaiFeatures;

@@ -131,6 +131,11 @@ def create_app(test_config=None):
     @app.route('/model', methods=['POST'])
     def t():
         module = request.get_json()
+
+        sdgs = db["modules"].find_one({ "modulinfos.modulnummer": int(module["modulnummer"]) },{ "sdgs": 1, "_id": 0 })["sdgs"]
+        if sdgs:
+            return sdgs
+
         with open("model_requests.json", mode='r', encoding='utf-8') as feedsjson:
             mr = json.load(feedsjson)
 
@@ -139,7 +144,7 @@ def create_app(test_config=None):
                 base_url = "https://api.llama-api.com"
             )
 
-            """ m = [
+            m = [
                 {
                     "role":"system",
                     "content":"You are an expert in sustainable development education with a focus on the United Nations Sustainable Development Goals (SDGs). Your task is to identify only the SDGs that are directly and explicitly addressed by a university course module, based on the provided module title, learning outcomes, and course content descriptions. When assigning the SDGs follow the following steps in the given order: 1. Direct Relevance: SDGs must be clearly and explicitly relevant based on the exact terms, topics, or concepts mentioned in (a) Module Title, (b) Learning Outcomes, (c) Course Content. 1.a Module Title: Look for explicit SDG themes in the module title ('titelde', 'titelen'). 1.b Learning Outcomes: Examine specific learning objectives or skills listed for the module to identify SDG priorities ('lernergebnissede', 'lernergebnisseen'). 1.c Course Content: Analyze the listed topics and themes to match them to SDGs ('lerninhaletde', 'lerninhalteen'). 2. Indirect Relevance: In cases where direct relevance cannot be established, consider indirect relevance by evaluating broader impacts. However, prioritize SDGs that align most closely with the module's explicit focus and avoid speculative connections. 2.a Module Title: Reflect on the broader themes and implications of the module title that might relate to SDGs, even if not explicitly mentioned. 2.b Learning Outcomes: Analyze the learning outcomes for potential impacts on sustainable development goals, even if the connection is not directly stated. 2.c Course Content: Evaluate the course content for topics that might have indirect relevance to SDGs, considering the broader context and potential applications of the material. 3. Prioritization: If a module could be assigned to multiple SDGs, focus on the most directly relevant ones. Do not include SDGs that are only indirectly addressed or require significant interpretation beyond the explicit information provided. 4. Source Identification: For each assigned SDG, clearly indicate the step (a. Module Title, b. Learning Outcomes, c. Course Content) where the connection was identified first. 5. Explanation: After assigning the SDGs, provide a concise explanation for all the selected SDGs, clearly describing how the provided descriptions align explicitly with each SDG. Based on the provided information, including the module title, learning outcomes, and course content, assign only the Sustainable Development Goals (SDGs) that are directly and explicitly relevant to the module. For each SDG, clearly indicate where the decision to assign it was made by referencing one of the following steps: (a) Module Title, (b) Learning Outcomes, or (c) Course Content. Additionally, provide a concise explanation for all selected SDGs, describing how the provided descriptions explicitly align with the SDG framework. Ensure your response is structured to include the SDGs with step identification, followed by a brief explanation that justifies your choices based on the information provided. When explaining SDG choices, use the following structure: SDG Number (Step): Brief reason for inclusion."
@@ -178,11 +183,11 @@ def create_app(test_config=None):
                 },
                 {
                     "role": "user",
-                    "content": format_req(mr["model_req"], module["modulinfos"])
+                    "content": format_req(mr["model_req_final"], module)
                 }
-            ] """
+            ]
 
-            m = [
+            """ m = [
                 {
                     "role":"system",
                     "content":"You are an expert in sustainable development education with a focus on the United Nations Sustainable Development Goals (SDGs). Your task is to identify only the SDGs that are directly and explicitly addressed by a university course module, based on the provided module title, learning outcomes, and course content descriptions. When assigning the SDGs follow the following steps in the given order: 1. Direct Relevance: SDGs must be clearly and explicitly relevant based on the exact terms, topics, or concepts mentioned in (a) Module Title, (b) Learning Outcomes, (c) Course Content. 1.a Module Title: Look for explicit SDG themes in the module title ('titelde', 'titelen'). 1.b Learning Outcomes: Examine specific learning objectives or skills listed for the module to identify SDG priorities ('lernergebnissede', 'lernergebnisseen'). 1.c Course Content: Analyze the listed topics and themes to match them to SDGs ('lerninhaletde', 'lerninhalteen'). 2. Indirect Relevance: In cases where direct relevance cannot be established, consider indirect relevance by evaluating broader impacts. However, prioritize SDGs that align most closely with the module's explicit focus and avoid speculative connections. 2.a Module Title: Reflect on the broader themes and implications of the module title that might relate to SDGs, even if not explicitly mentioned. 2.b Learning Outcomes: Analyze the learning outcomes for potential impacts on sustainable development goals, even if the connection is not directly stated. 2.c Course Content: Evaluate the course content for topics that might have indirect relevance to SDGs, considering the broader context and potential applications of the material. 3. Prioritization: If a module could be assigned to multiple SDGs, focus on the most directly relevant ones. Do not include SDGs that are only indirectly addressed or require significant interpretation beyond the explicit information provided. 4. Source Identification: For each assigned SDG, clearly indicate the step (a. Module Title, b. Learning Outcomes, c. Course Content) where the connection was identified first. 5. Explanation: After assigning the SDGs, provide a concise explanation for all the selected SDGs, clearly describing how the provided descriptions align explicitly with each SDG. Based on the provided information, including the module title, learning outcomes, and course content, assign only the Sustainable Development Goals (SDGs) that are directly and explicitly relevant to the module. For each SDG, clearly indicate where the decision to assign it was made by referencing one of the following steps: (a) Module Title, (b) Learning Outcomes, or (c) Course Content. Additionally, provide a concise explanation for all selected SDGs, describing how the provided descriptions explicitly align with the SDG framework. Ensure your response is structured to include the SDGs with step identification, followed by a brief explanation that justifies your choices based on the information provided. When explaining SDG choices, use the following structure: SDG Number (Step): Brief reason for inclusion."
@@ -191,10 +196,10 @@ def create_app(test_config=None):
                     "role": "user",
                     "content": format_req(mr["model_req"], module)
                 }
-            ]
+            ] """
             
             response = client.chat.completions.create(
-                model="mistral-7b-instruct",
+                model="mixtral-8x22b-instruct",
                 messages=m,
                 response_format = {
                     "type": "json",
@@ -203,6 +208,8 @@ def create_app(test_config=None):
             )
 
             # write result into dd
+
+            print(response)
 
             update = {"$set": {"sdgs": json.loads(response.choices[0].message.content)}}
 
@@ -220,16 +227,27 @@ def create_app(test_config=None):
     @app.route('/feedback/<id>', methods=['POST'])
     def process_feedback(id):
         r = request.get_json()
-        update = {"$push": {"editorinfos": r}}
 
-        result = db["modules"].update_one({"modulinfos.modulnummer": int(id)}, update)
+        update_result = db["modules"].update_one(
+            { 
+                "editorinfos.sdg": int(r["sdg"]),
+                "modulinfos.modulnummer": int(id)
+            },
+            {
+                "$set": {
+                    "editorinfos.$[elem].chosen": r["chosen"],
+                    "editorinfos.$[elem].explanation": r["explanation"]
+                }
+            },
+            array_filters=[{ "elem.sdg": int(r["sdg"]) }]
+        )
 
-        if result.matched_count > 0:
-            print(f"Successfully updated")
-        else:
-            print("No document found with modulinfos.modulnumber")
+        # if no update => insert:
+        if update_result.modified_count == 0:
+            db["modules"].update_one({"modulinfos.modulnummer": int(id)}, {"$push": {"editorinfos": r}})
 
-        return {}
+        # return editorinfos
+        return db["modules"].find_one({ "modulinfos.modulnummer": int(id) },{ "editorinfos": 1, "_id": 0 })["editorinfos"]
     
     @app.route('/upload', methods=['GET', 'POST'])
     def upload_file():

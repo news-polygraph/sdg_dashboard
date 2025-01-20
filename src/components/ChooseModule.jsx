@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Dropdown, Row, Card, Button, CardBody} from "react-bootstrap";
+import { Col, Container, Dropdown, Row, Card, Button, CardBody, Spinner} from "react-bootstrap";
 import axios from "axios";
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import {DropdownButton,FormControl} from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import PropTypes from "prop-types";
+import Select from 'react-select';
 
-function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, setModuleChosen}) {
+function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, setModuleChosen, loading}) {
   // states for modules
   const [modules, setModules] = useState([]);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
   // function to get modules from backend and save in modules
   useEffect(() => {
@@ -20,7 +21,6 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
         .get(`${backendUrl}/modules/all`)
         .then((result) =>{  
           setModules(result.data)
-          console.log("Module abgerufen");
         }); 
       
     } catch (error) {
@@ -34,8 +34,6 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
   const [languageModuleInfo, setLanguage] = useState("deutsch");
   const changeLanguage = (language) =>{
     setLanguage(language);
-    console.log("changed language to "+ language)
-
   }
   const radios = [
     { name: 'deutsch', value: 'deutsch' },
@@ -44,24 +42,19 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
 
   return (
     <Container xl={12}>
-        <Row>        
-          <DropdownButton
-              variant="secondary"
-              align={{ lg: 'start' }}
-              title="choose module"
-              id="choose-module-btn"
-            >
-              {modules.map((module, index) => (
-                  <Dropdown.Item key={index} eventKey={index} onClick={() => {
-                    chooseModule(module);
-                  }}>
-                    {module.titelde} / {module.titelen}
-                  </Dropdown.Item>
-                ))}
-          </DropdownButton>     
+        <Row>
+          <div style={{ zIndex: '9999'}}>
+            <Select
+              options={modules.map((module) => (
+                  {label: module.titelde || module.titelen, value: module.modulnummer, modulnummer: module.modulnummer}
+              ))}
+              onChange={chooseModule}
+              isClearable
+              placeholder="Please choose a module..."
+            />
+          </div>
         </Row>
-        {moduleChosen?
-        <div className="content" class="div-padding-top-bottom">
+        {moduleChosen && (<div className="content" class="div-padding-top-bottom">
           <Row class="row-margin-bottom">
             <Col xl={6}>
               <p>Choose module language</p>
@@ -112,9 +105,9 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
                         <h6>subjects</h6>
                         {moduleChosen?.modulinfos?.lehrinhalteen || "no subjects available"}
                         <p></p>
-                        <h6>learnig goals</h6>
+                        <h6>learning outcomes</h6>
                         <p></p>
-                        {moduleChosen?.modulinfos?.lehrnergebnisseen || "no goals available"}
+                        {moduleChosen?.modulinfos?.lehrnergebnisseen || "no outcomes available"}
                       </div>}
                   </Card.Body>
                 </Card>
@@ -126,17 +119,16 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
               onClick={()=>{
                 setSentRequest(true);
                 sendRequest(moduleChosen);
-                //console.log("moduleChosen: "+moduleChosen)
-                
-                
               }}>
-							Get SDGs from AI model
+              {loading ? (
+                <Spinner animation="border" size="sm"/>
+              ) : (
+                "Get SDGs from AI model"
+              )}
 						</Button>
 					</Col>
 				</Row>
-        </div>
-        
-        : <div class="div-abstand">Please choose your module from the dropdown above.</div>}
+        </div>)}
     </Container> 
   );
 }
@@ -146,5 +138,6 @@ ChooseModule.propTypes = {
   chooseModule:PropTypes.func.isRequired,
   moduleChosen:PropTypes.object,
   setModuleChosen:PropTypes.func.isRequired,
+  loading:PropTypes.bool.isRequired,
 };
 export default ChooseModule;

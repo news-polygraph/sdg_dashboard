@@ -9,12 +9,10 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 function FeedbackSection ({ sdgActive, sdgMissing }){
-	console.log("Props in FeedbackSection:", { sdgActive, sdgMissing });
 	//saves the iconObjects with the same key as listed in sdgMissing
 	const missingSDGIcons = sdgMissing
         .map(number => sdgIcons.find(icon => icon.key === number))
         .filter(Boolean);
-	console.log(missingSDGIcons);
 	const [missingSdgActive, setMissingSdgActive] = React.useState(null);
 	 //saves the descriptions to all sdgs
 	 const [sdgDescriptions, setSdgDescriptions] = useState([]);
@@ -23,10 +21,6 @@ function FeedbackSection ({ sdgActive, sdgMissing }){
 	 
 	// URL des Backends
 	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
-	//for debugging
-	if (sdgActive === null) {
-	console.log("sdgActive is null");
-	}
 	
 	// function to load sdg_descriptions
 	useEffect(() => {
@@ -35,8 +29,6 @@ function FeedbackSection ({ sdgActive, sdgMissing }){
 		.get(`${backendUrl}/descriptions`)
 		.then((result) =>{  
 			setSdgDescriptions(result.data)//save result in sdgDescriptions
-			console.log("set SDGdescriptions");
-			console.log(result.data);
 		}); 
 		
 	} catch (error) {
@@ -49,8 +41,7 @@ function FeedbackSection ({ sdgActive, sdgMissing }){
    
 	//called by clicking on an sdgIcon from the missing SDGS
 	const changeSDGActiveDescription = (number) =>{
-	setActiveSdgDescription(sdgDescriptions.find(sdg => sdg.number==number));
-	console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
+		setActiveSdgDescription(sdgDescriptions.find(sdg => sdg.number==number));
 	};
 
 	//fit doesnt toggle

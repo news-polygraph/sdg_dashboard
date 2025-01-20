@@ -7,7 +7,6 @@ import Row from "react-bootstrap/Row";
 import { Button, Container } from "react-bootstrap";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
-console.log("Backend UploadNavbar:", backendUrl);
 
 class UploadNavbar extends Component {
   constructor(props) {

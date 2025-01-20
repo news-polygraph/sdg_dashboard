@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes, { number } from "prop-types";
 import { Container, Row, Col, Card, CardHeader, CardBody} from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
@@ -7,7 +7,7 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import axios from "axios";
 
-function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent}){	
+function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent, moduleChosen, editorinfos, setModuleChosen}){
 
 	//backend URL
 	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001"; 
@@ -19,22 +19,16 @@ function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent}){
 			"sdg": sdg,
 			"explanation": explanation
 		}
-
-		// bspw so:
-		/*const m = {
-			"chosen": true,
-			"sdg": 4,
-			"explanation": "test"
-		}*/
+		
 		try {
 		  axios
 			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
 			.then((result) =>{
-				console.log("Feedback Missing SDG");
-			  	console.log(result.data);
+				setModuleChosen((m) => ({
+					...m,
+					editorinfos: result.data,
+				}));
 			})
-			
-			
 		} catch (error) {
 		  console.error("Req Fehler", error);
 		}
@@ -42,14 +36,25 @@ function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent}){
 	
 
 	//fit doesnt toggle
-	const [fitToggle, setFitToggle] = useState(false);
 
 	const fitRadios = [
 		{ name: 'fits', value: true},
 		{ name: 'does not fit', value: false},
 	];
 
-	const [textinput, setTextinput] = useState("");
+	const [textinput, setTextinput] = useState();
+	const [fitToggle, setFitToggle] = useState();
+
+	useEffect(() => {
+		const m = moduleChosen.editorinfos.filter(e => e.sdg === sdgActive);
+		if(m.length === 0) {
+			setTextinput("");
+			setFitToggle(false);
+			return;
+		}
+		setFitToggle(m[0].chosen);
+		setTextinput(m[0].explanation);
+	}, [sdgActive]);
 
 	function handleTextinput(event){
 		setTextinput(event.target.value);
@@ -85,7 +90,7 @@ function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent}){
 				</Row>
 				<Row class="row-margin-bottom">
 					<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-						<Form.Label>please explain in short words why you think the active SDG is fitting or not fitting to the chosen module</Form.Label>
+						<Form.Label>please explain briefly why you think SDG {sdgActive} fits/doesn't fit to the chosen module</Form.Label>
 						<Form.Control as="textarea" placeholder="personal explanation" value={textinput} onChange={handleTextinput} />
 					</Form.Group>	
 				</Row>
@@ -109,6 +114,9 @@ ActiveSdgFeedback.propTypes = {
   sdgActive: PropTypes.number,
   moduleNr: PropTypes.number,
   feedbackSent: PropTypes.func.isRequired,
+  moduleChosen: PropTypes.object,
+  editorinfos: PropTypes.array.isRequired,
+  setModuleChosen: PropTypes.func.isRequired,
 };
 
 export default ActiveSdgFeedback;

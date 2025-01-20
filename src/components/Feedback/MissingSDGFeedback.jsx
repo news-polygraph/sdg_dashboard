@@ -6,7 +6,7 @@ import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
+function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 	//saves the iconObjects with the same key as listed in sdgsMissing
 	const missingSDGIcons = sdgsMissing
         .map(number => sdgIcons.find(icon => icon.key === number))
@@ -21,10 +21,10 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 	const moduleNr = moduleChosen.modulinfos.modulnummer
 
 	const [missingSdgActive, setMissingSdgActive] = React.useState(null);
-	 //saves the descriptions to all sdgs
-	 const [sdgDescriptions, setSdgDescriptions] = useState([]);
-	 //saves which sdg was clicked to switch back after onMouseLeave
-	 const [sdgClicked, setSdgClicked] = useState("");
+	//saves the descriptions to all sdgs
+	const [sdgDescriptions, setSdgDescriptions] = useState([]);
+	//saves which sdg was clicked to switch back after onMouseLeave
+	const [sdgClicked, setSdgClicked] = useState("");
 	 
 	// URL des Backends
 	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";  
@@ -41,8 +41,10 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 		  axios
 			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
 			.then((result) =>{
-				console.log("Feedback Missing SDG");
-			  	console.log(result.data);
+				setModuleChosen((m) => ({
+					...m,
+					editorinfos: result.data,
+				}));
 			});
 			
 		} catch (error) {
@@ -55,10 +57,8 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 	try {
 		axios
 		.get(`${backendUrl}/descriptions`)
-		.then((result) =>{  
+		.then((result) =>{
 			setSdgDescriptions(result.data)//save result in sdgDescriptions
-			console.log("set SDGdescriptions");
-			console.log(result.data);
 		}); 
 		
 	} catch (error) {
@@ -72,11 +72,18 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 	//called by clicking on an sdgIcon from the missing SDGS
 	const changeSDGActiveDescription = (number) =>{
 	setActiveSdgDescription(sdgDescriptions.find(sdg => sdg.number==number));
-	console.log("changed activeSdgDescription to " + sdgDescriptions.find(sdg => sdg.number==number));
 	};
 
-	//for saving and handling form textarea-input
-	const [textinput, setTextinput] = useState("");
+	const [textinput, setTextinput] = useState();
+
+	useEffect(() => {
+		const m = moduleChosen.editorinfos.filter(e => e.sdg === missingSdgActive);
+		if(m.length === 0) {
+			setTextinput("");
+			return;
+		}
+		setTextinput(m[0].explanation);
+	}, [missingSdgActive]);
 
 	function handleTextinput(event){
 		setTextinput(event.target.value);
@@ -106,7 +113,6 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 									className="sdgIcon img-fluid"
 									src={sdgIcon}
 									key={key}
-									sdgId={key}
 									alt={"sdg_icon_".concat(key)}
 									style={{
 									objectFit: "contain",
@@ -162,8 +168,8 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 						</CardHeader>
 						<CardBody>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-								<Form.Label>please explain in short words why you think the SDG {missingSdgActive} would have fitted in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}	</Form.Label>
-								<Form.Control as="textarea" placeholder="personal explanation" value={textinput} onChange={handleTextinput} />
+								<Form.Label>please explain briefly why you think the SDG {missingSdgActive} would have been a good fit for module {moduleChosen?.modulinfos?.titelde}{moduleChosen?.modulinfos?.titelen ? `/${moduleChosen?.modulinfos?.titelen}` : ''}	</Form.Label>
+								<Form.Control as="textarea" placeholder="personal explanation" value={textinput || ""} onChange={handleTextinput} />
 							</Form.Group>
 							<Row>
 								<Col xs={12} sm={8}>
@@ -188,6 +194,7 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen}){
 MissingSDGFeedback.propTypes = {
   sdgsMissing: PropTypes.array,
   moduleChosen: PropTypes.object,
+  setModuleChosen: PropTypes.func,
 };
 
 export default MissingSDGFeedback;

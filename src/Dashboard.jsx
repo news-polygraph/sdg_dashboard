@@ -42,14 +42,14 @@ function Dashboard() {
   
 
   const [finishedFeedback, setFinishedFeedback] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //if Mistral sent answer, actualize sdgsAnswer and missingSdgsAnswer automaticly
   React.useEffect(() => {
     if (mistralAnswer) {
-      const sdgsAnswerArray =mistralAnswer.map(object =>Number(object.sdg_number))
+      const sdgsAnswerArray = mistralAnswer.map(object => Number(object.sdg_number));
       setSdgsAnswer(sdgsAnswerArray);
-      setMissingSdgsAnswer([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].filter((sdgnumber)=>  !sdgsAnswerArray.includes(sdgnumber)));
-
+      setMissingSdgsAnswer([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].filter((sdgnumber) => !sdgsAnswerArray.includes(sdgnumber)));
     }
   }, [mistralAnswer]);
 
@@ -98,31 +98,17 @@ function Dashboard() {
   }, [pageNumber]);
 
   const sendModelReq = (module) => {
-    // bspw sowas:
-    const m = {"modulinfos": {
-        "modulnummer": 51088,
-        "versionsnummer": 1,
-        "link": "https://moseskonto.tu-berlin.de/moses/modultransfersystem/bolognamodule/beschreibung/anzeigen.html?number=51088&version=1&sprache=1",
-        "titelde": "Medizintechnik im Krankenhaus",
-        "titelen": "Medical technology in hospitals",
-        "lernergebnissede": "Die Absolvent*innen dieses Moduls erlernen die erforderlichen Grundlagen des/der in der Medizintechnikabteilung eines Krankenhauses tätige/n Ingenieur*in bei der Anwendung dort eingesetzter Medizinprodukte. Durch die Vermittlung der zugehörigen Aufgaben und Tätigkeiten und deren relevanter Aspekte werden die Teilnehmer*innen in die Lage versetzt, Anforderungen an Medizinprodukte aus Sicht eines Krankenhauses zu verstehen. Mit Abschluss des Moduls verfügen die Absolvent*innen grundlegende Kenntnisse zur medizintechnischen Planung, zur Beschaffung sowie zum Betreiben von Medizinprodukten in einer Gesundheitseinrichtung. Die Absolvent*innen werden befähigt, Entscheidungen zur zielgerichteten Anwendung der Medizintechnik im Krankenhausumfeld zu treffen.",
-        "lernergebnisseen": "Graduates of this module learn the necessary basics of the engineer working in the medical technology department of a hospital in the application of medical devices used there. By learning about the associated tasks and activities and their relevant aspects, participants will be able to understand the requirements for medical devices from the perspective of a hospital. On completion of the module, graduates will have basic knowledge of medical technology planning, procurement and the operation of medical devices in a healthcare facility. Graduates will be able to make decisions on the targeted application of medical technology in the hospital environment.",
-        "lehrinhaltede": "• Funktionsweise und Aufbau Krankenhaus • Medizintechnische Planung • Beschaffung von Medizinprodukten • Betreiben von Medizinprodukten • Medizinische IT: Vernetzung und Informationssicherheit",
-        "lehrinhalteen": "Functionality and organisation of hospitals - Medical technology planning - Procurement of Medical devices - Operation of Medical devices - Medical IT: networking and information security"
-    }}
+    setLoading(true);
     try {
       axios
         .post(`${backendUrl}/model`, module.modulinfos)
         .then((res) =>{
-          setMistralAnswer(res.data)
-          console.log("Answer: ");
-          console.log(res.data);
-          console.log("speichere Answer in MistralAnswer");
-
+          setMistralAnswer(res.data);
+          setLoading(false);
         });
-        
     } catch (error) {
       console.error("Req Fehler", error);
+      setLoading(false);
     }
   }
 
@@ -152,30 +138,23 @@ function Dashboard() {
   const [sentRequest, setSentRequest] = useState(false);
 
   const [moduleChosen, setModuleChosen] = useState();
+  const [moduleFeedback, setModuleFeedback] = useState();
 
   const chooseModule = useCallback(async (module) => {
     try {
       const response = await axios.get(`${backendUrl}/modules/${module.modulnummer}`);
+      setModuleFeedback(response.data.editorinfos)
       setModuleChosen(response.data);
     } catch (error) {
       console.error("Fehler beim Auswählen eines Moduls:", error);
     }
   }, []);
-  
-
-  React.useEffect(() => {
-        if (moduleChosen) {
-          console.log("Aktualisiertes moduleChosen:", moduleChosen);
-          // Hier kannst du den Wert weitergeben oder darauf reagieren
-        }
-      }, [moduleChosen]);
 
   //change all relevant state for Xai Features if active SDG changes
   const [nlExplanation, setNlExplanation] = useState("no sdg chosen");
 
   const changeSDGActive = (sdgNumber) =>{
     setSdgActive (Number(sdgNumber))
-    //console.log("mistralAnswer: " + toString(mistralAnswer))
     const sdgExplanation = mistralAnswer.find(
       (object) => object.sdg_number == String(sdgNumber) // String-Vergleich für `sdg_number`
     )?.explanation;
@@ -206,7 +185,6 @@ function Dashboard() {
           dashboardState={pageState}
           changeDashboardState={(newState)=>{
             if (newState !== pageState) {
-              console.log("Changing dashboardState to:", newState);
               setPageState(newState);
             }
           }}
@@ -228,6 +206,7 @@ function Dashboard() {
                     chooseModule={chooseModule}
                     moduleChosen={moduleChosen}
                     setModuleChosen={setModuleChosen}
+                    loading={loading}
                   /> 
                 </Card.Body>
               </Card>
@@ -273,7 +252,7 @@ function Dashboard() {
               <Col md="12">
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
-                    <Card.Title as="h4">2. Results for SDGs for {moduleChosen.modulinfos.titelde}/{moduleChosen.modulinfos.titelen} chosen by AI model</Card.Title>
+                    <Card.Title as="h4">2. Resulting SDGs for {moduleChosen.modulinfos.titelde}{moduleChosen.modulinfos.titelen ? `/${moduleChosen.modulinfos.titelen}` : ''} chosen by AI model</Card.Title>
                   </Card.Header>
                   <Card.Body>
                   {/*later: only shown when request was send and request-answer is not empty*/}
@@ -283,6 +262,8 @@ function Dashboard() {
                       sdgsAnswer = {sdgsAnswer}
                       nlExplanation={nlExplanation}
                       moduleChosen={moduleChosen}
+                      editorinfos={moduleFeedback}
+                      setModuleChosen={setModuleChosen}
                  />
                   </Card.Body>
                 </Card>
@@ -308,6 +289,7 @@ function Dashboard() {
                   <MissingSDGFeedback 
                     sdgsMissing={missingSdgsAnswer}
                     moduleChosen={moduleChosen}
+                    setModuleChosen={setModuleChosen}
                     />
                   </Card.Body>
                 </Card>:(null)}
