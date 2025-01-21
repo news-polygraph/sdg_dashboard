@@ -170,14 +170,17 @@ function Dashboard() {
       return acc;
     }, "");
 
+    const a = [];
+
     const sdgFoundIn = mistralAnswer.reduce((acc, obj) => {
-      if (obj.sdg_number == String(sdgNumber)) {
+      if (obj.sdg_number == String(sdgNumber) && !a.includes((m[obj.found_in] || obj.found_in))) {
+          a.push(m[obj.found_in] || obj.found_in);
           if (acc !== "") return acc + "\n\n" + (m[obj.found_in] || obj.found_in);
           return acc + (m[obj.found_in] || obj.found_in);
       }
       return acc;
     }, "");
-  
+
     if (sdgExplanation) {
       setFoundIn(sdgFoundIn);
       setNlExplanation(sdgExplanation); // Erklärung setzen, wenn gefunden

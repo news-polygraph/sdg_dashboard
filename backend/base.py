@@ -71,6 +71,11 @@ def create_app(test_config=None):
     def test():
         return "App is working!"
     
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        app.logger.error("Unhandled Exception", exc_info=True)
+        return jsonify({"error": "Something went wrong, please answer to our email, explainig what you were trying to do and for which module the error happened. Thanks and sorry for the inconvenience!"}), 500
+    
     @app.route('/descriptions', methods=['GET'])
     def get_sdg_descriptions():
         with open("data_defaults/sdg_descriptions.json", mode='r', encoding='utf-8') as feedsjson:
@@ -183,7 +188,7 @@ def create_app(test_config=None):
                 },
                 {
                     "role": "user",
-                    "content": format_req(mr["model_req_final"], module)
+                    "content": format_req(mr["model_req"], module)
                 }
             ]
 
@@ -200,12 +205,13 @@ def create_app(test_config=None):
             
             response = client.chat.completions.create(
                 model="llama3.2-3b",
-                messages=m
+                messages=m,
+                max_tokens=4096
             )
 
             # write result into dd
 
-            print(response)
+            print(response.choices[0].message.content)
 
             update = {"$set": {"sdgs": json.loads(response.choices[0].message.content)}}
 
