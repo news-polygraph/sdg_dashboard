@@ -29,11 +29,11 @@ import Button from "react-bootstrap/Button";
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
 // react-bootstrap components
-console.log("REACT_APP_BACKEND_URL:");
-console.log(process.env.REACT_APP_BACKEND_URL);
+// console.log("REACT_APP_BACKEND_URL:");
+// console.log(process.env.REACT_APP_BACKEND_URL);
 
-console.log("Dashboard.jsx:");
-console.log(backendUrl);
+// console.log("Dashboard.jsx:");
+// console.log(backendUrl);
 
 function Dashboard() {
   const location = useLocation();

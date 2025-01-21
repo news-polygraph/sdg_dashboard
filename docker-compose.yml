@@ -5,6 +5,7 @@ services:
     ports:
       - "3001:3001" # [HOST_PORT]:[CONTAINER_PORT]
 
+
   frontend:
     build:
       context: .
@@ -15,3 +16,5 @@ services:
       - "3002:8000"
     depends_on:
       - backend
+
+

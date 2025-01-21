@@ -7,8 +7,14 @@ WORKDIR /
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
+RUN rm -rf node_modules package-lock.json
+
 # Install any needed packages
+RUN npm cache clean --force
 RUN npm install
+# remove duplicates in packages folder
+RUN npm dedupe 
+RUN npm update
 
 # Bundle app source
 COPY . .

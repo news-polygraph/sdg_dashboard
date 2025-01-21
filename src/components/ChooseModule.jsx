@@ -14,11 +14,12 @@ function ChooseModule({setSentRequest,sendRequest,chooseModule, moduleChosen, se
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
+  console.log(`${backendUrl}/modules/all`)
   // function to get modules from backend and save in modules
   useEffect(() => {
     try {
       axios
-        .get(`${backendUrl}/modules/all`)
+        .get(`${backendUrl}/modules/all`, { withCredentials: true })
         .then((result) =>{  
           setModules(result.data)
         }); 

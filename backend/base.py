@@ -1,4 +1,3 @@
-import os
 from flask import Flask, flash, request, redirect, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -6,10 +5,13 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import json
 from dotenv import load_dotenv
+import os
 
 from analysis.page_analysis.analyse_page import analyse_page
 from openai import OpenAI
 
+
+load_dotenv()
 uri = "mongodb+srv://<db_user>:<db_password>@sdg.uzifr.mongodb.net/?retryWrites=true&w=majority&appName=SDG"
 uri = uri.replace("<db_password>", os.getenv("DB_PW")).replace("<db_user>", os.getenv("DB_USER"))
 
@@ -34,8 +36,9 @@ with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
 def create_app(test_config=None):
     # Create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    
     # allow all origins
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
 
     app.config.from_mapping(
         SECRET_KEY='super secret key',
