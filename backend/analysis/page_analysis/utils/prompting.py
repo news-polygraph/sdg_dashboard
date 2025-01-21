@@ -10,7 +10,6 @@ logger.setLevel(logging.INFO)
 def perform_api_request(prompts: tuple, max_tokens: int) -> str:
     system_prompt, user_prompt = prompts
     api_key = os.environ.get("LEMONFOX_API")
-    print(api_key)
     api_url = "https://api.lemonfox.ai/v1"
     client = OpenAI(
         api_key=api_key,
