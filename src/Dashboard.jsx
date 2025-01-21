@@ -40,14 +40,13 @@ function Dashboard() {
   const [sdgsAnswer, setSdgsAnswer] =React.useState([]);
   const [missingSdgsAnswer, setMissingSdgsAnswer] = React.useState([]);
   
-
   const [finishedFeedback, setFinishedFeedback] = useState(false);
   const [loading, setLoading] = useState(false);
 
   //if Mistral sent answer, actualize sdgsAnswer and missingSdgsAnswer automaticly
   React.useEffect(() => {
     if (mistralAnswer) {
-      const sdgsAnswerArray = mistralAnswer.map(object => Number(object.sdg_number));
+      const sdgsAnswerArray = [...new Set(mistralAnswer.map(object => Number(object.sdg_number)))].sort(function(a, b){return a - b});
       setSdgsAnswer(sdgsAnswerArray);
       setMissingSdgsAnswer([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].filter((sdgnumber) => !sdgsAnswerArray.includes(sdgnumber)));
     }
@@ -103,6 +102,7 @@ function Dashboard() {
       axios
         .post(`${backendUrl}/model`, module.modulinfos)
         .then((res) =>{
+          console.log("then");
           setMistralAnswer(res.data);
           setLoading(false);
         });
@@ -141,6 +141,7 @@ function Dashboard() {
   const [moduleFeedback, setModuleFeedback] = useState();
 
   const chooseModule = useCallback(async (module) => {
+    setSentRequest(false);
     try {
       const response = await axios.get(`${backendUrl}/modules/${module.modulnummer}`);
       setModuleFeedback(response.data.editorinfos)
@@ -152,14 +153,33 @@ function Dashboard() {
 
   //change all relevant state for Xai Features if active SDG changes
   const [nlExplanation, setNlExplanation] = useState("no sdg chosen");
+  const [foundIn, setFoundIn] = useState();
 
-  const changeSDGActive = (sdgNumber) =>{
-    setSdgActive (Number(sdgNumber))
-    const sdgExplanation = mistralAnswer.find(
-      (object) => object.sdg_number == String(sdgNumber) // String-Vergleich für `sdg_number`
-    )?.explanation;
+  const changeSDGActive = (sdgNumber) => {
+    const m = {
+      a: "Module Title",
+      b: "Learning Outcomes",
+      c: "Course Content"
+    }
+    setSdgActive(Number(sdgNumber));
+    const sdgExplanation = mistralAnswer.reduce((acc, obj) => {
+      if (obj.sdg_number == String(sdgNumber)) {
+          if (acc !== "") return acc + "\n\n" + obj.explanation;
+          return acc + obj.explanation;
+      }
+      return acc;
+    }, "");
+
+    const sdgFoundIn = mistralAnswer.reduce((acc, obj) => {
+      if (obj.sdg_number == String(sdgNumber)) {
+          if (acc !== "") return acc + "\n\n" + (m[obj.found_in] || obj.found_in);
+          return acc + (m[obj.found_in] || obj.found_in);
+      }
+      return acc;
+    }, "");
   
     if (sdgExplanation) {
+      setFoundIn(sdgFoundIn);
       setNlExplanation(sdgExplanation); // Erklärung setzen, wenn gefunden
     } else {
       setNlExplanation("No explanation available."); // Fallback
@@ -255,16 +275,16 @@ function Dashboard() {
                     <Card.Title as="h4">2. Resulting SDGs for {moduleChosen.modulinfos.titelde}{moduleChosen.modulinfos.titelen ? `/${moduleChosen.modulinfos.titelen}` : ''} chosen by AI model</Card.Title>
                   </Card.Header>
                   <Card.Body>
-                  {/*later: only shown when request was send and request-answer is not empty*/}
-                  <XaiFeatures
+                    <XaiFeatures
                       sdgActive={sdgActive}
                       setSdgActive={changeSDGActive}
                       sdgsAnswer = {sdgsAnswer}
                       nlExplanation={nlExplanation}
+                      foundIn={foundIn}
                       moduleChosen={moduleChosen}
                       editorinfos={moduleFeedback}
                       setModuleChosen={setModuleChosen}
-                 />
+                    />
                   </Card.Body>
                 </Card>
               </Col>:(null)}

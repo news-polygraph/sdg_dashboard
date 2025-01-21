@@ -194,17 +194,13 @@ def create_app(test_config=None):
                 },
                 {
                     "role": "user",
-                    "content": format_req(mr["model_req"], module)
+                    "content": format_req(mr["model_req_final"], module)
                 }
             ] """
             
             response = client.chat.completions.create(
-                model="mixtral-8x22b-instruct",
-                messages=m,
-                response_format = {
-                    "type": "json",
-                },
-                max_tokens=4096
+                model="llama3.2-3b",
+                messages=m
             )
 
             # write result into dd

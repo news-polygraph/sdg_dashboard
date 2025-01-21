@@ -5,7 +5,7 @@ import { sdgIcons, sdgColors } from "../utils.js";
 import axios from "axios";
 import ActiveSdgFeedback from "components/Feedback/ActiveSDGFeedback.jsx";
 
-function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, moduleChosen, editorinfos, setModuleChosen}){
+function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, foundIn, moduleChosen, editorinfos, setModuleChosen}){
 
   //saves the iconObjects with the same key as listed in sdgMissing
 	const sdgIconsAnswer = sdgsAnswer
@@ -28,14 +28,12 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
 
    // function to load sdg_descriptions
    useEffect(() => {
-    if(sdgDescriptions?.length != 0) return;
     try {
       axios
         .get(`${backendUrl}/descriptions`)
         .then((result) =>{
           setSdgDescriptions(result.data)
-        }); 
-      
+        });
     } catch (error) {
       console.error("cant get descriptions", error);
     }
@@ -125,8 +123,16 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, modu
                       
                       </Col>  
                       <Col lg={6}>
-                       <h6> Mistrals explanation </h6>
-                       <p> {sdgActive?nlExplanation:"no sdg chosen"} </p>
+                        {sdgActive ? (
+                          <>
+                            <h6> AIs explanation </h6>
+                            <p style={{ whiteSpace: "pre-line" }}> {nlExplanation} </p>
+                            <h6> SDG Found in Section: </h6>
+                            <p style={{ whiteSpace: "pre-line" }}> {foundIn} </p>
+                          </>
+                        ) : (
+                          <></>
+                        )}
                       </Col>
                     </Row>
                   </CardBody>
@@ -164,6 +170,7 @@ XaiFeatures.propTypes = {
   setSdgActive: PropTypes.func.isRequired,
   sdgsAnswer: PropTypes.array,
   nlExplanation: PropTypes.string,
+  foundIn: PropTypes.string,
   moduleChosen: PropTypes.object,
   editorinfos: PropTypes.array,
   setModuleChosen: PropTypes.func,

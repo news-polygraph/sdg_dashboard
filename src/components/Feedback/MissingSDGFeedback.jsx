@@ -103,7 +103,7 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 						<CardHeader>
 							<h5>Missing SDGs</h5>
 							<p><strong>Please check if one of the following SDGs would have fittet too and give short feedback why.</strong></p>
-							<p>Give feedback for one SDG once a time. You can repeat this as often as you want to.</p>
+							<p>Give feedback for one SDG once at a time. You can repeat this as often as you want to.</p>
 						</CardHeader>
 						<CardBody>
 							<Row class="row-padding-side">
