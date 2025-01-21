@@ -1,7 +1,17 @@
 /* Colorpalatte:  FFFBF5, F7EFE5, C3ACD0, 674188 Link: https://colorhunt.co/palette/fffbf5f7efe5c3acd0674188 */
 
+h5{ 
+  font-size: 18px;
+  font-weight: 500;
+}
+
+:root{
+  --darkgrey:#777777;
+  --beige: #fffbf5;
+}
+
 .form-control {
-  background-color: #fffbf5;
+  background-color: var(--beige);
   border: solid 1px lightgray;
 }
 
@@ -11,10 +21,153 @@
 
 .card {
   border-color: lightgray;
+  padding:10px;
+  margin-bottom: 20px;
 }
 
 .btn-custom {
-  background-color: #fffbf5;
-  border-color: lightgray;
-  color: solid 1px lightgray;
+  background-color: var(--beige);
+  border-color: var(--darkgrey);
+  color: var(--darkgrey);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.btn-custom:hover {
+  color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+.btn-custom:hover {
+  color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+.btn-custom:active {
+  color: var(--beige);
+  background-color: lightblue;
+  border-color: lightblue;
+}
+
+.btn:active {
+  color: var(--beige);
+  background-color: lightblue;
+  border-color: lightblue;
+}
+
+.div-padding-top-bottom{
+  padding: 10px 0px;
+}
+
+.row-margin-bottom{
+  margin: 0px 0px 20px 0px;
+}
+
+.col-no-margin{
+  margin: 0px;
+}
+
+.row-no-padding-side{
+  padding: 10px 0px;
+
+}
+
+.row-padding-side{
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: row;
+
+}
+
+.row > *{
+  padding:0px;
+}
+
+.row > *:not(:first-child) {
+  /* Stile für alle Elemente außer dem ersten */
+  padding-left: 20px;
+}
+
+.navbar{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+#choose-module-btn{
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  background-color: lightblue;
+  color:var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+#choose-module-btn:hover{
+  background-color: var(--darkgrey);
+  color:lightblue;;
+}
+
+.dropdown-toggle::after {
+  margin: 10px 0px 0px 10px;
+}
+
+.dropdown-toggle{
+  margin: 0px 0px 10px 0px;
+  font-size: large;
+}
+
+
+/*css für toggle buttons*/
+.card label {
+  text-transform:none;
+  font-size: medium;
+}
+
+.btn-check + .btn{
+  color: var(--darkgrey);
+  background-color: var(--beige);
+  border-color: var(--darkgrey);
+}
+.btn-check:checked + .btn{
+  color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+.btn-check:hover + .btn{
+  color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+.btn-check + .btn:hover{
+  color: var(--beige);
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
+}
+
+.feedback-card{
+  background-color:lightblue;
+  border-radius: var(--bs-border-radius);
+}
+
+.feedback-card .card-header{
+  background-color:lightblue;
+}
+
+.btn-cta {
+  background-color: lightblue;;
+  border-color: var(--darkgrey);
+  color: var(--darkgrey);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.btn-cta:hover {
+  color: lightblue;;
+  background-color: var(--darkgrey);
+  border-color: var(--darkgrey);
 }

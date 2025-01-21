@@ -1,0 +1,71 @@
+{
+    "example1": {
+        "titelen": "Energy Entrepreneurship",
+        "lernergebnisseen": "The course aims to teach students how the combination of entrepreneurship with sustainable and renewable energy technologies can positively impact low-income communities.",
+        "lehrinhalteen": "Topics include developing business ideas related to energy access and exploring social entrepreneurship."
+    },
+    "assistant1": [
+        {
+            "explanation": "The SDG was chosen because the learning outcomes directly mention renewable energy technologies, explicitly addressing SDG 7 (Affordable and Clean Energy) by promoting access to sustainable energy solutions.",
+            "found_in": "b",
+            "sdg_number": 7
+        },
+        {
+            "explanation": "Additionally, the focus on entrepreneurship and economic impact aligns explicitly with SDG 8 (Decent Work and Economic Growth) by fostering sustainable business development and creating economic opportunities in low-income communities.",
+            "found_in": "b",
+            "sdg_number": 8
+        }
+    ],
+    "example2": {
+        "titelen": "Sustainable Urban Development",
+        "lernergebnisseen": "Students will analyze urbanization challenges and sustainable city solutions.",
+        "lehrinhalteen": "The course covers urban planning, public spaces, and housing sustainability."
+    },
+    "assistant2": [
+        {
+            "explanation": "The SDG was chosen because the module title explicitly mentions \"Sustainable Urban Development\", which directly aligns with SDG 11 (Sustainable Cities and Communities). The focus on urban planning, public spaces, and housing sustainability further supports this alignment by addressing core aspects of creating sustainable cities.",
+            "found_in": "a",
+            "sdg_number": 11
+        }
+    ],
+    "example3": {
+        "titelen": "Global Health and Climate Change",
+        "lernergebnisseen": "The module discusses the intersection of health, climate change, and social equity.",
+        "lehrinhalteen": "It includes emerging health issues related to climate impacts and health policy responses."
+    },
+    "assistant3": [
+        {
+            "explanation": "The SDG was chosen because the module title explicitly mentions \"Global Health\" directly addressing SDG 3 (Good Health and Well-being).",
+            "found_in": "a",
+            "sdg_number": 3
+        },
+        {
+            "explanation": "The SDG was chosen because the module title explicitly mentions \"Climate Change\" directly addressing SDG 13 (Climate Action).",
+            "found_in": "a",
+            "sdg_number": 13
+        },
+        {
+            "explanation": "Additionally, the focus on \"social equity\" in the learning outcomes aligns with SDG 10 (Reduced Inequalities), as it emphasizes addressing disparities linked to climate and health impacts.",
+            "found_in": "b",
+            "sdg_number": 10
+        }
+    ],
+    "example4": {
+        "titelen": "Advanced Mathematics for Engineers",
+        "lernergebnisseen": "Students will develop advanced mathematical skills and apply them to engineering problems.",
+        "lehrinhalteen": "Topics include differential equations, linear algebra, and numerical methods."
+    },
+    "assistant4": [
+        {
+            "explanation": "Although the module does not explicitly mention SDGs, the learning outcomes focus on developing advanced mathematical skills, which are crucial for innovation and infrastructure development, indirectly supporting SDG 9 (Industry, Innovation, and Infrastructure).",
+            "found_in": "b",
+            "sdg_number": 9
+        },
+        {
+            "explanation": "Additionally, the application of these skills to engineering problems can contribute to quality education, aligning with SDG 4 (Quality Education).",
+            "found_in": "b",
+            "sdg_number": 4
+        }
+    ],
+    "model_req": "For the module with the Module Title: {%moduletitel%}, the Learning Outcomes: {%learningoutcomes%} and the Course Content: {%coursecontent%}. Return only a JSONARRAY consisting the assigned sdgs as JSONOBJECTS that consist of the number of the assigned sdg called sdg_number, where the sdg was found (only return a for Module Title, b for Learning Outcomes and c for Course Content) called found_in and a short explaination, why, called explanation."
+}
