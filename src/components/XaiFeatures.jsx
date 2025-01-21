@@ -148,7 +148,7 @@ class XaiFeatures extends Component {
                   </div>
               </div>
               <div style={{margin: "30px 0"}}>
-                  <div>Pro:</div>
+                  <div>Increases impact:</div>
                    <div
                        style={{
                            display: "flex",
@@ -166,7 +166,7 @@ class XaiFeatures extends Component {
                            {context.pro}
                        </div>
                    </div>
-                   <div>Con:</div>
+                   <div>Limits impact:</div>
                    <div
                        style={{
                            display: "flex",
