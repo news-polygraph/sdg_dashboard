@@ -117,6 +117,9 @@ class PdfViewer extends Component {
       <>
         <style type="text/css">
           {`
+        mark {
+          opacity: 0.5;
+        }
         mark.word {
             background-color: ${sdgColors[sdgActive]};
             color: black;
