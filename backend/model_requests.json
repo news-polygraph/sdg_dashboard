@@ -67,5 +67,6 @@
             "sdg_number": 4
         }
     ],
-    "model_req": "For the module with the Module Title: {%moduletitel%}, the Learning Outcomes: {%learningoutcomes%} and the Course Content: {%coursecontent%}. Return only a JSONARRAY consisting the assigned sdgs as JSONOBJECTS that consist of the number of the assigned sdg called sdg_number, where the sdg was found (only return a for Module Title, b for Learning Outcomes and c for Course Content) called found_in and a short explaination, why, called explanation."
+    "model_req": "For the module with the Module Title: {%moduletitel%}, the Learning Outcomes: {%learningoutcomes%} and the Course Content: {%coursecontent%}",
+    "model_req_final": "For the module with the Module Title: {%moduletitel%}, the Learning Outcomes: {%learningoutcomes%} and the Course Content: {%coursecontent%}. Return only a JSONARRAY consisting the assigned sdgs as JSONOBJECTS that consist of the number of the assigned sdg called sdg_number, where the sdg was found (only return a for Module Title, b for Learning Outcomes and c for Course Content) called found_in and a short explaination, why, called explanation."
 }

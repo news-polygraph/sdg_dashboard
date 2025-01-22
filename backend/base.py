@@ -191,7 +191,7 @@ def create_app(test_config=None):
                 },
                 {
                     "role": "user",
-                    "content": format_req(mr["model_req"], module)
+                    "content": format_req(mr["model_req_final"], module)
                 }
             ]
 
@@ -207,14 +207,12 @@ def create_app(test_config=None):
             ] """
             
             response = client.chat.completions.create(
-                model="llama3.2-3b",
+                model="llama3.3-70b",
                 messages=m,
-                max_tokens=4096
+                response_format={"type": "json_array"}
             )
 
-            # write result into dd
-
-            print(response.choices[0].message.content)
+            # write result into db
 
             update = {"$set": {"sdgs": json.loads(response.choices[0].message.content)}}
 
@@ -254,6 +252,18 @@ def create_app(test_config=None):
         # return editorinfos
         return db["modules"].find_one({ "modulinfos.modulnummer": int(id) },{ "editorinfos": 1, "_id": 0 })["editorinfos"]
     
+    """@app.route('/insertcustom', methods=['GET'])
+    def insertcustom():
+        with open("custom_sdgs.json", mode='r', encoding='utf-8') as feedsjson:
+            sdgs = json.load(feedsjson)
+
+            for sdg in sdgs:
+                update = {"$set": {"sdgs": sdg["sdgs"]}}
+                result = db["modules"].update_one({"modulinfos.modulnummer": int(sdg["modulnummer"])}, update)
+
+        return []
+    """
+
     @app.route('/upload', methods=['GET', 'POST'])
     def upload_file():
         
