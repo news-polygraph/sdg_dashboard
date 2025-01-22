@@ -35,7 +35,7 @@ function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent, moduleChosen, ed
 	}
 	
 
-	//fit doesnt toggle
+	//"fit/ doesnt fit" toggle
 
 	const fitRadios = [
 		{ name: 'fits', value: true},
@@ -43,7 +43,7 @@ function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent, moduleChosen, ed
 	];
 
 	const [textinput, setTextinput] = useState();
-	const [fitToggle, setFitToggle] = useState();
+	const [fitToggle, setFitToggle] = useState(true);
 
 	useEffect(() => {
 		const m = moduleChosen.editorinfos.filter(e => e.sdg === sdgActive);

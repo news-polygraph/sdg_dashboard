@@ -119,9 +119,9 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 									paddingLeft: "0px", // remove style
 									filter:
 										sdgsFeedbackSent.includes(key)
-										?"opacity(100%)" //if feedback is send, less color intensity
+										?"opacity(100%)" //if feedback is send, more color intensity
 										:key === missingSdgActive
-										?"opacity(100%)" 
+										?"opacity(100%)" //more intensity when selected
 										:"opacity(30%)",
 									border:
 										key === missingSdgActive
@@ -168,11 +168,11 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 				<Row>
 					<Card className="feedback-card">
 						<CardHeader>
-							<h5>Feedback for SDG {missingSdgActive} missing in module {moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}</h5>	
+							<h5>Feedback for SDG {missingSdgActive} missing in module "{moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}"</h5>	
 						</CardHeader>
 						<CardBody>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-								<Form.Label>please explain briefly why you think the SDG {missingSdgActive} would have been a good fit for module {moduleChosen?.modulinfos?.titelde}{moduleChosen?.modulinfos?.titelen ? `/${moduleChosen?.modulinfos?.titelen}` : ''}	</Form.Label>
+								<Form.Label>please explain briefly why you think the SDG {missingSdgActive} would have been a good fit for module "{moduleChosen?.modulinfos?.titelde}{moduleChosen?.modulinfos?.titelen ? `/${moduleChosen?.modulinfos?.titelen}` : ''}"	</Form.Label>
 								<Form.Control as="textarea" placeholder="personal explanation" value={textinput || ""} onChange={handleTextinput} />
 							</Form.Group>
 							<Row>

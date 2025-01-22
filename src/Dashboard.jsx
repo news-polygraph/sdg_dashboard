@@ -312,11 +312,11 @@ function Dashboard() {
                     <Card style={cardColor}>
                       <Card.Header style={cardColor}>
                         <Card.Title as="h4">
-                          2. Resulting SDGs for{" "}
+                          2. Resulting SDGs for "{" "}
                           {moduleChosen.modulinfos.titelde}
                           {moduleChosen.modulinfos.titelen
                             ? `/${moduleChosen.modulinfos.titelen}`
-                            : ""}{" "}
+                            : ""}{" "}"
                           chosen by AI model
                         </Card.Title>
                       </Card.Header>
