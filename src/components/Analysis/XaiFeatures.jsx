@@ -74,11 +74,15 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, foun
                           paddingLeft: "0px", // remove style
                           filter:
                             sdgsFeedbackSent.includes(key)
-                              ?"opacity(30%)"
-                              :
+                            ?"opacity(100%)" //if feedback is send, less color intensity
+                            :key === sdgActive
+                            ?"opacity(100%)" 
+                            :"opacity(30%)",
+                            border:
                               key === sdgActive
-                                ? "grayscale(0%)" // if sdg is selected normal color
-                                : "grayscale(70%)" // not selected less color intensity
+                              ? "5px solid blue" // if sdg is selected blue border
+                              : "none" // not selected without
+                              
                             
                                 
                         }}
