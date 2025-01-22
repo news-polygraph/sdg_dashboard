@@ -1,5 +1,5 @@
 from flask import Flask, flash, request, redirect, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
