@@ -253,7 +253,7 @@ function Dashboard() {
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
                     <Card.Title as="h4">
-                      Choose module and send request
+                      1. Choose module and send request
                     </Card.Title>
                   </Card.Header>
                   <Card.Body>
@@ -312,7 +312,7 @@ function Dashboard() {
                     <Card style={cardColor}>
                       <Card.Header style={cardColor}>
                         <Card.Title as="h4">
-                          1. Resulting SDGs for{" "}
+                          2. Resulting SDGs for{" "}
                           {moduleChosen.modulinfos.titelde}
                           {moduleChosen.modulinfos.titelen
                             ? `/${moduleChosen.modulinfos.titelen}`
@@ -351,7 +351,7 @@ function Dashboard() {
                     <Card style={cardColor}>
                       <Card.Header style={cardColor}>
                         <Card.Title as="h4">
-                          2. Missing SDGs Feedback
+                          3. Missing SDGs Feedback
                         </Card.Title>
                       </Card.Header>
                       <Card.Body>
