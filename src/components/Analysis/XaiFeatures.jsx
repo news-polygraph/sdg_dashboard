@@ -57,7 +57,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, foun
           <Row>
             <Card>
               <CardHeader>
-                <h5>Chosen SDGs</h5>
+                <h5>Resulting SDGs</h5>
                 <p><strong>Select a sdg-icon to read about the SDGs that the AI Model has decided to fit to the given module. As soon as an SDG has been selected, an explanation of why the AI model has assigned this SDG to the module appears, as well as the possibility to give feedback on whether the SDG fits the module.</strong></p>
               </CardHeader>
               <CardBody>
@@ -107,17 +107,19 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, foun
             {/*display additional information (definition) about the sdg which ist hovered*/}
             <Col lg={8} class="col-no-margin" >
                 <Card>
-                  <CardHeader><h5>info about chosen SDG</h5></CardHeader>
+                  <CardHeader><h5>Info about chosen SDG</h5></CardHeader>
                   <CardBody>
                     <Row>
                       <Col lg={6}>
-                        <h6>SDG {sdgActive} description</h6>
-                      
-                        {activeSdgDescription?
-                        <>
-                          <p>{activeSdgDescription.description}</p>
-                          {/*<p>{activeSdgDescription.targets}</p>*/}
-                          {activeSdgDescription?.targets?.map((target)=>( <p>{target}</p>))}
+                      {sdgActive 
+                        ?<>
+                          <h6>SDG {sdgActive} description</h6>
+                          {activeSdgDescription?
+                          <>
+                            <p>{activeSdgDescription.description}</p>
+                            {/*<p>{activeSdgDescription.targets}</p>*/}
+                            {activeSdgDescription?.targets?.map((target)=>( <p>{target}</p>))}
+                          </>:(null)}
                         </>
                         :<p>No sdg chosen.</p>}
                       
@@ -125,7 +127,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, foun
                       <Col lg={6}>
                         {sdgActive ? (
                           <>
-                            <h6> AIs explanation </h6>
+                            <h6> AI explanation </h6>
                             <p style={{ whiteSpace: "pre-line" }}> {nlExplanation} </p>
                             <h6> SDG Found in Section: </h6>
                             <p style={{ whiteSpace: "pre-line" }}> {foundIn} </p>
@@ -141,7 +143,7 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, foun
             <Col lg={4}class="col-no-margin">
               <Card className="feedback-card">
                 <CardHeader>
-                  Feedback for SDG {sdgActive} in module {moduleChosen.modulinfos.titelde ? moduleChosen.modulinfos.titelde : moduleChosen.modulinfos.titelen}
+                  Feedback for SDG {sdgActive} in module "{moduleChosen.modulinfos.titelde ? moduleChosen.modulinfos.titelde : moduleChosen.modulinfos.titelen}"
                 </CardHeader>
                 <CardBody>
                 {sdgActive?

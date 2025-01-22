@@ -101,7 +101,9 @@ function ChooseModule({
             <Col lg={4}>
               <Card>
                 <Card.Header>
-                  <h5>Modultitel</h5>
+                  {languageModuleInfo == "deutsch"
+                  ? <h5>Modultitel</h5>:
+                  <h5>Modultitle</h5>}
                 </Card.Header>
                 <Card.Body>
                   {languageModuleInfo == "deutsch"
@@ -126,29 +128,31 @@ function ChooseModule({
             <Col lg={8}>
               <Card>
                 <Card.Header>
-                  <h5>Moduledescription</h5>
+                  {languageModuleInfo == "deutsch" 
+                  ? <h5>Modulbeschreibung</h5>
+                  : <h5>Moduledescription</h5>}
                 </Card.Header>
                 <Card.Body>
                   {languageModuleInfo == "deutsch" ? (
                     <div>
                       <h6>Lehrinhalte</h6>
                       {moduleChosen?.modulinfos?.lehrinhaltede ||
-                        "Keine lehrinhalte verfügbar"}
+                        "Keine Lehrinhalte verfügbar"}
                       <p></p>
                       <h6>Lernergebnisse</h6>
                       <p></p>
-                      {moduleChosen?.modulinfos?.lehrnergebnissede ||
+                      {moduleChosen?.modulinfos?.lernergebnissede ||
                         "Keine lernergebnisse verfügbar"}
                     </div>
                   ) : (
                     <div>
-                      <h6>subjects</h6>
+                      <h6>content</h6>
                       {moduleChosen?.modulinfos?.lehrinhalteen ||
                         "no subjects available"}
                       <p></p>
                       <h6>learning outcomes</h6>
                       <p></p>
-                      {moduleChosen?.modulinfos?.lehrnergebnisseen ||
+                      {moduleChosen?.modulinfos?.lernergebnisseen ||
                         "no outcomes available"}
                     </div>
                   )}

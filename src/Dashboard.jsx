@@ -312,7 +312,7 @@ function Dashboard() {
                     <Card style={cardColor}>
                       <Card.Header style={cardColor}>
                         <Card.Title as="h4">
-                          2. Resulting SDGs for{" "}
+                          1. Resulting SDGs for{" "}
                           {moduleChosen.modulinfos.titelde}
                           {moduleChosen.modulinfos.titelen
                             ? `/${moduleChosen.modulinfos.titelen}`
@@ -382,7 +382,7 @@ function Dashboard() {
                             </strong>
                           </p>
                           <p>
-                            Have you also checked the mising SDGs if some of
+                            Have you also checked the missing SDGs if some of
                             them would have fittet too?
                           </p>
                           <Button
