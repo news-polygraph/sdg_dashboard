@@ -27,7 +27,7 @@
 #       - frontend
 #       - backend
 
-version: "3"
+# version: "3"
 services:
   backend:
     build: ./backend
@@ -49,9 +49,7 @@ services:
     ports:
       - "80:80"  # Only expose nginx port
     volumes:
-      - type: bind
-        source: ${PWD}/nginx.conf
-        target: /etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - frontend
       - backend

@@ -49,7 +49,7 @@ function ActiveSdgFeedback ({sdgActive, moduleNr, feedbackSent, moduleChosen, ed
 		const m = moduleChosen.editorinfos.filter(e => e.sdg === sdgActive);
 		if(m.length === 0) {
 			setTextinput("");
-			setFitToggle(false);
+			setFitToggle(true);  // Charlott changed something here
 			return;
 		}
 		setFitToggle(m[0].chosen);
