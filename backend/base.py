@@ -6,9 +6,11 @@ from pymongo.server_api import ServerApi
 import json
 from dotenv import load_dotenv
 import os
+import requests
 
 from analysis.page_analysis.analyse_page import analyse_page
 from openai import OpenAI
+from llamaapi import LlamaAPI  # Neue Import
 
 
 load_dotenv()
@@ -147,37 +149,37 @@ def create_app(test_config=None):
         with open("model_requests.json", mode='r', encoding='utf-8') as feedsjson:
             mr = json.load(feedsjson)
 
-            client = OpenAI(
-                api_key = os.getenv("API_KEY"),
-                base_url = "https://api.llama-api.com"
-            )
+            try:
+                # Initialize the Llama SDK
+                llama = LlamaAPI(os.getenv("API_KEY"))
 
-            messages = mr["prompt_final"]
-            messages.append({
-                "role": "user",
-                "content": format_req(mr["model_req_final"], module)
-            })
-            
-            response = client.chat.completions.create(
-                model="llama3.3-70b",
-                messages=messages,
-                response_format={"type": "json_array"}
-            )
+                # Build the API request
+                api_request_json = {
+                    "model": "llama3.3-70b",
+                    "messages": mr["prompt_final"] + [{
+                        "role": "user",
+                        "content": format_req(mr["model_req_final"], module)
+                    }],
+                    "response_format": {"type": "json_array"},
+                    "stream": False
+                }
 
-            # write result into db
+                # Execute the request
+                response = llama.run(api_request_json)
+                result = json.loads(response.json()["choices"][0]["message"]["content"])
 
-            update = {"$set": {"sdgs": json.loads(response.choices[0].message.content)}}
+                # write result into db
+                update = {"$set": {"sdgs": result}}
+                db["modules"].update_one(
+                    {"modulinfos.modulnummer": int(module["modulnummer"])}, 
+                    update
+                )
 
-            result = db["modules"].update_one({"modulinfos.modulnummer": int(module["modulnummer"])}, update)
+                return result
 
-            if result.matched_count > 0:
-                print(f"Successfully updated")
-            else:
-                print("No document found with modulinfos.modulnumber")
-
-            # return the model result
-
-            return json.loads(response.choices[0].message.content)
+            except Exception as e:
+                print(f"Error calling Llama API: {str(e)}")
+                return jsonify({"error": "Error processing request"}), 500
     
     @app.route('/feedback/<id>', methods=['POST'])
     def process_feedback(id):
