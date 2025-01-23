@@ -250,6 +250,20 @@ function Dashboard() {
               {pageState == 1 ? (
                 <UploadNavbar onSelectPdf={onSelectPdf} />
               ) : (
+                <>
+                <Card>
+                  <CardHeader>
+                    <Card.Title as="h4">Anleitung:</Card.Title>
+                  </CardHeader>
+                  <CardBody>
+                    <p><strong>1. Auswahl eines Moduls: Wählen Sie Ihr Modul unter Choose module and send request von der Dropdown-Liste "Please choose a module" aus. Sie können die Sprache des Moduls unter "Choose module language" ändern (z. B. Englisch oder Deutsch).</strong></p>
+                    <p>1.1 SDG-Zuordnung generieren: Klicken Sie auf den blauen Button "Get SDGs from AI model".</p>
+                    <p><strong>2. SDGs Übersicht: Die KI hat nun passende SDGs Ihrem Modul zugeordnet. Mit einem Klick auf die jeweiligen SDGs erhalten Sie weiterführende Informationen, wie etwa Definitionen, Erklärungen zur Auswahl des SDGs und Verweise auf entsprechende Stellen in den Modulbeschreibungen.</strong></p>
+                    <p>2.1 Feedback zum jeweiligen SDG: Auf der rechten Seite sehen Sie eine blaue Box, in der Sie ihr Feedback zu dem jeweiligen SDG abgeben können. Klicken Sie dafür das jeweilige SDG an, zu dem Sie Ihr Feedback abgeben möchten. Bestätgen Sie Ihr Feedback mit dem unten stehenden Button "Send feedback for [SDG]".</p>
+                    <p><strong>3. Fehlende SDGs: Weiter unten auf der Seite können Sie Ihrer Meinung nach fehlende SDG-Zuordnungen auswählen (dazu können Sie sich nochmal Informationen zu dem jeweiligen SDGs durchlesen, indem Sie auf das jeweilige SDG klicken). Bitte geben Sie dazu, unter der SDG Beschreibung, auch eine kurze prägnante Erklärung ab, warum dieses SDG fehlt und bestätigen es ebenfalls durch den Knopfdruck "Send feedback for [SDG]".</strong></p>
+                    <p>3.1 Abschluss des Feedbacks: Wenn Sie mit dem Feedback fertig sind, drücken Sie ganz unten auf der Seite den Knopf "finished feedback".</p>
+                  </CardBody>
+                </Card>
                 <Card style={cardColor}>
                   <Card.Header style={cardColor}>
                     <Card.Title as="h4">
@@ -267,6 +281,7 @@ function Dashboard() {
                     />
                   </Card.Body>
                 </Card>
+                </>
               )}
             </Container>
             <Container fluid>
