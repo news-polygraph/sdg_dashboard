@@ -167,7 +167,7 @@ def create_app(test_config=None):
                 # Execute the request
                 response = llama.run(api_request_json)
 
-                # Get the result
+                # Get the result, catch weird format
                 try:
                     result = json.loads(response.json()["choices"][0]["message"]["content"])
                 except:
@@ -191,22 +191,25 @@ def create_app(test_config=None):
     def process_feedback(id):
         r = request.get_json()
 
-        update_result = db["modules"].update_one(
-            { 
-                "editorinfos.sdg": int(r["sdg"]),
-                "modulinfos.modulnummer": int(id)
-            },
-            {
-                "$set": {
-                    "editorinfos.$[elem].chosen": r["chosen"],
-                    "editorinfos.$[elem].explanation": r["explanation"]
-                }
-            },
-            array_filters=[{ "elem.sdg": int(r["sdg"]) }]
-        )
-
-        # if no update => insert:
-        if update_result.modified_count == 0:
+        # check if sdg feedback exists
+        a = db["modules"].find_one({ "modulinfos.modulnummer": int(id), "editorinfos.sdg": int(r["sdg"])})
+        if a is not None:
+            # update
+            db["modules"].update_one(
+                { 
+                    "editorinfos.sdg": int(r["sdg"]),
+                    "modulinfos.modulnummer": int(id)
+                },
+                {
+                    "$set": {
+                        "editorinfos.$[elem].chosen": r["chosen"],
+                        "editorinfos.$[elem].explanation": r["explanation"]
+                    }
+                },
+                array_filters=[{ "elem.sdg": int(r["sdg"]) }]
+            )
+        else:
+            #insert
             db["modules"].update_one({"modulinfos.modulnummer": int(id)}, {"$push": {"editorinfos": r}})
 
         # return editorinfos
