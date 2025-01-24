@@ -166,7 +166,13 @@ def create_app(test_config=None):
 
                 # Execute the request
                 response = llama.run(api_request_json)
-                result = json.loads(response.json()["choices"][0]["message"]["content"])
+
+                # Get the result
+                try:
+                    result = json.loads(response.json()["choices"][0]["message"]["content"])
+                except:
+                    j = response.json()["choices"][0]["message"]["content"].replace("```\n","").replace("\n```","").replace("```json\n","")
+                    result = json.loads(j)
 
                 # write result into db
                 update = {"$set": {"sdgs": result}}
