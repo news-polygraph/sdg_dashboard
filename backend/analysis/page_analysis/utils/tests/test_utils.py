@@ -1,4 +1,9 @@
 import unittest
+import requests
+import httpx
+import time
+import os
+from openai import OpenAI 
 from mock import patch
 from analysis.page_analysis.utils.keyword_extraction import read_keywords_single_page, combine_keywords_page_level
 from analysis.page_analysis.utils.prompting import perform_api_request, summarize_paragraph, contextualize_paragraph
@@ -12,13 +17,8 @@ class PromptingTest(unittest.TestCase):
 
     def test_perform_request(self):
         prompt = ("You are a friendly cowboy.", "Hello, nice to meet you.")
-        responses = []
-        for _ in range(10):
-            result = perform_api_request(prompt, 20)
-            responses.append(result)
-        response_set = set(responses)
-        print(response_set)
-        # self.assertTrue(len(result) > 0)
+        result = perform_api_request(prompt, 20)
+        print(result)
 
     def test_summarize_paragraph(self):
         paragraphs = {"7":self.paragraph}
@@ -26,12 +26,62 @@ class PromptingTest(unittest.TestCase):
         self.assertTrue("summary" in self.page_data["7"].keys())
 
     def test_contextualize_paragraph(self):
+        print("Starting test_contextualize_paragraph...")
         paragraphs = {"7":self.paragraph}
         contextualize_paragraph(paragraphs, self.page_data)
+        print("Function completed...")
         self.assertTrue("context" in self.page_data["7"].keys())
         print(self.page_data["7"]["context"])
         self.assertEqual(type(self.page_data["7"]["context"]), dict)
         self.assertTrue(len(self.page_data["7"]["context"]))
+
+    def speedtest_requests(self):
+        print("Starting speedtest...")
+        api_key = os.environ.get("LEMONFOX_API")
+        api_url = "https://api.lemonfox.ai/v1/chat/completions"
+        ## requests
+        print("Running requests...")
+        headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+        payload = {
+                    "model": "mixtral-chat",
+                    "messages": [
+                      { "role": "system", "content": "You are a helpful assistant." },
+                      { "role": "user", "content": "How many days are in a year?" }
+                    ]
+                  }
+        start = time.time()
+        response = requests.post(url=api_url, headers=headers, json=payload)
+        print(f"requests completed after  {time.time()-start}")
+        print(response.__dict__)
+        ## httpx
+        print("")
+        print("Running httpx...")
+        start = time.time()
+        response = httpx.post(api_url, json=payload, headers=headers)
+        print(f"httpx completed after  {time.time()-start}")
+        print(response)
+        ## openai
+        print("Running openai...")
+        start = time.time()
+        client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.lemonfox.ai/v1",
+        )
+        completion = client.chat.completions.create(
+            messages=[
+                {"role":"system", "content":"You are a helpful assistant."}, 
+                {"role":"user", "content": "How many days are in a year?"}, 
+
+            ],
+            model="mixtral-chat",
+            max_tokens=60
+        )
+        print(f"openai completed after  {time.time()-start}")
+        print(response)
+        
+
+
+
 
 
 
