@@ -102,13 +102,6 @@ class PdfViewer extends Component {
             return `<mark class="sequence">${value}</mark>`;
           });
         });
-      } else {
-        keywordsAll.forEach((text) => {
-          const regex = new RegExp(text, "gi"); // g for global, i for case-insensitive
-          markedTextItem = markedTextItem.replace(regex, (value) => {
-            return `<mark class="wordAll">${value}</mark>`;
-          });
-        });
       }
       return markedTextItem;
     }
@@ -173,6 +166,7 @@ class PdfViewer extends Component {
           >
             <Page
               pageNumber={pageNumber}
+              customTextRenderer={textRenderer}
               renderAnnotationLayer={false} // remove empty space under report page
             />
           </Document>

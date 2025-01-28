@@ -128,7 +128,14 @@ function Dashboard() {
                   </Card.Header>
                   <Card.Body>
                     {loading ? ( 
-                      <loading-grid color="black"></loading-grid> 
+                      <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      }}>
+                        <loading-grid color="black"></loading-grid> 
+                        <b>Waiting for the LLM...</b>
+                      </div>
                     ):(
                       <XaiFeatures
                         sdgActive={sdgActive}
