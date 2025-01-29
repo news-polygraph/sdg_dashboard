@@ -18,6 +18,7 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 	setSdgsFeedbackSent(sdgsFeedbackSent+sdgNumber);
 	}
 	
+	//saves the modulenr of moduleChosen
 	const moduleNr = moduleChosen.modulinfos.modulnummer
 
 	const [missingSdgActive, setMissingSdgActive] = React.useState(null);
@@ -29,8 +30,9 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 	// URL des Backends
 	const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";  
 
+	//Calls backend function to send feedbackobject to database
 	const sendFeedback = (active, sdg, explanation, modulnr) => {
-		// eigentlich sowas:
+		//structure of feedback object
 		const feedback = {
 			"chosen": active,
 			"sdg": sdg,
