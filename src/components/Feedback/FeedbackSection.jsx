@@ -8,6 +8,9 @@ import Form from 'react-bootstrap/Form';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
+//THIS COMPONENT IS NOT USED!
+//was a former state
+
 function FeedbackSection ({ sdgActive, sdgMissing }){
 	//saves the iconObjects with the same key as listed in sdgMissing
 	const missingSDGIcons = sdgMissing

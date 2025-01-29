@@ -17,6 +17,12 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import PropTypes from "prop-types";
 import Select from "react-select";
 
+/**in this section the users first choose their module from the drowdown menue
+ * when chosen, the information is shown underneath.
+ * actual language de/en is saved in a state variable, can be switched by a toggle button
+ * when button send request is hit, send Request is called (handled in dashboard)
+ */
+
 function ChooseModule({
   setSentRequest,
   sendRequest,
@@ -32,9 +38,8 @@ function ChooseModule({
     process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
   console.log(`${backendUrl}`);
-  // function to get modules from backend and save in modules
+  // function to get List of modules from backend and save in modules
   useEffect(() => {
-
     try {
       axios
         .get(`${backendUrl}/modules/all`)
@@ -51,9 +56,12 @@ function ChooseModule({
 
   //language to display modules
   const [languageModuleInfo, setLanguage] = useState("deutsch");
+
   const changeLanguage = (language) => {
     setLanguage(language);
   };
+
+  //values for language ToggleButton
   const radios = [
     { name: "deutsch", value: "deutsch" },
     { name: "english", value: "english" },

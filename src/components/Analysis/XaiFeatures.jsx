@@ -39,9 +39,8 @@ function XaiFeatures ({ sdgActive, setSdgActive, sdgsAnswer, nlExplanation, foun
     }
    }, []);
   
-   
+   //saves the description only for the activ sdg
    const [activeSdgDescription, setActiveSdgDescription] = useState({}); 
-
    //called by clicking on an sdgIcon
    const changeSDGActiveDescription = (number) =>{
     setActiveSdgDescription(sdgDescriptions?.find(sdg => sdg.number==number));

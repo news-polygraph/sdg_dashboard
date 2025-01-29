@@ -36,7 +36,6 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 			"sdg": sdg,
 			"explanation": explanation
 		}
-
 		try {
 		  axios
 			.post(`${backendUrl}/feedback/${modulnr}`, feedback)
@@ -74,8 +73,8 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 	setActiveSdgDescription(sdgDescriptions.find(sdg => sdg.number==number));
 	};
 
+	//personal explanation Textinput
 	const [textinput, setTextinput] = useState();
-
 	useEffect(() => {
 		const m = moduleChosen.editorinfos.filter(e => e.sdg === missingSdgActive);
 		if(m.length === 0) {
@@ -84,7 +83,6 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 		}
 		setTextinput(m[0].explanation);
 	}, [missingSdgActive]);
-
 	function handleTextinput(event){
 		setTextinput(event.target.value);
 	}
@@ -93,7 +91,7 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
     return (
 			//missing sdg section
 			//icon list missing sdgs to choose one by clicking
-			//eplanations field for displaying sdg description
+			//explanations field for displaying sdg description
 			//text input personal explanation (show only when missing one is chosen)
 			//button send feedback for missing sdgs (show only when missing one is chosen)
 		<Container>
@@ -171,9 +169,10 @@ function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 							<h5>Feedback for SDG {missingSdgActive} missing in module "{moduleChosen?.modulinfos?.titelde}/{moduleChosen?.modulinfos?.titelen}"</h5>	
 						</CardHeader>
 						<CardBody>
+							{/**Explanation textinput field */}
 							<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
 								<Form.Label>please explain briefly why you think the SDG {missingSdgActive} would have been a good fit for module "{moduleChosen?.modulinfos?.titelde}{moduleChosen?.modulinfos?.titelen ? `/${moduleChosen?.modulinfos?.titelen}` : ''}"	</Form.Label>
-								<Form.Control as="textarea" placeholder="personal explanation" value={textinput || ""} onChange={handleTextinput} />
+							<Form.Control as="textarea" placeholder="personal explanation" value={textinput || ""} onChange={handleTextinput} />
 							</Form.Group>
 							<Row>
 								<Col xs={12} sm={8}>

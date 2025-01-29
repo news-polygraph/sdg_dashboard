@@ -28,29 +28,34 @@ import Button from "react-bootstrap/Button";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
-// react-bootstrap components
-// console.log("REACT_APP_BACKEND_URL:");
-// console.log(process.env.REACT_APP_BACKEND_URL);
-
-// console.log("Dashboard.jsx:");
-// console.log(backendUrl);
+/**
+ * The Dashboard is the main page of these project
+ * all other frontend components are displayed inside the dashboard */
 
 function Dashboard() {
   const location = useLocation();
+  //page state 0 means choose module from list, 1 are PDF functions
+  const [pageState, setPageState] = useState(0);
+  //which sdg is chosen in XaiFeatures analysis Section
+  const [sdgActive, setSdgActive] = React.useState(null); 
+  //for PDF Features
+  const [pageNumber, setPageNumber] = React.useState(1);
   const mainPanel = React.useRef(null);
   const [file, setFile] = React.useState(null);
   const [fileData, setFileData] = React.useState(fileDataDefault);
-  const [sdgActive, setSdgActive] = React.useState(null); //which sdg is chosen in analysis Section
-  const [pageNumber, setPageNumber] = React.useState(1);
-  const cardColor = { backgroundColor: "#FFFBF5" };
-  const [mistralAnswer, setMistralAnswer] = React.useState([]); //maybe not the right Data-Type for UnseState, proof befor use
-  const [sdgsAnswer, setSdgsAnswer] = React.useState([]);
-  const [missingSdgsAnswer, setMissingSdgsAnswer] = React.useState([]);
 
+  const cardColor = { backgroundColor: "#FFFBF5" };
+  //whole answer object
+  const [mistralAnswer, setMistralAnswer] = React.useState([]);
+  //List of SDGs from Mistral answer 
+  const [sdgsAnswer, setSdgsAnswer] = React.useState([]);
+  //List of whole 17 SDGs - sdgsAnswer
+  const [missingSdgsAnswer, setMissingSdgsAnswer] = React.useState([]);
+  //is set true by finished feedback button
   const [finishedFeedback, setFinishedFeedback] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  //if Mistral sent answer, actualize sdgsAnswer and missingSdgsAnswer automaticly
+  //if Mistral sent answer, actualize sdgsAnswer (for XaiFeatures) and missingSdgsAnswer (for MissingSDGFeedback) automaticly
   React.useEffect(() => {
     if (mistralAnswer) {
       const sdgsAnswerArray = [
@@ -66,6 +71,116 @@ function Dashboard() {
       );
     }
   }, [mistralAnswer]);
+
+  //calls a backend fuction which sends the module.mudulinfos with the prompt to the AI model
+  /** needs a module as parameter */
+  const sendModelReq = (module) => {
+    setLoading(true);
+    try {
+      axios.post(`${backendUrl}/model`, module.modulinfos).then((res) => {
+        console.log("then");
+        setMistralAnswer(res.data);
+        setLoading(false);
+      });
+    } catch (error) {
+      console.error("Req Fehler", error);
+      setLoading(false);
+    }
+  };
+
+ 
+
+  //only for demo
+  const [sentRequest, setSentRequest] = useState(false);
+
+  const [moduleChosen, setModuleChosen] = useState();
+  const [moduleFeedback, setModuleFeedback] = useState();
+
+  const chooseModule = useCallback(async (module) => {
+    setSentRequest(false);
+    try {
+      const response = await axios.get(
+        `${backendUrl}/modules/${module.modulnummer}`
+      );
+      setModuleFeedback(response.data.editorinfos);
+      setModuleChosen(response.data);
+    } catch (error) {
+      console.error("Fehler beim Auswählen eines Moduls:", error);
+    }
+  }, []);
+
+  //change all relevant states for Xai Features if active SDG changes
+  const [nlExplanation, setNlExplanation] = useState("no sdg chosen");
+  const [foundIn, setFoundIn] = useState();
+
+  const changeSDGActive = (sdgNumber) => {
+    const m = {
+      a: "Module Title",
+      b: "Learning Outcomes",
+      c: "Course Content",
+    };
+    setSdgActive(Number(sdgNumber));
+    const sdgExplanation = mistralAnswer.reduce((acc, obj) => {
+      if (obj.sdg_number == String(sdgNumber)) {
+        if (acc !== "") return acc + "\n\n" + obj.explanation;
+        return acc + obj.explanation;
+      }
+      return acc;
+    }, "");
+
+    const a = [];
+
+    const sdgFoundIn = mistralAnswer.reduce((acc, obj) => {
+      if (
+        obj.sdg_number == String(sdgNumber) &&
+        !a.includes(m[obj.found_in] || obj.found_in)
+      ) {
+        a.push(m[obj.found_in] || obj.found_in);
+        if (acc !== "") return acc + "\n\n" + (m[obj.found_in] || obj.found_in);
+        return acc + (m[obj.found_in] || obj.found_in);
+      }
+      return acc;
+    }, "");
+
+    if (sdgExplanation) {
+      setFoundIn(sdgFoundIn);
+      setNlExplanation(sdgExplanation); // Erklärung setzen, wenn gefunden
+    } else {
+      setNlExplanation("No explanation available."); // Fallback
+    }
+  };
+
+  //START
+  /*following: funtionalities for PDF Analysis mode */
+
+   // changes per SDG if PDF-Fuctions are active
+   const keywords =
+   sdgActive !== null
+     ? pageState == 1
+       ? pageData[sdgActive].keywords
+       : []
+     : []; // if sdg is active return the keywords else return empty list
+ const sequences =
+   sdgActive !== null
+     ? pageState == 1
+       ? pageData[sdgActive].sequences
+       : []
+     : [];
+
+  // filter sdgData to feed relevent attributes to child-components
+  // changes per file
+  const analysisData = fileData.analysis_data;
+
+  // changes per page
+  const pageData = fileData.sdg_data[pageNumber]; // data for XAI-Features
+  const numPages = Object.keys(fileData.sdg_data).length;
+
+  const keywordsAllSet = new Set();
+
+  for (var value of Object.values(pageData)) {
+    value.keywords.forEach((keyword) => keywordsAllSet.add(keyword.word));
+  }
+  const keywordsAll = Array.from(keywordsAllSet);
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -110,112 +225,8 @@ function Dashboard() {
         });
     }
   }, [pageNumber]);
-
-  const sendModelReq = (module) => {
-    setLoading(true);
-    try {
-      axios.post(`${backendUrl}/model`, module.modulinfos).then((res) => {
-        console.log("then");
-        setMistralAnswer(res.data);
-        setLoading(false);
-      });
-    } catch (error) {
-      console.error("Req Fehler", error);
-      setLoading(false);
-    }
-  };
-
-  // filter sdgData to feed relevent attributes to child-components
-  // changes per file
-  const analysisData = fileData.analysis_data;
-
-  // changes per page
-  const pageData = fileData.sdg_data[pageNumber]; // data for XAI-Features
-  const numPages = Object.keys(fileData.sdg_data).length;
-
-  const keywordsAllSet = new Set();
-
-  for (var value of Object.values(pageData)) {
-    value.keywords.forEach((keyword) => keywordsAllSet.add(keyword.word));
-  }
-  const keywordsAll = Array.from(keywordsAllSet);
-
-  //page state 0 means choose module from list, 1 are PDF functions
-  const [pageState, setPageState] = useState(0);
-
-  // changes per SDG if PDF-Fuctions are active
-  const keywords =
-    sdgActive !== null
-      ? pageState == 1
-        ? pageData[sdgActive].keywords
-        : []
-      : []; // if sdg is active return the keywords else return emplty list
-  const sequences =
-    sdgActive !== null
-      ? pageState == 1
-        ? pageData[sdgActive].sequences
-        : []
-      : [];
-
-  //only for demo
-  const [sentRequest, setSentRequest] = useState(false);
-
-  const [moduleChosen, setModuleChosen] = useState();
-  const [moduleFeedback, setModuleFeedback] = useState();
-
-  const chooseModule = useCallback(async (module) => {
-    setSentRequest(false);
-    try {
-      const response = await axios.get(
-        `${backendUrl}/modules/${module.modulnummer}`
-      );
-      setModuleFeedback(response.data.editorinfos);
-      setModuleChosen(response.data);
-    } catch (error) {
-      console.error("Fehler beim Auswählen eines Moduls:", error);
-    }
-  }, []);
-
-  //change all relevant state for Xai Features if active SDG changes
-  const [nlExplanation, setNlExplanation] = useState("no sdg chosen");
-  const [foundIn, setFoundIn] = useState();
-
-  const changeSDGActive = (sdgNumber) => {
-    const m = {
-      a: "Module Title",
-      b: "Learning Outcomes",
-      c: "Course Content",
-    };
-    setSdgActive(Number(sdgNumber));
-    const sdgExplanation = mistralAnswer.reduce((acc, obj) => {
-      if (obj.sdg_number == String(sdgNumber)) {
-        if (acc !== "") return acc + "\n\n" + obj.explanation;
-        return acc + obj.explanation;
-      }
-      return acc;
-    }, "");
-
-    const a = [];
-
-    const sdgFoundIn = mistralAnswer.reduce((acc, obj) => {
-      if (
-        obj.sdg_number == String(sdgNumber) &&
-        !a.includes(m[obj.found_in] || obj.found_in)
-      ) {
-        a.push(m[obj.found_in] || obj.found_in);
-        if (acc !== "") return acc + "\n\n" + (m[obj.found_in] || obj.found_in);
-        return acc + (m[obj.found_in] || obj.found_in);
-      }
-      return acc;
-    }, "");
-
-    if (sdgExplanation) {
-      setFoundIn(sdgFoundIn);
-      setNlExplanation(sdgExplanation); // Erklärung setzen, wenn gefunden
-    } else {
-      setNlExplanation("No explanation available."); // Fallback
-    }
-  };
+  //END 
+  /*functionalitys for PDF Analysis mode*/
 
   if (finishedFeedback) {
     return (
