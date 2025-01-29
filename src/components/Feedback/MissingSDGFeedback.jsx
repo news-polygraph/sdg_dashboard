@@ -6,6 +6,14 @@ import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+/**Section to give Feedback for the SDGs which were not chosen by Mistral
+ * sdgs to show is passed by sdgsMissing
+ * sdg to give feedback for is chosen by cklick on button
+ * SDG sescription is shown
+ * input personal explanation
+ * send feedback by button send feedback for sdg [SDG]
+ */
+
 function MissingSDGFeedback ({ sdgsMissing, moduleChosen, setModuleChosen}){
 	//saves the iconObjects with the same key as listed in sdgsMissing
 	const missingSDGIcons = sdgsMissing
