@@ -28,8 +28,6 @@ try:
 except Exception as e:
     print(e)
 
-load_dotenv()
-
 # start with a fresh database
 with open("file_data.json", mode='w', encoding='utf-8') as feedsjson:
     json.dump([], feedsjson)
@@ -76,6 +74,7 @@ def create_app(test_config=None):
     def test():
         return "App is working!"
     
+    # simple backend errorhandler
     @app.errorhandler(Exception)
     def handle_exception(e):
         app.logger.error("Unhandled Exception", exc_info=True)
@@ -95,16 +94,17 @@ def create_app(test_config=None):
             
         return descriptions
     
+    """returns array of all modules in the database.
+
+    if the optional parameter 'full' is true return the entire data of all modules, else only return title + modulnummer
+    """
     @app.route('/modules/all', methods=['GET'])
     def get_modules():
-        # if full = true, return the entire data of all modules, else make it more lean and only return title + modulnummer
         full = request.args.get('full', default=False, type=bool)
 
         if full == True:
             return list(db["modules"].find({}, {"_id": 0}))
         
-        # return list(db["modules"].find({},{"_id": 0, "modulinfos.modulnummer": 1, "modulinfos.titelde": 1, "modulinfos.titelen": 1})) 
-
         pipeline = [
             {"$project": {"_id": 0, "modulinfos.modulnummer": 1, "modulinfos.titelde": 1, "modulinfos.titelen": 1}},
             {"$replaceRoot": {"newRoot": "$modulinfos"}}
@@ -112,10 +112,16 @@ def create_app(test_config=None):
 
         return list(db["modules"].aggregate(pipeline))
 
+    """
+    returns all information of the module with the modulnummer equal to id in the db
+    """
     @app.route('/modules/<id>', methods=['GET'])
     def get_module(id):
         return list(db["modules"].find({"modulinfos.modulnummer": int(id)}, {"_id": 0}))[0]
     
+    """
+    returns a formatted model request as a string using the information of the module
+    """
     def format_req(message, m):
         # titel
         if m["titelen"] != "":
@@ -137,7 +143,14 @@ def create_app(test_config=None):
 
         return message
 
-    
+    """
+    returns the sdgs assigned to the given module in an array of objects.
+
+    expects a module with all module information to be sent in the body of the post request
+
+    if the database has sdgs assigned to the module return them
+    else format the request with the module information, obtain the models sdgs, write them into the db and return them
+    """
     @app.route('/model', methods=['POST'])
     def t():
         module = request.get_json()
@@ -187,6 +200,9 @@ def create_app(test_config=None):
                 print(f"Error calling Llama API: {str(e)}")
                 return jsonify({"error": "Error processing request"}), 500
     
+    """
+    upserts and returns the human feedback
+    """
     @app.route('/feedback/<id>', methods=['POST'])
     def process_feedback(id):
         r = request.get_json()
@@ -214,18 +230,7 @@ def create_app(test_config=None):
 
         # return editorinfos
         return db["modules"].find_one({ "modulinfos.modulnummer": int(id) },{ "editorinfos": 1, "_id": 0 })["editorinfos"]
-    
-    """@app.route('/insertcustom', methods=['GET'])
-    def insertcustom():
-        with open("custom_sdgs.json", mode='r', encoding='utf-8') as feedsjson:
-            sdgs = json.load(feedsjson)
 
-            for sdg in sdgs:
-                update = {"$set": {"sdgs": sdg["sdgs"]}}
-                result = db["modules"].update_one({"modulinfos.modulnummer": int(sdg["modulnummer"])}, update)
-
-        return []
-    """
 
     @app.route('/upload', methods=['GET', 'POST'])
     def upload_file():
