@@ -154,14 +154,20 @@ def create_app(test_config=None):
     """
     returns the sdgs assigned to the given module in an array of objects.
 
-    expects a module with all module information to be sent in the body of the post request
+    the route can be /model which expects a module with all module information to be sent in the body of the post request
+    or /model/<mnr> which gets the necessary module information of the module with the requested modulenumber (mnr) from the database
 
     if the database has sdgs assigned to the module return them
     else format the request with the module information, obtain the models sdgs, write them into the db and return them
     """
-    @app.route('/model', methods=['POST'])
-    def t():
-        module = request.get_json()
+    @app.route('/model', defaults={'mnr': None}, methods=['POST'])
+    @app.route('/model/<mnr>', methods=['POST'])
+    def t(mnr):
+        module = []
+        if mnr is not None:
+            module = db["modules"].find_one({ "modulinfos.modulnummer": int(mnr) },{ "modulinfos": 1, "_id": 0})["modulinfos"]
+        else:
+            module = request.get_json()
 
         sdgs = db["modules"].find_one({ "modulinfos.modulnummer": int(module["modulnummer"]) },{ "sdgs": 1, "_id": 0 })["sdgs"]
         if sdgs:
