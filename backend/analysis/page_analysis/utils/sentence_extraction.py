@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import nltk
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import sent_tokenize, word_tokenize, WordPunctTokenizer
 import json
 nltk.download('punkt')
 import re
@@ -92,6 +92,7 @@ def sentence_extraction(filename, page_texts):
 
 
 def sentence_extraction_for_page(page_texts):
+    wpt = WordPunctTokenizer()
     # Predefined descriptions for each of the 17 SDGs
     sdg_descriptions = [
         "No Poverty",
@@ -118,6 +119,11 @@ def sentence_extraction_for_page(page_texts):
 
     # Tokenize the text into paragraphs
     paragraphs = sent_tokenize(page_text)
+    words = word_tokenize(page_text)
+    tokeen = wpt.tokenize_sents(paragraphs)
+    print(words)
+    print(paragraphs)
+    print(tokeen)
     
 
     # Combine SDG descriptions and paragraphs for vectorization

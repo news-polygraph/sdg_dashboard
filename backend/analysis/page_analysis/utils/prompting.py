@@ -8,23 +8,40 @@ from openai import OpenAI
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+# def perform_api_request(prompts: tuple, max_tokens: int) -> str:
+#     system_prompt, user_prompt = prompts
+#     api_key = os.environ.get("LEMONFOX_API")
+#     api_url = "https://api.lemonfox.ai/v1/chat/completions"
+#     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+#     payload = {
+#                 "model": "mixtral-chat",
+#                 "max_tokens": max_tokens,
+#                 "messages": [
+#                     {"role":"system", "content":system_prompt}, 
+#                     {"role":"user", "content":user_prompt}, 
+#                 ]
+#               }
+#     r = httpx.post(url=api_url, json=payload, headers=headers)
+#     content = json.loads(r.content.decode("utf-8"))['choices'][0]['message']['content']
+#     return content
+
 def perform_api_request(prompts: tuple, max_tokens: int) -> str:
     system_prompt, user_prompt = prompts
     api_key = os.environ.get("LEMONFOX_API")
-    api_url = "https://api.lemonfox.ai/v1/chat/completions"
-    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
-    payload = {
-                "model": "mixtral-chat",
-                "max_tokens": max_tokens,
-                "messages": [
-                    {"role":"system", "content":system_prompt}, 
-                    {"role":"user", "content":user_prompt}, 
-                ]
-              }
-    r = httpx.post(url=api_url, json=payload, headers=headers)
-    content = json.loads(r.content.decode("utf-8"))['choices'][0]['message']['content']
-    return content
+    client = OpenAI(
+      api_key=api_key,
+      base_url="https://api.lemonfox.ai/v1",
+    )
 
+    completion = client.chat.completions.create(
+      messages=[
+        { "role": "system", "content": system_prompt },
+        { "role": "user", "content": user_prompt }
+      ],
+      model="mixtral-chat",
+    )
+
+    return completion.choices[0].message.content or ""
 
 def summarize_paragraph(paragraphs, page_data):
     sdg_descriptions = [

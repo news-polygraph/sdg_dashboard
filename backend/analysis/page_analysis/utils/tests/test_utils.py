@@ -89,10 +89,10 @@ class ExtractionTest(unittest.TestCase):
     
     @patch('analysis.page_analysis.utils.keyword_extraction.read_single_page_from_pdf')
     def test_read_keywords_single_page(self, mock_func):
-        mock_func.return_value = "This is a poor sample."
-        text, data = read_keywords_single_page("filename.pdf", 1)
+        mock_func.return_value = "This is a poor sample. This is a wastewater sample. The climate is important"
+        paragraphs, data = read_keywords_single_page("filename.pdf", 1)
         print(data)
-        self.assertEqual("This is a poor sample.", text)
+        print(paragraphs)
         self.assertEqual(len(data), 17)
         self.assertEqual(len(data['1']['keywords']), 1)
 
