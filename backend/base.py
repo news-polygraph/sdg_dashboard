@@ -80,19 +80,27 @@ def create_app(test_config=None):
         app.logger.error("Unhandled Exception", exc_info=True)
         return jsonify({"error": "Something went wrong, please answer to our email, explainig what you were trying to do and for which module the error happened. Thanks and sorry for the inconvenience!"}), 500
     
+    """
+    returns the sdg descriptions from the databse collection 'sdg_descriptions'
+    """
     @app.route('/descriptions', methods=['GET'])
     def get_sdg_descriptions():
-        with open("data_defaults/sdg_descriptions.json", mode='r', encoding='utf-8') as feedsjson:
-            descriptions = json.load(feedsjson)
-
-            # transform targets to array of strings
-            for sdg in descriptions:
-                targets_array = [
-                    f"{key} {value}" for key, value in sdg["targets"].items()
-                ]
-                sdg["targets"] = targets_array 
-            
-        return descriptions
+        return list(db["sdg_descriptions"].aggregate([
+            {
+                "$project": {
+                    "_id": 0, 
+                    "number": 1, 
+                    "description": 1, 
+                    "targets": {
+                        "$map": {
+                            "input": {"$objectToArray": "$targets"},
+                            "as": "target",
+                            "in": {"$concat": ["$$target.k", " ", "$$target.v"]}
+                        }
+                    }
+                }
+            }
+        ]))
     
     """returns array of all modules in the database.
 
