@@ -1,9 +1,9 @@
-version: "3"
 services:
   backend:
-    build: ./backend # specify where the Dockerfile is
-    ports:
-      - "3001:3001" # [HOST_PORT]:[CONTAINER_PORT]
+    build: ./backend
+    # No direct port exposure in production
+    environment:
+      - CORS_ORIGIN=http://localhost
     env_file:
       - ./backend/.env
 
@@ -12,8 +12,17 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        REACT_APP_BACKEND_URL: http://backend:3001 # <- within docker compose you can call a container with it's service name
-    ports:
-      - "3002:8000"
+        REACT_APP_BACKEND_URL: /api  # Use relative path for production
     depends_on:
       - backend
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"  # Only expose nginx port
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+
