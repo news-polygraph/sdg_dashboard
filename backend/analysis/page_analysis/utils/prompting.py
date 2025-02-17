@@ -70,8 +70,7 @@ def summarize_paragraph(paragraphs, page_data):
 def contextualize_paragraph(paragraphs, page_data):
     for sdg_idx,paragraph in paragraphs.items():
         context_system_prompt = f"""
-        You are an analysis api that allows a user to evaluate an action taken by a company to contribute to solutions for to ensure 
-        access to affordable, reliable, sustainable and modern energy for all. Answer in a json format.  
+        You are an analysis api that allows a user to evaluate an action taken by a company to contribute to solutions for sustainability. Answer in a json format.  
         """        
         context_prompt = f"""
         Your task is to classify the following actions into one of the categories in the ABC model of impact frontiers and provide a detailed reasoning process with pro and con arguments. 
