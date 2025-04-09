@@ -13,7 +13,8 @@ to run Backend:
 to run Frontend:
 
 1. Install node v22.9.0
-2. run npm install
+2. Delete package-log.json
+3. run npm install
 
 -> start frontend: npm start
 
