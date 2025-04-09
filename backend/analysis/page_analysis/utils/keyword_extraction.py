@@ -57,6 +57,7 @@ def read_keywords_single_page(filename, page_number):
 
     text = read_single_page_from_pdf(filename, page_number)
 
+    ## Count keywords by sentence.
     page_data = {}
     page_text = clean_text(text)
     words = word_tokenize(text)
@@ -64,25 +65,24 @@ def read_keywords_single_page(filename, page_number):
     tokenized = wpt.tokenize_sents(paragraphs)    
     counters = list(map(lambda x: Counter(x), tokenized))
     relevant_paragraphs = {}
+    ## Saving paragraphs for sentences with the most keywords for each SDG.
+    ## If no keywords exist, save nothing.
     for sdg, sdg_keywords in keywords.items():
 
         list_keywords = sdg_keywords.split(", ")
         count = list(map(lambda x:reduce(lambda a,b: a + x[b], list_keywords, 0), counters))
         max_idx = FindIndex(0,0,count)
-        # if sdg == 6:
-        #     print(list_keywords)
-        #     print("sample_ct", sample_ct)
-        #     print("counters", counters)
-        #     print("Count", count)
-        #     print("Max_idx: ", max_idx)
-        #     print("Count[max]: ", count[max_idx])
+
         if count[max_idx] > 0:
             if len(paragraphs) <= 3:
                 relevant_paragraphs[str(sdg)] = " ".join(paragraphs)
             elif len(paragraphs) == (max_idx + 1):
                 relevant_paragraphs[str(sdg)] = " ".join(paragraphs[-3:])
+            elif max_idx == 0:
+                relevant_paragraphs[str(sdg)] = " ".join(paragraphs[:3])
             else:
                 relevant_paragraphs[str(sdg)] = " ".join(paragraphs[max_idx-1:max_idx+2])
+
 
 
 

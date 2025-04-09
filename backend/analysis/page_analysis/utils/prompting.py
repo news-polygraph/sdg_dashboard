@@ -107,7 +107,5 @@ def contextualize_paragraph(paragraphs, page_data):
                 page_data[f"{sdg_idx}"]["context"] = response_json    
         except Exception as e:
             print(f"Exception when parsing json:", e)
-            print("Response 1: ", response_1)
-            print("Response 5: ", response_5)
 
 

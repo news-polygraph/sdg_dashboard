@@ -11,7 +11,7 @@ function MainNavbar() {
             onClick={(e) => e.preventDefault()}
             className="mr-2"
           >
-            SDG Dashboard Test
+            SDG Demonstrator
           </Navbar.Brand>
         </div>
       </Container>

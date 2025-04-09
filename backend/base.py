@@ -123,6 +123,7 @@ def create_app(test_config=None):
                     if report["title"] == title:
                         filename = report["filename"]
 
+            ## launch analysis
             if filename:
                 analyse_document(filename)
 

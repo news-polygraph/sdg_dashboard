@@ -147,6 +147,7 @@ function Dashboard() {
                 </Card>
               </Col>
             </Row>
+            {/*
             <Row>
               <Col>
                 <Card style={cardColor}>
@@ -159,6 +160,7 @@ function Dashboard() {
                 </Card>
               </Col>
             </Row>
+            */}
           </Container>
         </div>
         <Footer />
